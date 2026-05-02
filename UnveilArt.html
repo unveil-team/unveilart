@@ -1,0 +1,1135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>UnveilArt — Art Curation for Melbourne's Finest Spaces</title>
+<meta name="description" content="UnveilArt connects Melbourne's emerging artists with the hotels, restaurants, and venues where their work belongs. Rotating art, curated for your space." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,280;0,9..144,320;0,9..144,360;0,9..144,400;1,9..144,320;1,9..144,360;1,9..144,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+/* ─── Tokens ─────────────────────────────────────────────── */
+:root {
+  --off-white:    #FAFAF7;
+  --deep-black:   #0A0A0A;
+  --warm-charcoal:#1C1C1C;
+  --cream:        #F5F1EA;
+  --stone-gray:   #8B8680;
+  --bone:         #E8E4DD;
+  --gold-whisper: #B8A48A;
+  --gold-deep:    #8E7A5E;
+  --serif: "Fraunces", "Cormorant Garamond", Georgia, serif;
+  --sans:  "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+}
+
+/* ─── Reset ──────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--sans);
+  color: var(--deep-black);
+  background: var(--off-white);
+  font-feature-settings: "ss01","kern","liga";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.55;
+  letter-spacing: -0.005em;
+  overflow-x: hidden;
+}
+h1, h2, h3, h4 {
+  font-family: var(--serif);
+  font-weight: 360;
+  letter-spacing: -0.022em;
+  line-height: 1.05;
+  margin: 0;
+  font-feature-settings: "ss01","kern","liga","calt";
+}
+p { margin: 0; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; }
+::selection { background: var(--gold-whisper); color: var(--deep-black); }
+
+/* ─── Curtain intro ──────────────────────────────────────── */
+#curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  pointer-events: none;
+}
+#curtain.done { display: none; }
+.curtain-mark {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-weight: 280;
+  color: var(--off-white);
+  font-size: clamp(60px, 12vw, 160px);
+  letter-spacing: 0.12em;
+  background: var(--deep-black);
+  opacity: 0;
+  animation: mark-in 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes mark-in {
+  0%   { opacity: 0; letter-spacing: 0.4em; }
+  40%  { opacity: 1; }
+  100% { opacity: 0; letter-spacing: 0.12em; }
+}
+.curtain-l, .curtain-r {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 50%;
+  background: var(--deep-black);
+  animation: curtain-split 0.9s 1.6s cubic-bezier(0.86, 0, 0.07, 1) forwards;
+}
+.curtain-l { left: 0;  transform-origin: left; }
+.curtain-r { right: 0; transform-origin: right; }
+@keyframes curtain-split { to { transform: scaleX(0); } }
+
+/* ─── Nav ────────────────────────────────────────────────── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 26px 56px;
+  color: var(--off-white);
+  border-bottom: 1px solid transparent;
+  transition: background 0.45s ease, padding 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+}
+nav.solid {
+  background: var(--off-white);
+  color: var(--deep-black);
+  border-bottom-color: rgba(10,10,10,0.06);
+  padding: 18px 56px;
+}
+.logo {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  font-style: italic;
+}
+.logo b { font-style: normal; font-weight: 500; letter-spacing: -0.01em; }
+.nav-links {
+  display: flex;
+  gap: 36px;
+  align-items: center;
+}
+.nav-links a {
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  position: relative;
+  padding: 4px 0;
+  opacity: 0.85;
+  transition: opacity 0.3s;
+}
+.nav-links a:hover { opacity: 1; }
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: 0;
+  height: 1px; width: 100%;
+  background: currentColor;
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 0.35s cubic-bezier(0.65, 0, 0.35, 1);
+}
+.nav-links a:hover::after { transform: scaleX(1); }
+.nav-cta {
+  border: 1px solid currentColor;
+  padding: 10px 18px;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transition: background 0.3s, color 0.3s;
+}
+.nav-cta:hover { background: currentColor; }
+.nav-cta:hover span { mix-blend-mode: difference; color: #fff; }
+.nav-cta::after { display: none !important; }
+
+/* ─── Eyebrow ────────────────────────────────────────────── */
+.eyebrow {
+  display: block;
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--stone-gray);
+  font-weight: 500;
+}
+
+/* ─── Buttons ────────────────────────────────────────────── */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 28px;
+  font-family: var(--sans);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 500;
+  border: 1px solid var(--deep-black);
+  background: transparent;
+  color: var(--deep-black);
+  overflow: hidden;
+  isolation: isolate;
+  transition: color 0.4s ease;
+  cursor: pointer;
+}
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--deep-black);
+  transform: translateX(-101%);
+  transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+  z-index: -1;
+}
+.btn:hover { color: var(--off-white); }
+.btn:hover::before { transform: translateX(0); }
+.btn.invert { border-color: var(--off-white); color: var(--off-white); }
+.btn.invert::before { background: var(--off-white); }
+.btn.invert:hover { color: var(--deep-black); }
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 500;
+  position: relative;
+}
+.link::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: -3px;
+  width: 100%; height: 1px;
+  background: currentColor;
+  transform-origin: right;
+  transform: scaleX(1);
+  transition: transform 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+}
+.link:hover::after {
+  transform-origin: left;
+  transform: scaleX(0);
+  animation: underline-out-in 0.7s 0.4s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+@keyframes underline-out-in {
+  from { transform-origin: left; transform: scaleX(0); }
+  to   { transform-origin: left; transform: scaleX(1); }
+}
+
+/* ─── Reveal on scroll ───────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 1.1s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.in { opacity: 1; transform: translateY(0); }
+
+/* ─── Letter stagger ─────────────────────────────────────── */
+.stagger-ch {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.4em);
+  animation: ch-in 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes ch-in {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Hero ───────────────────────────────────────────────── */
+.hero {
+  height: 100vh;
+  min-height: 760px;
+  position: relative;
+  overflow: hidden;
+  color: var(--off-white);
+}
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: saturate(0.85) contrast(1.05);
+  animation: kenburns 24s ease-in-out infinite alternate;
+}
+@keyframes kenburns {
+  0%   { transform: scale(1.05) translate(0, 0); }
+  100% { transform: scale(1.18) translate(-1.5%, -1%); }
+}
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(10,10,10,0.55) 0%,
+    rgba(10,10,10,0.35) 40%,
+    rgba(10,10,10,0.7)  100%
+  );
+}
+.hero-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 88px;
+}
+.hero h1 {
+  font-size: clamp(52px, 6.6vw, 96px);
+  font-weight: 320;
+  line-height: 1.0;
+  letter-spacing: -0.025em;
+  max-width: 14ch;
+  margin-top: 32px;
+}
+.hero h1 em {
+  font-style: italic;
+  font-weight: 320;
+  color: var(--bone);
+}
+.hero p.sub {
+  margin-top: 28px;
+  font-size: 17px;
+  line-height: 1.55;
+  max-width: 38ch;
+  color: rgba(250,250,247,0.85);
+}
+.hero-actions {
+  margin-top: 48px;
+  display: flex;
+  gap: 28px;
+  align-items: center;
+}
+.hero-meta {
+  position: absolute;
+  bottom: 36px;
+  left: 88px;
+  right: 88px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(250,250,247,0.65);
+}
+
+/* ─── Sections ───────────────────────────────────────────── */
+section {
+  padding: 130px 56px;
+  position: relative;
+}
+
+/* About */
+.about { background: var(--off-white); }
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 88px;
+}
+.about h2 {
+  font-size: clamp(38px, 4vw, 60px);
+  letter-spacing: -0.025em;
+}
+.about h2 em { font-style: italic; color: var(--gold-deep); }
+.about-body p {
+  font-size: 17px;
+  line-height: 1.75;
+  color: var(--warm-charcoal);
+  margin-bottom: 22px;
+  max-width: 52ch;
+}
+.about-body p.lede {
+  font-family: var(--serif);
+  font-size: 26px;
+  line-height: 1.4;
+  letter-spacing: -0.015em;
+  font-weight: 360;
+  color: var(--deep-black);
+  margin-bottom: 36px;
+}
+.about-body p.lede em { font-style: italic; color: var(--gold-deep); }
+.about-rule {
+  height: 1px;
+  background: rgba(10,10,10,0.12);
+  margin: 36px 0;
+  width: 80px;
+}
+.about-foot {
+  font-size: 13px;
+  color: var(--stone-gray);
+  letter-spacing: 0.04em;
+  line-height: 1.7;
+}
+.about-foot b { color: var(--deep-black); font-weight: 500; }
+
+/* How It Works */
+.how { background: var(--off-white); }
+.how-head {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 80px;
+  align-items: end;
+  margin-bottom: 96px;
+}
+.how-head h2 {
+  font-size: clamp(40px, 4.4vw, 68px);
+  letter-spacing: -0.025em;
+}
+.how-head h2 em { font-style: italic; color: var(--gold-deep); }
+.how-head p {
+  font-size: 15px;
+  color: var(--stone-gray);
+  max-width: 46ch;
+  line-height: 1.7;
+}
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 56px;
+  border-top: 1px solid rgba(10,10,10,0.1);
+  padding-top: 56px;
+}
+.step { position: relative; }
+.step .num {
+  font-family: var(--serif);
+  font-size: 14px;
+  letter-spacing: 0.2em;
+  color: var(--stone-gray);
+  margin-bottom: 32px;
+  display: block;
+}
+.step .glyph {
+  width: 56px; height: 56px;
+  border: 1px solid rgba(10,10,10,0.18);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 32px;
+  font-family: var(--serif);
+  font-size: 18px;
+  font-style: italic;
+  color: var(--gold-deep);
+}
+.step h3 {
+  font-size: 32px;
+  font-weight: 360;
+  letter-spacing: -0.02em;
+  margin-bottom: 18px;
+}
+.step p {
+  font-size: 15px;
+  color: var(--warm-charcoal);
+  opacity: 0.75;
+  line-height: 1.65;
+  max-width: 32ch;
+}
+
+/* Artists / Gallery */
+.artists { background: var(--cream); }
+.artists-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 64px;
+}
+.artists-head h2 {
+  font-size: clamp(40px, 4.4vw, 68px);
+  letter-spacing: -0.025em;
+}
+.artists-head h2 em { font-style: italic; color: var(--gold-deep); }
+.artists-head p {
+  font-size: 14px;
+  color: var(--stone-gray);
+  max-width: 30ch;
+  text-align: right;
+  line-height: 1.6;
+}
+
+/* Masonry gallery */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-auto-rows: 8px;
+  gap: 24px;
+  margin-bottom: 100px;
+}
+.tile { position: relative; overflow: hidden; background: var(--bone); cursor: pointer; transition: opacity 0.5s ease; }
+.gallery:hover .tile:not(:hover) { opacity: 0.45; }
+.tile-img {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: saturate(0.7);
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1), filter 0.6s ease;
+}
+.tile:hover .tile-img { transform: scale(1.06); filter: saturate(0.95); }
+.tile-meta {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 22px;
+  color: var(--off-white);
+  background: linear-gradient(180deg, transparent, rgba(10,10,10,0.78));
+  transform: translateY(40%);
+  opacity: 0;
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.45s ease;
+}
+.tile:hover .tile-meta { transform: translateY(0); opacity: 1; }
+.tile-meta .name {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 360;
+  letter-spacing: -0.01em;
+}
+.tile-meta .medium {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-whisper);
+  margin-top: 4px;
+}
+/* masonry tile sizing */
+.tile.t1 { grid-column: span 4; grid-row: span 56; }
+.tile.t2 { grid-column: span 4; grid-row: span 76; }
+.tile.t3 { grid-column: span 4; grid-row: span 44; }
+.tile.t4 { grid-column: span 4; grid-row: span 68; }
+.tile.t5 { grid-column: span 4; grid-row: span 50; }
+.tile.t6 { grid-column: span 4; grid-row: span 60; }
+
+/* Artist application bridge */
+.bridge {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 96px;
+  align-items: start;
+  border-top: 1px solid rgba(10,10,10,0.12);
+  padding-top: 80px;
+}
+.bridge h3 {
+  font-size: clamp(32px, 3.4vw, 52px);
+  font-weight: 320;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-top: 18px;
+}
+.bridge h3 em { font-style: italic; color: var(--gold-deep); }
+.bridge p {
+  margin-top: 22px;
+  color: var(--stone-gray);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* Forms */
+.form { display: flex; flex-direction: column; gap: 28px; }
+.field { position: relative; }
+.field label {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--stone-gray);
+  margin-bottom: 8px;
+  transition: color 0.3s;
+}
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid rgba(10,10,10,0.2);
+  padding: 8px 0 14px;
+  font: inherit;
+  font-size: 15px;
+  color: var(--deep-black);
+  outline: none;
+  font-family: var(--sans);
+  border-radius: 0;
+  -webkit-appearance: none;
+}
+.field textarea { resize: none; min-height: 90px; line-height: 1.5; }
+.field::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: 0;
+  height: 1px; width: 100%;
+  background: var(--deep-black);
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+}
+.field:focus-within::after { transform: scaleX(1); }
+.field:focus-within label { color: var(--deep-black); }
+.field.error::after { background: #B85C3E; transform: scaleX(1); }
+.form-success {
+  padding: 18px 22px;
+  border-left: 2px solid var(--gold-deep);
+  background: rgba(184,164,138,0.1);
+  font-size: 14px;
+  color: var(--warm-charcoal);
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.form-success .check {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 1px solid var(--gold-deep);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold-deep);
+  flex-shrink: 0;
+  font-size: 10px;
+}
+
+/* Contact */
+.contact { background: var(--warm-charcoal); color: var(--off-white); }
+.contact .eyebrow { color: var(--gold-whisper); }
+.contact h2 {
+  font-size: clamp(44px, 4.8vw, 76px);
+  letter-spacing: -0.025em;
+  margin-top: 18px;
+}
+.contact h2 em { font-style: italic; color: var(--gold-whisper); }
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 96px;
+  margin-top: 72px;
+}
+.contact .field label { color: rgba(250,250,247,0.55); }
+.contact .field input,
+.contact .field select,
+.contact .field textarea {
+  color: var(--off-white);
+  border-bottom-color: rgba(250,250,247,0.25);
+}
+.contact .field select option { color: var(--deep-black); }
+.contact .field::after { background: var(--off-white); }
+.contact .field:focus-within label { color: var(--off-white); }
+.contact-side p {
+  color: rgba(250,250,247,0.65);
+  font-size: 15px;
+  line-height: 1.75;
+  max-width: 38ch;
+}
+.contact-side .item {
+  margin-top: 28px;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+.contact-side .item .lbl {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold-whisper);
+  margin-bottom: 4px;
+}
+
+/* Footer */
+footer {
+  background: var(--deep-black);
+  color: var(--off-white);
+  padding: 80px 56px 32px;
+  border-top: 1px solid rgba(250,250,247,0.08);
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 60px;
+  margin-bottom: 60px;
+}
+footer .logo { font-size: 26px; }
+footer p {
+  margin-top: 18px;
+  color: rgba(250,250,247,0.55);
+  font-size: 14px;
+  line-height: 1.7;
+  max-width: 36ch;
+}
+footer h4 {
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-whisper);
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+footer ul {
+  list-style: none;
+  padding: 0; margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+footer ul a {
+  font-size: 13px;
+  color: rgba(250,250,247,0.7);
+  transition: color 0.25s;
+}
+footer ul a:hover { color: var(--off-white); }
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(250,250,247,0.08);
+  padding-top: 24px;
+  font-size: 12px;
+  color: rgba(250,250,247,0.45);
+}
+.footer-bottom a { margin-left: 18px; transition: color 0.25s; }
+.footer-bottom a:hover { color: var(--off-white); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(10,10,10,0.12); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(10,10,10,0.25); }
+</style>
+</head>
+<body>
+
+<!-- ─── Curtain ──────────────────────────────────────────── -->
+<div id="curtain" aria-hidden="true">
+  <div class="curtain-mark">UNVEIL</div>
+  <div class="curtain-l"></div>
+  <div class="curtain-r"></div>
+</div>
+
+<!-- ─── Nav ─────────────────────────────────────────────── -->
+<nav id="nav">
+  <a href="#hero" class="logo"><b>Unveil</b>art</a>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#how">How It Works</a>
+    <a href="#artists">Artists</a>
+    <a href="#contact" class="nav-cta"><span>Partner With Us</span></a>
+  </div>
+</nav>
+
+<!-- ─── Hero ─────────────────────────────────────────────── -->
+<section id="hero" class="hero">
+  <div class="hero-bg" style="background-image:url('assets/hero-primary.jpg')"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-inner">
+    <span class="eyebrow" style="color:var(--gold-whisper);margin-bottom:32px" id="hero-eyebrow"></span>
+    <h1 id="hero-h1"></h1>
+    <p class="sub">
+      Rotating art from emerging artists, curated for hotels,
+      restaurants &amp; venues across Melbourne.
+    </p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn invert">Partner With Us <span>→</span></a>
+      <a href="#artists" class="link" style="color:var(--off-white)">Apply as Artist <span>→</span></a>
+    </div>
+  </div>
+  <div class="hero-meta">
+    <span>Scroll to explore</span>
+  </div>
+</section>
+
+<!-- ─── About ────────────────────────────────────────────── -->
+<section id="about" class="about">
+  <div class="about-grid">
+    <div>
+      <div class="reveal">
+        <span class="eyebrow">About</span>
+        <h2 style="margin-top:16px">Art should <em>be seen.</em></h2>
+      </div>
+    </div>
+    <div class="about-body">
+      <div class="reveal" data-delay="120">
+        <p class="lede">Not stored in studios, not waiting for the <em>right gallery.</em></p>
+      </div>
+      <div class="reveal" data-delay="200">
+        <p>
+          UnveilArt connects Melbourne's emerging artists with the spaces
+          where their work belongs — hotels, restaurants, and venues
+          where people actually live, dine, and remember.
+        </p>
+      </div>
+      <div class="reveal" data-delay="280">
+        <p style="margin-top:22px">
+          We don't place art once and walk away. We rotate. We refresh.
+          We keep introducing new voices to new walls.
+        </p>
+      </div>
+      <div class="reveal" data-delay="360">
+        <p style="margin-top:22px">Every wall is an opportunity. Every rotation, a new story.</p>
+      </div>
+      <div class="reveal" data-delay="440">
+        <div class="about-rule"></div>
+        <div class="about-foot">
+          <b>Based in Melbourne.</b><br>
+          Built for the artists and spaces that make this city worth experiencing.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── How It Works ─────────────────────────────────────── -->
+<section id="how" class="how">
+  <div class="how-head">
+    <div class="reveal">
+      <span class="eyebrow">How it works</span>
+      <h2 style="margin-top:16px">A practice, <em>not a delivery.</em></h2>
+    </div>
+    <div class="reveal" data-delay="120">
+      <p>
+        We've designed UnveilArt to be quiet for you and generative for the
+        artists. Three steps that repeat — so the work on your walls
+        keeps moving forward.
+      </p>
+    </div>
+  </div>
+  <div class="steps">
+    <div class="reveal" data-delay="200">
+      <div class="step">
+        <span class="num">Step 01</span>
+        <div class="glyph">i</div>
+        <h3>Consult</h3>
+        <p>We learn your space, your story, and what your guests should feel.</p>
+      </div>
+    </div>
+    <div class="reveal" data-delay="400">
+      <div class="step">
+        <span class="num">Step 02</span>
+        <div class="glyph">ii</div>
+        <h3>Curate</h3>
+        <p>We handpick works from our growing roster of emerging Melbourne artists — made for your walls.</p>
+      </div>
+    </div>
+    <div class="reveal" data-delay="600">
+      <div class="step">
+        <span class="num">Step 03</span>
+        <div class="glyph">iii</div>
+        <h3>Rotate &amp; Maintain</h3>
+        <p>Every few months, new artists. Every visit, condition checked. Your space stays fresh, effortlessly.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Artists / Gallery ─────────────────────────────────── -->
+<section id="artists" class="artists">
+  <div class="artists-head">
+    <div class="reveal">
+      <span class="eyebrow">The roster</span>
+      <h2 style="margin-top:16px">Emerging voices, <em>on real walls.</em></h2>
+    </div>
+    <div class="reveal" data-delay="120">
+      <p>A rotating selection from the artists currently showing across partner venues in Melbourne.</p>
+    </div>
+  </div>
+
+  <div class="reveal">
+    <div class="gallery" id="gallery">
+      <div class="tile t1">
+        <div class="tile-img" style="background-image:url('https://images.unsplash.com/photo-1578321272176-b7bbc0679853?auto=format&fit=crop&w=1200&q=80')"></div>
+        <div class="tile-meta"><div class="name">Mira Chen</div><div class="medium">Mixed media · 2025</div></div>
+      </div>
+      <div class="tile t2">
+        <div class="tile-img" style="background-image:url('https://images.unsplash.com/photo-1549887534-1541e9326642?auto=format&fit=crop&w=1200&q=80')"></div>
+        <div class="tile-meta"><div class="name">Tomás Whitfield</div><div class="medium">Oil on linen · 2024</div></div>
+      </div>
+      <div class="tile t3">
+        <div class="tile-img" style="background-image:url('https://images.unsplash.com/photo-1554907984-15263bfd63bd?auto=format&fit=crop&w=1200&q=80')"></div>
+        <div class="tile-meta"><div class="name">Aiyana Park</div><div class="medium">Photography · 2025</div></div>
+      </div>
+      <div class="tile t4">
+        <div class="tile-img" style="background-image:url('https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=1200&q=80')"></div>
+        <div class="tile-meta"><div class="name">Joaquín Reyes</div><div class="medium">Acrylic &amp; ink · 2025</div></div>
+      </div>
+      <div class="tile t5">
+        <div class="tile-img" style="background-image:url('https://images.unsplash.com/photo-1577720580479-7d839d829c73?auto=format&fit=crop&w=1200&q=80')"></div>
+        <div class="tile-meta"><div class="name">Saoirse Halloran</div><div class="medium">Textile · 2024</div></div>
+      </div>
+      <div class="tile t6">
+        <div class="tile-img" style="background-image:url('https://images.unsplash.com/photo-1605721911519-3dfeb3be25e7?auto=format&fit=crop&w=1200&q=80')"></div>
+        <div class="tile-meta"><div class="name">Kenji Moreau</div><div class="medium">Pigment on paper · 2025</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Artist apply bridge -->
+  <div class="bridge">
+    <div>
+      <div class="reveal">
+        <span class="eyebrow">For artists</span>
+        <h3>Are you an emerging artist? <br><em>Join our network.</em></h3>
+        <p>
+          We're always looking for new voices to introduce to our partner
+          venues. Send us your portfolio — we read every submission.
+        </p>
+      </div>
+    </div>
+    <div class="reveal" data-delay="140">
+      <form class="form" id="artist-form" novalidate>
+        <div class="field" id="af-name-field">
+          <label for="af-name">Name</label>
+          <input type="text" id="af-name" name="name" autocomplete="name" />
+        </div>
+        <div class="field" id="af-email-field">
+          <label for="af-email">Email</label>
+          <input type="email" id="af-email" name="email" autocomplete="email" />
+        </div>
+        <div class="field" id="af-portfolio-field">
+          <label for="af-portfolio">Portfolio Link</label>
+          <input type="url" id="af-portfolio" name="portfolio" placeholder="https://" />
+        </div>
+        <div class="field" id="af-message-field">
+          <label for="af-message">Message</label>
+          <textarea id="af-message" name="message" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn">Submit Application <span>→</span></button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Contact ───────────────────────────────────────────── -->
+<section id="contact" class="contact">
+  <div class="reveal">
+    <span class="eyebrow">Partner with us</span>
+    <h2>Let's talk about <br><em>your space.</em></h2>
+  </div>
+  <div class="contact-grid">
+    <div class="contact-side">
+      <div class="reveal" data-delay="120">
+        <p>
+          We work with hotels, restaurants, cafés, and boutique venues
+          across Melbourne. Tell us about your space and we'll be in
+          touch within 48 hours.
+        </p>
+        <div class="item">
+          <span class="lbl">Email</span>
+          contact@unveilart.com.au
+        </div>
+        <div class="item">
+          <span class="lbl">Studio</span>
+          Collingwood, Naarm / Melbourne
+        </div>
+        <div class="item">
+          <span class="lbl">Press &amp; general</span>
+          press@unveilart.com.au
+        </div>
+      </div>
+    </div>
+    <div class="reveal" data-delay="200">
+      <form class="form" id="contact-form" novalidate>
+        <div class="field" id="cf-company-field">
+          <label for="cf-company">Company Name</label>
+          <input type="text" id="cf-company" name="company" autocomplete="organization" />
+        </div>
+        <div class="field" id="cf-name-field">
+          <label for="cf-name">Your Name</label>
+          <input type="text" id="cf-name" name="name" autocomplete="name" />
+        </div>
+        <div class="field" id="cf-email-field">
+          <label for="cf-email">Email</label>
+          <input type="email" id="cf-email" name="email" autocomplete="email" />
+        </div>
+        <div class="field" id="cf-venue-field">
+          <label for="cf-venue">Venue Type</label>
+          <select id="cf-venue" name="venueType">
+            <option value="">Select…</option>
+            <option>Hotel</option>
+            <option>Restaurant</option>
+            <option>Café</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field" id="cf-message-field">
+          <label for="cf-message">Message</label>
+          <textarea id="cf-message" name="message" rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn invert">Send Inquiry <span>→</span></button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Footer ────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <a href="#hero" class="logo"><b>Unveil</b>art</a>
+      <p>Curating Melbourne's emerging artists into the spaces that matter.</p>
+    </div>
+    <div>
+      <h4>Connect</h4>
+      <ul>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">LinkedIn</a></li>
+        <li><a href="mailto:contact@unveilart.com.au">Email</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Site</h4>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#how">How It Works</a></li>
+        <li><a href="#artists">Artists</a></li>
+        <li><a href="#contact">Partner With Us</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 UnveilArt. All rights reserved.</span>
+    <span>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Cookie Policy</a>
+    </span>
+  </div>
+</footer>
+
+<script>
+(function () {
+
+  /* ── Curtain ──────────────────────────────────────────── */
+  setTimeout(function () {
+    document.getElementById('curtain').classList.add('done');
+  }, 2700);
+
+  /* ── Letter stagger ───────────────────────────────────── */
+  function stagger(el, text, startDelay, perChar) {
+    el.innerHTML = '';
+    Array.from(text).forEach(function (ch, i) {
+      var span = document.createElement('span');
+      span.className = 'stagger-ch';
+      span.style.animationDelay = (startDelay + i * perChar) + 'ms';
+      span.textContent = ch === ' ' ? ' ' : ch;
+      el.appendChild(span);
+    });
+  }
+
+  /* Hero text */
+  var eyebrow = document.getElementById('hero-eyebrow');
+  stagger(eyebrow, 'UNVEILART · MELBOURNE', 0, 28);
+
+  var h1 = document.getElementById('hero-h1');
+  var line1 = document.createElement('span');
+  stagger(line1, 'Turn Your Space', 400, 45);
+  var br = document.createElement('br');
+  var line2 = document.createElement('em');
+  stagger(line2, 'Into An Experience', 1100, 45);
+  h1.appendChild(line1);
+  h1.appendChild(br);
+  h1.appendChild(line2);
+
+  /* ── Nav scroll ───────────────────────────────────────── */
+  var nav = document.getElementById('nav');
+  var onScroll = function () {
+    nav.classList.toggle('solid', window.scrollY > 100);
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* Smooth-scroll nav links (offset for fixed nav) */
+  document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      var id = a.getAttribute('href').slice(1);
+      if (!id) return;
+      var target = document.getElementById(id);
+      if (!target) return;
+      e.preventDefault();
+      var top = target.getBoundingClientRect().top + window.scrollY - 60;
+      window.scrollTo({ top: top, behavior: 'smooth' });
+    });
+  });
+
+  /* ── Reveal on scroll ─────────────────────────────────── */
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (!entry.isIntersecting) return;
+      var el = entry.target;
+      var delay = parseInt(el.getAttribute('data-delay') || '0', 10);
+      setTimeout(function () { el.classList.add('in'); }, delay);
+      io.unobserve(el);
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+
+  /* ── Forms ────────────────────────────────────────────── */
+  function validateEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+
+  function showSuccess(form) {
+    var msg = document.createElement('div');
+    msg.className = 'form-success';
+    msg.innerHTML = '<span class="check">✓</span> Submitted! We\'ll get back to you within 48 hours.';
+    form.parentNode.replaceChild(msg, form);
+  }
+
+  /* Artist form */
+  document.getElementById('artist-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var form = this;
+    var name = form.querySelector('#af-name').value.trim();
+    var email = form.querySelector('#af-email').value.trim();
+    var portfolio = form.querySelector('#af-portfolio').value.trim();
+    var message = form.querySelector('#af-message').value.trim();
+    var ok = true;
+
+    [['af-name-field', name], ['af-portfolio-field', portfolio], ['af-message-field', message]].forEach(function (pair) {
+      var field = document.getElementById(pair[0]);
+      if (!pair[1]) { field.classList.add('error'); ok = false; }
+      else field.classList.remove('error');
+    });
+    var emailField = document.getElementById('af-email-field');
+    if (!email || !validateEmail(email)) { emailField.classList.add('error'); ok = false; }
+    else emailField.classList.remove('error');
+
+    if (ok) setTimeout(function () { showSuccess(form); }, 350);
+  });
+
+  /* Contact form */
+  document.getElementById('contact-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var form = this;
+    var company = form.querySelector('#cf-company').value.trim();
+    var name = form.querySelector('#cf-name').value.trim();
+    var email = form.querySelector('#cf-email').value.trim();
+    var venue = form.querySelector('#cf-venue').value;
+    var message = form.querySelector('#cf-message').value.trim();
+    var ok = true;
+
+    [['cf-company-field', company], ['cf-name-field', name], ['cf-venue-field', venue], ['cf-message-field', message]].forEach(function (pair) {
+      var field = document.getElementById(pair[0]);
+      if (!pair[1]) { field.classList.add('error'); ok = false; }
+      else field.classList.remove('error');
+    });
+    var emailField = document.getElementById('cf-email-field');
+    if (!email || !validateEmail(email)) { emailField.classList.add('error'); ok = false; }
+    else emailField.classList.remove('error');
+
+    if (ok) setTimeout(function () { showSuccess(form); }, 350);
+  });
+
+})();
+</script>
+</body>
+</html>
