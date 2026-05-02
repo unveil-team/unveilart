@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>UnveilArt — Site Concepts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,280;0,9..144,320;0,9..144,360;0,9..144,400;0,9..144,500;1,9..144,320;1,9..144,360;1,9..144,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+  html, body { margin: 0; padding: 0; background: #f0eee9; height: 100%; font-family: "Inter", system-ui, sans-serif; }
+  #root { width: 100vw; height: 100vh; }
+  /* Each artboard hosts an entire site shell. Constrain so internal absolute
+     positioning works correctly. */
+  .ua-artboard-host {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    background: var(--off-white);
+  }
+</style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel" src="design-canvas.jsx"></script>
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel" src="site-shared.jsx"></script>
+  <script type="text/babel" src="site-variations.jsx"></script>
+
+  <script type="text/babel" data-presets="env,react">
+    const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+      "showTweaks": true,
+      "accentHue": "gold",
+      "heroImage": "primary",
+      "boardWidth": 1280,
+      "boardHeight": 820
+    }/*EDITMODE-END*/;
+
+    const ACCENT_PRESETS = {
+      gold:   { whisper: "#B8A48A", deep: "#8E7A5E" },
+      stone:  { whisper: "#9B958C", deep: "#6F6A60" },
+      copper: { whisper: "#B58A6A", deep: "#7E5A3F" },
+    };
+
+    function App() {
+      const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+      // Apply accent presets at the document level so all variations share.
+      React.useEffect(() => {
+        const a = ACCENT_PRESETS[t.accentHue] || ACCENT_PRESETS.gold;
+        document.documentElement.style.setProperty("--gold-whisper", a.whisper);
+        document.documentElement.style.setProperty("--gold-deep", a.deep);
+      }, [t.accentHue]);
+
+      return (
+        <>
+          <DesignCanvas
+            title="UnveilArt"
+            subtitle="Single-page site · 3 directions · Melbourne luxury B2B"
+          >
+            <DCSection
+              id="sites"
+              title="Site directions"
+              subtitle="Same brief, three editorial languages — scroll inside any artboard. Curtain plays on every load. Click a card's expand icon to focus it fullscreen."
+            >
+              <DCArtboard id="editorial" label="01 · Editorial Quiet" width={t.boardWidth} height={t.boardHeight}>
+                <div className="ua-artboard-host">
+                  <UASiteEditorial />
+                </div>
+              </DCArtboard>
+
+              <DCArtboard id="typographic" label="02 · Typographic" width={t.boardWidth} height={t.boardHeight}>
+                <div className="ua-artboard-host">
+                  <UASiteTypographic />
+                </div>
+              </DCArtboard>
+
+              <DCArtboard id="split" label="03 · Split / Collage" width={t.boardWidth} height={t.boardHeight}>
+                <div className="ua-artboard-host">
+                  <UASiteSplit />
+                </div>
+              </DCArtboard>
+            </DCSection>
+
+            <DCPostIt top={40} left={40} rotate={-3}>
+              Curtain intro plays on every load. Each artboard runs its own
+              scroll, nav, and reveal animations.
+            </DCPostIt>
+
+            <DCPostIt top={40} right={40} rotate={2} width={210}>
+              <b>Tip:</b> open any artboard fullscreen via the expand icon
+              for a real visit. Toggle Tweaks for accent + size controls.
+            </DCPostIt>
+          </DesignCanvas>
+
+          <TweaksPanel title="UnveilArt">
+            <TweakSection label="Direction" />
+            <div style={{ fontSize: 11, color: "rgba(41,38,27,.55)", lineHeight: 1.5 }}>
+              Three directions live side-by-side. Open any artboard fullscreen
+              from its header to experience the full scroll.
+            </div>
+            <TweakSection label="Brand" />
+            <TweakRadio
+              label="Accent palette"
+              value={t.accentHue}
+              options={["gold", "stone", "copper"]}
+              onChange={(v) => setTweak("accentHue", v)}
+            />
+            <TweakSection label="Artboard size" />
+            <TweakSlider
+              label="Width" value={t.boardWidth} min={1080} max={1600} step={20} unit="px"
+              onChange={(v) => setTweak("boardWidth", v)}
+            />
+            <TweakSlider
+              label="Height" value={t.boardHeight} min={680} max={1080} step={20} unit="px"
+              onChange={(v) => setTweak("boardHeight", v)}
+            />
+          </TweaksPanel>
+        </>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>
