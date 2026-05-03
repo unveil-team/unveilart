@@ -1084,6 +1084,20 @@ footer ul a:hover { color: var(--off-white); }
     form.parentNode.replaceChild(msg, form);
   }
 
+  function submitToFormspree(form, endpoint, onValid) {
+    fetch(endpoint, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' }
+    }).then(function (res) {
+      if (res.ok) { showSuccess(form); }
+      else { alert('Something went wrong. Please try again.'); onValid(); }
+    }).catch(function () {
+      alert('Network error. Please check your connection and try again.');
+      onValid();
+    });
+  }
+
   /* Artist form */
   document.getElementById('artist-form').addEventListener('submit', function (e) {
     e.preventDefault();
@@ -1103,7 +1117,7 @@ footer ul a:hover { color: var(--off-white); }
     if (!email || !validateEmail(email)) { emailField.classList.add('error'); ok = false; }
     else emailField.classList.remove('error');
 
-    if (ok) setTimeout(function () { showSuccess(form); }, 350);
+    if (ok) submitToFormspree(form, 'https://formspree.io/f/xjglgwaz', function () {});
   });
 
   /* Contact form */
@@ -1126,7 +1140,7 @@ footer ul a:hover { color: var(--off-white); }
     if (!email || !validateEmail(email)) { emailField.classList.add('error'); ok = false; }
     else emailField.classList.remove('error');
 
-    if (ok) setTimeout(function () { showSuccess(form); }, 350);
+    if (ok) submitToFormspree(form, 'https://formspree.io/f/mrejeqyo', function () {});
   });
 
 })();
