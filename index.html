@@ -1055,7 +1055,7 @@ footer ul a:hover { color: var(--off-white); }
         <div class="tile-overlay"><div class="name">Mira Chen</div><div class="medium">Mixed media · 2025</div></div>
       </div>
       <div class="tile">
-        <div class="tile-img" style="background-image:url('https://images.unsplash.com/PPNuhmesC9w?auto=format&fit=crop&w=1200&q=80')"></div>
+        <div class="tile-img" style="background-image:url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1200&q=80')"></div>
         <div class="tile-overlay"><div class="name">Tomás Whitfield</div><div class="medium">Oil on linen · 2024</div></div>
       </div>
       <div class="tile">
@@ -1414,6 +1414,17 @@ footer ul a:hover { color: var(--off-white); }
       trigger.setAttribute('aria-expanded', 'false');
     });
   }());
+
+  /* ── Broken tile-image fallback ──────────────────────── */
+  document.querySelectorAll('.tile-img').forEach(function (el) {
+    var raw = el.style.backgroundImage.replace(/url\(["']?|["']?\)/g, '');
+    if (!raw) return;
+    var img = new Image();
+    img.onerror = function () {
+      el.style.backgroundImage = 'linear-gradient(160deg,#d6cfc4 0%,#b8a48a 100%)';
+    };
+    img.src = raw;
+  });
 
   /* ── Gallery drag-scroll + arrows ────────────────────── */
   (function () {
