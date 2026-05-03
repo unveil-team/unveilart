@@ -706,6 +706,127 @@ footer ul a:hover { color: var(--off-white); }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(10,10,10,0.12); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(10,10,10,0.25); }
+
+/* ─── Hamburger menu ─────────────────────────────────────── */
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 4px;
+  background: none;
+  border: none;
+}
+.nav-hamburger span {
+  display: block;
+  width: 24px;
+  height: 1.5px;
+  background: currentColor;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+.nav-mobile-menu {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--off-white);
+  z-index: 90;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+}
+.nav-mobile-menu.open { display: flex; }
+.nav-mobile-menu a {
+  font-family: var(--serif);
+  font-size: 36px;
+  font-weight: 360;
+  letter-spacing: -0.02em;
+  color: var(--deep-black);
+}
+.nav-mobile-menu a.nav-cta {
+  font-family: var(--sans);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid var(--deep-black);
+  padding: 14px 28px;
+}
+
+/* ─── Responsive ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Nav */
+  nav { padding: 20px 24px; }
+  nav.solid { padding: 16px 24px; }
+  .nav-links { display: none; }
+  .nav-hamburger { display: flex; }
+
+  /* Sections */
+  section { padding: 80px 24px; }
+
+  /* Hero */
+  .hero { min-height: 100svh; }
+  .hero-inner { padding: 0 28px; }
+  .hero h1 { font-size: clamp(40px, 10vw, 64px); }
+  .hero p.sub { font-size: 15px; max-width: 100%; }
+  .hero-actions { flex-direction: column; align-items: flex-start; gap: 18px; margin-top: 36px; }
+  .hero-meta { left: 28px; right: 28px; }
+
+  /* About */
+  .about-grid { grid-template-columns: 1fr; gap: 40px; }
+  .about-body p { font-size: 15px; max-width: 100%; }
+  .about-body p.lede { font-size: 22px; }
+
+  /* How It Works */
+  .how-head { grid-template-columns: 1fr; gap: 24px; margin-bottom: 56px; }
+  .steps { grid-template-columns: 1fr; gap: 0; border-top: none; padding-top: 0; }
+  .step { border-top: 1px solid rgba(10,10,10,0.1); padding: 36px 0; }
+  .step h3 { font-size: 26px; }
+  .step p { max-width: 100%; }
+
+  /* Gallery */
+  .artists-head { flex-direction: column; align-items: flex-start; gap: 16px; margin-bottom: 40px; }
+  .artists-head p { text-align: left; max-width: 100%; }
+  .gallery {
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: auto;
+    gap: 12px;
+    margin-bottom: 60px;
+  }
+  .tile.t1, .tile.t2, .tile.t3,
+  .tile.t4, .tile.t5, .tile.t6 {
+    grid-column: span 1;
+    grid-row: span 1;
+    aspect-ratio: 3 / 4;
+  }
+  .tile-meta { transform: translateY(0); opacity: 1; background: linear-gradient(180deg, transparent 40%, rgba(10,10,10,0.7)); }
+
+  /* Bridge */
+  .bridge { grid-template-columns: 1fr; gap: 48px; padding-top: 56px; }
+  .bridge h3 { font-size: clamp(28px, 7vw, 40px); }
+
+  /* Contact */
+  .contact-grid { grid-template-columns: 1fr; gap: 48px; margin-top: 48px; }
+
+  /* Footer */
+  footer { padding: 60px 24px 28px; }
+  .footer-grid { grid-template-columns: 1fr; gap: 40px; }
+  .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+  .footer-bottom a { margin-left: 10px; }
+
+  /* Buttons */
+  .btn { width: 100%; justify-content: center; }
+  .link { justify-content: center; }
+}
+
+@media (max-width: 480px) {
+  .gallery { grid-template-columns: 1fr; }
+  .tile.t1, .tile.t2, .tile.t3,
+  .tile.t4, .tile.t5, .tile.t6 { aspect-ratio: 4 / 3; }
+}
 </style>
 </head>
 <body>
@@ -726,7 +847,17 @@ footer ul a:hover { color: var(--off-white); }
     <a href="#artists">Artists</a>
     <a href="#contact" class="nav-cta"><span>Partner With Us</span></a>
   </div>
+  <button class="nav-hamburger" id="hamburger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<div class="nav-mobile-menu" id="mobile-menu">
+  <a href="#about" class="mobile-nav-link">About</a>
+  <a href="#how" class="mobile-nav-link">How It Works</a>
+  <a href="#artists" class="mobile-nav-link">Artists</a>
+  <a href="#contact" class="nav-cta mobile-nav-link">Partner With Us</a>
+</div>
 
 <!-- ─── Hero ─────────────────────────────────────────────── -->
 <section id="hero" class="hero">
@@ -1008,6 +1139,22 @@ footer ul a:hover { color: var(--off-white); }
 
 <script>
 (function () {
+
+  /* ── Hamburger menu ───────────────────────────────────── */
+  var hamburger = document.getElementById('hamburger');
+  var mobileMenu = document.getElementById('mobile-menu');
+  hamburger.addEventListener('click', function () {
+    var isOpen = mobileMenu.classList.toggle('open');
+    hamburger.classList.toggle('open', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  });
+  document.querySelectorAll('.mobile-nav-link').forEach(function (link) {
+    link.addEventListener('click', function () {
+      mobileMenu.classList.remove('open');
+      hamburger.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  });
 
   /* ── Curtain ──────────────────────────────────────────── */
   setTimeout(function () {
