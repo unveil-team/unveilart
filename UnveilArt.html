@@ -168,11 +168,11 @@ nav.solid {
 
 /* ─── Buttons ────────────────────────────────────────────── */
 .btn {
-  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 16px 28px;
+  padding: 16px 44px;
+  white-space: nowrap;
   font-family: var(--sans);
   font-size: 13px;
   letter-spacing: 0.08em;
@@ -181,25 +181,12 @@ nav.solid {
   border: 1px solid var(--deep-black);
   background: transparent;
   color: var(--deep-black);
-  overflow: hidden;
-  isolation: isolate;
-  transition: color 0.4s ease;
   cursor: pointer;
+  transition: background 0.35s ease, color 0.35s ease;
 }
-.btn::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--deep-black);
-  transform: translateX(-101%);
-  transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
-  z-index: -1;
-}
-.btn:hover { color: var(--off-white); }
-.btn:hover::before { transform: translateX(0); }
+.btn:hover { background: var(--deep-black); color: var(--off-white); }
 .btn.invert { border-color: var(--off-white); color: var(--off-white); }
-.btn.invert::before { background: var(--off-white); }
-.btn.invert:hover { color: var(--deep-black); }
+.btn.invert:hover { background: var(--off-white); color: var(--deep-black); }
 
 .link {
   display: inline-flex;
@@ -708,11 +695,6 @@ footer ul a:hover { color: var(--off-white); }
 ::-webkit-scrollbar-thumb { background: rgba(10,10,10,0.12); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(10,10,10,0.25); }
 
-/* ─── Ripple ─────────────────────────────────────────────── */
-@keyframes ripple-out {
-  to { transform: scale(1); opacity: 0; }
-}
-
 /* ─── Hamburger menu ─────────────────────────────────────── */
 .nav-hamburger {
   display: none;
@@ -834,7 +816,7 @@ footer ul a:hover { color: var(--off-white); }
   .tile.t1, .tile.t2, .tile.t3,
   .tile.t4, .tile.t5, .tile.t6 { aspect-ratio: 4 / 3; min-height: 220px; }
   .hero-actions { gap: 14px; }
-  .hero-actions .btn { padding: 14px 22px; font-size: 12px; }
+  .hero-actions .btn { padding: 14px 32px; font-size: 12px; }
 }
 </style>
 </head>
@@ -1223,29 +1205,6 @@ footer ul a:hover { color: var(--off-white); }
       e.preventDefault();
       var top = target.getBoundingClientRect().top + window.scrollY - 60;
       smoothScrollTo(top, 900);
-    });
-  });
-
-  /* ── Button press ripple ──────────────────────────────────── */
-  document.querySelectorAll('.btn, .hero-actions .link').forEach(function (btn) {
-    btn.addEventListener('click', function (e) {
-      var ripple = document.createElement('span');
-      var rect = btn.getBoundingClientRect();
-      var size = Math.max(rect.width, rect.height) * 2;
-      ripple.style.cssText = [
-        'position:absolute',
-        'border-radius:50%',
-        'background:rgba(255,255,255,0.18)',
-        'pointer-events:none',
-        'width:' + size + 'px',
-        'height:' + size + 'px',
-        'left:' + (e.clientX - rect.left - size / 2) + 'px',
-        'top:' + (e.clientY - rect.top - size / 2) + 'px',
-        'transform:scale(0)',
-        'animation:ripple-out 0.6s cubic-bezier(0.22,1,0.36,1) forwards',
-      ].join(';');
-      btn.appendChild(ripple);
-      setTimeout(function () { ripple.remove(); }, 700);
     });
   });
 
