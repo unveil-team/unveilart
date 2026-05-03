@@ -98,7 +98,7 @@ nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 26px 56px;
+  padding: 40px 56px;
   color: var(--off-white);
   border-bottom: 1px solid transparent;
   transition: background 0.45s ease, padding 0.4s ease, color 0.4s ease, border-color 0.4s ease;
@@ -107,7 +107,7 @@ nav.solid {
   background: var(--off-white);
   color: var(--deep-black);
   border-bottom-color: rgba(10,10,10,0.06);
-  padding: 18px 56px;
+  padding: 26px 56px;
 }
 .logo {
   font-family: var(--serif);
@@ -488,8 +488,17 @@ section {
   background: rgba(0,0,0,0);
   transition: background 0.4s ease;
 }
-.tile:hover .tile-overlay { background: rgba(0,0,0,0.72); }
-.tile-overlay .name {
+.tile:hover .tile-overlay { background: #000; }
+.tile.active .tile-overlay { background: #000; }
+.tile:hover .tile-overlay .name,
+.tile:hover .tile-overlay .medium,
+.tile.active .tile-overlay .name,
+.tile.active .tile-overlay .medium { transform: translateY(0); opacity: 1; }
+@media (hover: none) {
+  .tile-overlay { background: rgba(0,0,0,0); }
+  .tile-overlay .name,
+  .tile-overlay .medium { transform: translateY(12px); opacity: 0; }
+}
   font-family: var(--serif);
   font-size: 24px;
   font-weight: 360;
@@ -511,11 +520,6 @@ section {
 }
 .tile:hover .tile-overlay .name,
 .tile:hover .tile-overlay .medium { transform: translateY(0); opacity: 1; }
-@media (hover: none) {
-  .tile-overlay { background: rgba(0,0,0,0.45); }
-  .tile-overlay .name,
-  .tile-overlay .medium { transform: translateY(0); opacity: 1; }
-}
 
 /* Carousel arrows */
 .gallery-outer { position: relative; }
@@ -812,7 +816,7 @@ footer ul a:hover { color: var(--off-white); }
   display: none;
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: var(--off-white);
+  background: #fff;
   z-index: 150;
   flex-direction: column;
   align-items: center;
@@ -828,19 +832,31 @@ footer ul a:hover { color: var(--off-white); }
   color: var(--deep-black);
 }
 .nav-mobile-menu a.nav-cta {
-  font-family: var(--sans);
-  font-size: 13px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  border: 1px solid var(--deep-black);
-  padding: 14px 28px;
+  font-family: var(--serif);
+  font-size: 36px;
+  font-weight: 360;
+  letter-spacing: -0.02em;
+  text-transform: none;
+  border: none;
+  padding: 0;
+}
+.mobile-menu-close {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--deep-black);
+  padding: 8px;
+  line-height: 0;
 }
 
 /* ─── Responsive ─────────────────────────────────────────── */
 @media (max-width: 768px) {
   /* Nav */
-  nav { padding: 20px 24px; }
-  nav.solid { padding: 16px 24px; }
+  nav { padding: 28px 24px; }
+  nav.solid { padding: 20px 24px; }
   .nav-links { display: none; }
   .nav-hamburger { display: flex; }
 
@@ -922,6 +938,9 @@ footer ul a:hover { color: var(--off-white); }
 </nav>
 
 <div class="nav-mobile-menu" id="mobile-menu">
+  <button class="mobile-menu-close" id="mobile-close" aria-label="Close menu">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+  </button>
   <a href="#about" class="mobile-nav-link">About</a>
   <a href="#how" class="mobile-nav-link">How It Works</a>
   <a href="#artists" class="mobile-nav-link">Artists</a>
@@ -1223,16 +1242,28 @@ footer ul a:hover { color: var(--off-white); }
   /* ── Hamburger menu ───────────────────────────────────── */
   var hamburger = document.getElementById('hamburger');
   var mobileMenu = document.getElementById('mobile-menu');
+  function closeMobileMenu() {
+    mobileMenu.classList.remove('open');
+    hamburger.classList.remove('open');
+    document.body.style.overflow = '';
+  }
   hamburger.addEventListener('click', function () {
     var isOpen = mobileMenu.classList.toggle('open');
     hamburger.classList.toggle('open', isOpen);
     document.body.style.overflow = isOpen ? 'hidden' : '';
   });
+  document.getElementById('mobile-close').addEventListener('click', closeMobileMenu);
   document.querySelectorAll('.mobile-nav-link').forEach(function (link) {
-    link.addEventListener('click', function () {
-      mobileMenu.classList.remove('open');
-      hamburger.classList.remove('open');
-      document.body.style.overflow = '';
+    link.addEventListener('click', closeMobileMenu);
+  });
+
+  /* ── Tile tap on touch devices ────────────────────────── */
+  document.querySelectorAll('.tile').forEach(function (tile) {
+    tile.addEventListener('click', function () {
+      if (!window.matchMedia('(hover: none)').matches) return;
+      var wasActive = tile.classList.contains('active');
+      document.querySelectorAll('.tile').forEach(function (t) { t.classList.remove('active'); });
+      if (!wasActive) tile.classList.add('active');
     });
   });
 
