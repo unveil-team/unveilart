@@ -145,14 +145,14 @@ nav.solid {
 .nav-links a:hover::after { transform: scaleX(1); }
 .nav-cta {
   border: 1px solid currentColor;
-  padding: 10px 18px;
+  padding: 10px 28px;
   font-size: 11px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  transition: background 0.3s, color 0.3s;
+  transition: background 0.35s ease, color 0.35s ease;
 }
-.nav-cta:hover { background: currentColor; }
-.nav-cta:hover span { mix-blend-mode: difference; color: #fff; }
+nav:not(.solid) .nav-cta:hover { background: var(--off-white); color: var(--deep-black); }
+nav.solid .nav-cta:hover { background: var(--deep-black); color: var(--off-white); }
 .nav-cta::after { display: none !important; }
 
 /* ─── Eyebrow ────────────────────────────────────────────── */
@@ -836,7 +836,7 @@ footer ul a:hover { color: var(--off-white); }
     <a href="#about">About</a>
     <a href="#how">How It Works</a>
     <a href="#artists">Artists</a>
-    <a href="#contact" class="nav-cta"><span>Partner With Us</span></a>
+    <a href="#contact" class="nav-cta">Partner With Us</a>
   </div>
   <button class="nav-hamburger" id="hamburger" aria-label="Open menu">
     <span></span><span></span><span></span>
