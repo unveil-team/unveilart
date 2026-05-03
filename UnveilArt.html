@@ -514,6 +514,33 @@ section {
   .tile-overlay .medium { transform: translateY(0); opacity: 1; }
 }
 
+/* Carousel arrows */
+.gallery-outer { position: relative; }
+.gallery-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(245,241,234,0.55);
+  border: 1px solid rgba(10,10,10,0.1);
+  color: var(--deep-black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.25s ease, opacity 0.3s ease;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.gallery-arrow:hover { background: rgba(245,241,234,0.88); }
+.gallery-arrow.prev { left: -22px; }
+.gallery-arrow.next { right: -22px; }
+.gallery-arrow.is-hidden { opacity: 0; pointer-events: none; }
+@media (max-width: 768px) { .gallery-arrow { display: none; } }
+
 /* Artist application bridge */
 .bridge {
   display: grid;
@@ -1015,13 +1042,20 @@ footer ul a:hover { color: var(--off-white); }
   </div>
 
   <div class="reveal">
+    <div class="gallery-outer">
+      <button class="gallery-arrow prev is-hidden" id="gallery-prev" aria-label="Previous artworks">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="gallery-arrow next" id="gallery-next" aria-label="Next artworks">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
     <div class="gallery" id="gallery">
       <div class="tile">
         <div class="tile-img" style="background-image:url('https://images.unsplash.com/photo-1578321272176-b7bbc0679853?auto=format&fit=crop&w=1200&q=80')"></div>
         <div class="tile-overlay"><div class="name">Mira Chen</div><div class="medium">Mixed media · 2025</div></div>
       </div>
       <div class="tile">
-        <div class="tile-img" style="background-image:url('https://images.unsplash.com/photo-1549887534-1541e9326642?auto=format&fit=crop&w=1200&q=80')"></div>
+        <div class="tile-img" style="background-image:url('https://images.unsplash.com/PPNuhmesC9w?auto=format&fit=crop&w=1200&q=80')"></div>
         <div class="tile-overlay"><div class="name">Tomás Whitfield</div><div class="medium">Oil on linen · 2024</div></div>
       </div>
       <div class="tile">
@@ -1041,6 +1075,7 @@ footer ul a:hover { color: var(--off-white); }
         <div class="tile-overlay"><div class="name">Kenji Moreau</div><div class="medium">Pigment on paper · 2025</div></div>
       </div>
     </div>
+    </div><!-- /.gallery-outer -->
   </div>
 
   <!-- Artist apply bridge -->
@@ -1380,12 +1415,37 @@ footer ul a:hover { color: var(--off-white); }
     });
   }());
 
-  /* ── Gallery drag-scroll ──────────────────────────────── */
+  /* ── Gallery drag-scroll + arrows ────────────────────── */
   (function () {
     var gallery = document.getElementById('gallery');
+    var prevBtn = document.getElementById('gallery-prev');
+    var nextBtn = document.getElementById('gallery-next');
     if (!gallery) return;
-    var isDown = false, startX, scrollLeft;
 
+    function tileStep() {
+      var tile = gallery.querySelector('.tile');
+      return tile ? tile.offsetWidth + 20 : gallery.clientWidth;
+    }
+
+    function updateArrows() {
+      var atStart = gallery.scrollLeft <= 2;
+      var atEnd = gallery.scrollLeft >= gallery.scrollWidth - gallery.clientWidth - 2;
+      if (prevBtn) prevBtn.classList.toggle('is-hidden', atStart);
+      if (nextBtn) nextBtn.classList.toggle('is-hidden', atEnd);
+    }
+
+    if (prevBtn) prevBtn.addEventListener('click', function () {
+      gallery.scrollBy({ left: -tileStep(), behavior: 'smooth' });
+    });
+    if (nextBtn) nextBtn.addEventListener('click', function () {
+      gallery.scrollBy({ left: tileStep(), behavior: 'smooth' });
+    });
+
+    gallery.addEventListener('scroll', updateArrows);
+    updateArrows();
+
+    /* drag to scroll */
+    var isDown = false, startX, scrollLeft;
     gallery.addEventListener('mousedown', function (e) {
       isDown = true;
       gallery.classList.add('grabbing');
