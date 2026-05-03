@@ -466,10 +466,14 @@ section {
 .tile-img {
   position: absolute;
   inset: 0;
-  background-size: cover;
-  background-position: center;
-  filter: saturate(0.75);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  filter: saturate(0.8);
   transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1), filter 0.6s ease;
+  pointer-events: none;
 }
 .tile:hover .tile-img { transform: scale(1.05); filter: saturate(1); }
 .tile-overlay {
@@ -481,35 +485,34 @@ section {
   justify-content: center;
   text-align: center;
   padding: 24px;
-  background: rgba(10,10,10,0);
-  transition: background 0.45s ease;
+  background: rgba(0,0,0,0);
+  transition: background 0.4s ease;
 }
-.tile:hover .tile-overlay { background: rgba(10,10,10,0.68); }
+.tile:hover .tile-overlay { background: rgba(0,0,0,0.72); }
 .tile-overlay .name {
   font-family: var(--serif);
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 360;
-  color: var(--off-white);
-  letter-spacing: -0.01em;
-  transform: translateY(10px);
+  color: #fff;
+  letter-spacing: 0.01em;
+  transform: translateY(12px);
   opacity: 0;
   transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease;
 }
 .tile-overlay .medium {
-  font-size: 11px;
-  letter-spacing: 0.18em;
+  font-size: 10px;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--gold-whisper);
-  margin-top: 8px;
-  transform: translateY(10px);
+  color: rgba(255,255,255,0.6);
+  margin-top: 10px;
+  transform: translateY(12px);
   opacity: 0;
-  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.06s, opacity 0.4s ease 0.06s;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.07s, opacity 0.4s ease 0.07s;
 }
 .tile:hover .tile-overlay .name,
 .tile:hover .tile-overlay .medium { transform: translateY(0); opacity: 1; }
-/* Touch devices: always show overlay */
 @media (hover: none) {
-  .tile-overlay { background: rgba(10,10,10,0.42); }
+  .tile-overlay { background: rgba(0,0,0,0.45); }
   .tile-overlay .name,
   .tile-overlay .medium { transform: translateY(0); opacity: 1; }
 }
@@ -1051,28 +1054,34 @@ footer ul a:hover { color: var(--off-white); }
       </button>
     <div class="gallery" id="gallery">
       <div class="tile">
-        <div class="tile-img" style="background-image:url('https://images.unsplash.com/photo-1578321272176-b7bbc0679853?auto=format&fit=crop&w=1200&q=80')"></div>
-        <div class="tile-overlay"><div class="name">Mira Chen</div><div class="medium">Mixed media · 2025</div></div>
+        <img class="tile-img" src="assets/wade_01.jpg" alt="Wade"
+             data-fallback="https://images.unsplash.com/photo-1578321272176-b7bbc0679853?auto=format&fit=crop&w=1200&q=80" loading="lazy">
+        <div class="tile-overlay"><div class="name">Wade</div><div class="medium">Photography · 2025</div></div>
       </div>
       <div class="tile">
-        <div class="tile-img" style="background-image:url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1200&q=80')"></div>
-        <div class="tile-overlay"><div class="name">Tomás Whitfield</div><div class="medium">Oil on linen · 2024</div></div>
+        <img class="tile-img" src="assets/jeong_01.jpg" alt="Jeong"
+             data-fallback="https://images.unsplash.com/photo-1554907984-15263bfd63bd?auto=format&fit=crop&w=1200&q=80" loading="lazy">
+        <div class="tile-overlay"><div class="name">Jeong</div><div class="medium">Photography · 2025</div></div>
       </div>
       <div class="tile">
-        <div class="tile-img" style="background-image:url('https://images.unsplash.com/photo-1554907984-15263bfd63bd?auto=format&fit=crop&w=1200&q=80')"></div>
-        <div class="tile-overlay"><div class="name">Aiyana Park</div><div class="medium">Photography · 2025</div></div>
+        <img class="tile-img" src="assets/henry_01.jpg" alt="Henry"
+             data-fallback="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=1200&q=80" loading="lazy">
+        <div class="tile-overlay"><div class="name">Henry</div><div class="medium">Photography · 2025</div></div>
       </div>
       <div class="tile">
-        <div class="tile-img" style="background-image:url('https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=1200&q=80')"></div>
-        <div class="tile-overlay"><div class="name">Joaquín Reyes</div><div class="medium">Acrylic &amp; ink · 2025</div></div>
+        <img class="tile-img" src="assets/wade_02.jpg" alt="Wade"
+             data-fallback="https://images.unsplash.com/photo-1577720580479-7d839d829c73?auto=format&fit=crop&w=1200&q=80" loading="lazy">
+        <div class="tile-overlay"><div class="name">Wade</div><div class="medium">Photography · 2025</div></div>
       </div>
       <div class="tile">
-        <div class="tile-img" style="background-image:url('https://images.unsplash.com/photo-1577720580479-7d839d829c73?auto=format&fit=crop&w=1200&q=80')"></div>
-        <div class="tile-overlay"><div class="name">Saoirse Halloran</div><div class="medium">Textile · 2024</div></div>
+        <img class="tile-img" src="assets/jeong_02.jpg" alt="Jeong"
+             data-fallback="https://images.unsplash.com/photo-1605721911519-3dfeb3be25e7?auto=format&fit=crop&w=1200&q=80" loading="lazy">
+        <div class="tile-overlay"><div class="name">Jeong</div><div class="medium">Photography · 2025</div></div>
       </div>
       <div class="tile">
-        <div class="tile-img" style="background-image:url('https://images.unsplash.com/photo-1605721911519-3dfeb3be25e7?auto=format&fit=crop&w=1200&q=80')"></div>
-        <div class="tile-overlay"><div class="name">Kenji Moreau</div><div class="medium">Pigment on paper · 2025</div></div>
+        <img class="tile-img" src="assets/henry_02.jpg" alt="Henry"
+             data-fallback="https://images.unsplash.com/photo-1578321272176-b7bbc0679853?auto=format&fit=crop&w=1200&q=80&crop=entropy" loading="lazy">
+        <div class="tile-overlay"><div class="name">Henry</div><div class="medium">Photography · 2025</div></div>
       </div>
     </div>
     </div><!-- /.gallery-outer -->
@@ -1415,15 +1424,13 @@ footer ul a:hover { color: var(--off-white); }
     });
   }());
 
-  /* ── Broken tile-image fallback ──────────────────────── */
-  document.querySelectorAll('.tile-img').forEach(function (el) {
-    var raw = el.style.backgroundImage.replace(/url\(["']?|["']?\)/g, '');
-    if (!raw) return;
-    var img = new Image();
-    img.onerror = function () {
-      el.style.backgroundImage = 'linear-gradient(160deg,#d6cfc4 0%,#b8a48a 100%)';
-    };
-    img.src = raw;
+  /* ── Tile image: assets/ first, Unsplash fallback ────── */
+  document.querySelectorAll('.tile-img[data-fallback]').forEach(function (img) {
+    img.addEventListener('error', function () {
+      if (img.src.indexOf('assets/') !== -1) {
+        img.src = img.dataset.fallback;
+      }
+    });
   });
 
   /* ── Gallery drag-scroll + arrows ────────────────────── */
