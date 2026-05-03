@@ -603,6 +603,55 @@ section {
 .contact .field select option { color: var(--deep-black); }
 .contact .field::after { background: var(--off-white); }
 .contact .field:focus-within label { color: var(--off-white); }
+
+/* ── Custom select dropdown ──────────────────────────── */
+.cs-wrap { position: relative; }
+.cs-trigger {
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 8px 0 14px;
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--off-white);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+  outline: none;
+}
+.cs-trigger .cs-placeholder { opacity: 0.4; }
+.cs-trigger .cs-selected { opacity: 1; }
+.cs-chevron {
+  flex-shrink: 0;
+  opacity: 0.45;
+  transition: transform 0.3s ease;
+}
+.cs-wrap.open .cs-chevron { transform: rotate(180deg); }
+.cs-panel {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0; right: 0;
+  background: var(--deep-black);
+  border: 1px solid rgba(250,250,247,0.1);
+  z-index: 20;
+  padding: 6px 0;
+}
+.cs-wrap.open .cs-panel { display: block; }
+.cs-item {
+  padding: 13px 20px;
+  font-family: var(--sans);
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  color: rgba(250,250,247,0.75);
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s;
+  list-style: none;
+}
+.cs-item:hover { color: var(--off-white); background: rgba(250,250,247,0.05); }
+.cs-item.is-selected { color: var(--gold-whisper); }
 .contact-side p {
   color: rgba(250,250,247,0.65);
   font-size: 15px;
@@ -1055,14 +1104,20 @@ footer ul a:hover { color: var(--off-white); }
           <input type="email" id="cf-email" name="email" autocomplete="email" />
         </div>
         <div class="field" id="cf-venue-field">
-          <label for="cf-venue">Venue Type</label>
-          <select id="cf-venue" name="venueType">
-            <option value="">Select…</option>
-            <option>Hotel</option>
-            <option>Restaurant</option>
-            <option>Café</option>
-            <option>Other</option>
-          </select>
+          <label>Venue Type</label>
+          <div class="cs-wrap" id="cs-venue">
+            <button type="button" class="cs-trigger" aria-haspopup="listbox" aria-expanded="false">
+              <span class="cs-placeholder">Select…</span>
+              <svg class="cs-chevron" width="11" height="6" viewBox="0 0 11 6" fill="none" aria-hidden="true"><path d="M1 1l4.5 4L10 1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <ul class="cs-panel" role="listbox">
+              <li class="cs-item" data-value="Hotel" role="option">Hotel</li>
+              <li class="cs-item" data-value="Restaurant" role="option">Restaurant</li>
+              <li class="cs-item" data-value="Café" role="option">Café</li>
+              <li class="cs-item" data-value="Other" role="option">Other</li>
+            </ul>
+          </div>
+          <input type="hidden" id="cf-venue" name="venueType" value="" />
         </div>
         <div class="field" id="cf-message-field">
           <label for="cf-message">Message</label>
@@ -1278,6 +1333,42 @@ footer ul a:hover { color: var(--off-white); }
 
     if (ok) submitToFormspree(form, 'https://formspree.io/f/mrejeqyo', function () {});
   });
+
+  /* ── Custom venue select ──────────────────────────────── */
+  (function () {
+    var wrap = document.getElementById('cs-venue');
+    if (!wrap) return;
+    var trigger = wrap.querySelector('.cs-trigger');
+    var panel = wrap.querySelector('.cs-panel');
+    var hidden = document.getElementById('cf-venue');
+    var items = wrap.querySelectorAll('.cs-item');
+
+    trigger.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var opening = !wrap.classList.contains('open');
+      wrap.classList.toggle('open', opening);
+      trigger.setAttribute('aria-expanded', opening);
+    });
+
+    items.forEach(function (item) {
+      item.addEventListener('click', function () {
+        var val = item.dataset.value;
+        hidden.value = val;
+        trigger.innerHTML =
+          '<span class="cs-selected">' + item.textContent + '</span>' +
+          '<svg class="cs-chevron" width="11" height="6" viewBox="0 0 11 6" fill="none" aria-hidden="true"><path d="M1 1l4.5 4L10 1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+        items.forEach(function (i) { i.classList.remove('is-selected'); });
+        item.classList.add('is-selected');
+        wrap.classList.remove('open');
+        trigger.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    document.addEventListener('click', function () {
+      wrap.classList.remove('open');
+      trigger.setAttribute('aria-expanded', 'false');
+    });
+  }());
 
 })();
 </script>
