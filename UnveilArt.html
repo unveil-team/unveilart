@@ -733,7 +733,7 @@ footer ul a:hover { color: var(--off-white); }
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
   background: var(--off-white);
-  z-index: 90;
+  z-index: 150;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -801,6 +801,7 @@ footer ul a:hover { color: var(--off-white); }
     grid-column: span 1;
     grid-row: span 1;
     aspect-ratio: 3 / 4;
+    min-height: 200px;
   }
   .tile-meta { transform: translateY(0); opacity: 1; background: linear-gradient(180deg, transparent 40%, rgba(10,10,10,0.7)); }
 
@@ -825,7 +826,9 @@ footer ul a:hover { color: var(--off-white); }
 @media (max-width: 480px) {
   .gallery { grid-template-columns: 1fr; }
   .tile.t1, .tile.t2, .tile.t3,
-  .tile.t4, .tile.t5, .tile.t6 { aspect-ratio: 4 / 3; }
+  .tile.t4, .tile.t5, .tile.t6 { aspect-ratio: 4 / 3; min-height: 220px; }
+  .hero-actions { gap: 14px; }
+  .hero-actions .btn { padding: 14px 22px; font-size: 12px; }
 }
 </style>
 </head>
@@ -1058,14 +1061,6 @@ footer ul a:hover { color: var(--off-white); }
           <span class="lbl">Email</span>
           contact@unveilart.com.au
         </div>
-        <div class="item">
-          <span class="lbl">Studio</span>
-          Collingwood, Naarm / Melbourne
-        </div>
-        <div class="item">
-          <span class="lbl">Press &amp; general</span>
-          press@unveilart.com.au
-        </div>
       </div>
     </div>
     <div class="reveal" data-delay="200">
@@ -1112,8 +1107,7 @@ footer ul a:hover { color: var(--off-white); }
     <div>
       <h4>Connect</h4>
       <ul>
-        <li><a href="#">Instagram</a></li>
-        <li><a href="#">LinkedIn</a></li>
+        <li><a href="https://www.instagram.com/unveil.art.au/" target="_blank" rel="noopener">Instagram</a></li>
         <li><a href="mailto:contact@unveilart.com.au">Email</a></li>
       </ul>
     </div>
@@ -1130,9 +1124,9 @@ footer ul a:hover { color: var(--off-white); }
   <div class="footer-bottom">
     <span>© 2026 UnveilArt. All rights reserved.</span>
     <span>
-      <a href="#">Privacy Policy</a>
-      <a href="#">Terms of Service</a>
-      <a href="#">Cookie Policy</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Service</a>
+      <a href="cookies.html">Cookie Policy</a>
     </span>
   </div>
 </footer>

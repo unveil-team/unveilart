@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Privacy Policy — UnveilArt</title>
+<meta name="description" content="UnveilArt Privacy Policy — how we collect, use, and protect your personal information in accordance with Australian privacy law." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,280;0,9..144,320;0,9..144,360;1,9..144,360&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --off-white:    #FAFAF7;
+  --deep-black:   #0A0A0A;
+  --warm-charcoal:#1C1C1C;
+  --cream:        #F5F1EA;
+  --stone-gray:   #8B8680;
+  --bone:         #E8E4DD;
+  --gold-whisper: #B8A48A;
+  --gold-deep:    #8E7A5E;
+  --serif: "Fraunces", Georgia, serif;
+  --sans:  "Inter", system-ui, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--sans);
+  color: var(--deep-black);
+  background: var(--off-white);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+::selection { background: var(--gold-whisper); color: var(--deep-black); }
+
+/* Nav */
+.policy-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 56px;
+  background: var(--off-white);
+  border-bottom: 1px solid rgba(10,10,10,0.07);
+}
+.logo {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  font-style: italic;
+}
+.logo b { font-style: normal; font-weight: 500; }
+.back-link {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--stone-gray);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.25s;
+}
+.back-link:hover { color: var(--deep-black); }
+
+/* Content */
+.policy-wrap {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 80px 40px 120px;
+}
+.policy-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--stone-gray);
+  font-weight: 500;
+  margin-bottom: 20px;
+  display: block;
+}
+.policy-wrap h1 {
+  font-family: var(--serif);
+  font-size: clamp(40px, 5vw, 64px);
+  font-weight: 360;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  margin: 0 0 12px;
+}
+.policy-meta {
+  font-size: 13px;
+  color: var(--stone-gray);
+  margin-bottom: 64px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--bone);
+}
+.policy-wrap h2 {
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 360;
+  letter-spacing: -0.02em;
+  margin: 56px 0 18px;
+  color: var(--deep-black);
+}
+.policy-wrap h3 {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--stone-gray);
+  margin: 32px 0 10px;
+}
+.policy-wrap p {
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--warm-charcoal);
+  margin-bottom: 18px;
+  max-width: 68ch;
+}
+.policy-wrap ul {
+  padding-left: 20px;
+  margin: 0 0 18px;
+}
+.policy-wrap ul li {
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--warm-charcoal);
+  margin-bottom: 8px;
+  max-width: 66ch;
+}
+.policy-wrap a {
+  color: var(--gold-deep);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.policy-wrap a:hover { color: var(--deep-black); }
+.notice-box {
+  background: var(--cream);
+  border-left: 3px solid var(--gold-deep);
+  padding: 20px 24px;
+  margin: 32px 0;
+  border-radius: 0 4px 4px 0;
+}
+.notice-box p { margin: 0; font-size: 15px; }
+
+/* Footer */
+.policy-footer {
+  background: var(--deep-black);
+  color: var(--off-white);
+  padding: 48px 56px 28px;
+  text-align: center;
+}
+.policy-footer .logo { font-size: 22px; display: block; margin-bottom: 16px; }
+.policy-footer p {
+  font-size: 13px;
+  color: rgba(250,250,247,0.5);
+  margin: 0 0 20px;
+}
+.policy-footer-links {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: rgba(250,250,247,0.55);
+}
+.policy-footer-links a { transition: color 0.25s; }
+.policy-footer-links a:hover { color: var(--off-white); }
+
+@media (max-width: 768px) {
+  .policy-nav { padding: 16px 24px; }
+  .policy-wrap { padding: 48px 24px 80px; }
+  .policy-footer { padding: 40px 24px 24px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="policy-nav">
+  <a href="index.html" class="logo"><b>Unveil</b>art</a>
+  <a href="index.html" class="back-link">← Back to site</a>
+</nav>
+
+<div class="policy-wrap">
+  <span class="policy-eyebrow">Legal</span>
+  <h1>Privacy Policy</h1>
+  <p class="policy-meta">Last updated: May 2026 &nbsp;·&nbsp; UnveilArt, Collingwood, Victoria, Australia</p>
+
+  <div class="notice-box">
+    <p>This Privacy Policy explains how UnveilArt collects, uses, and manages your personal information in accordance with the <em>Privacy Act 1988</em> (Cth), the Australian Privacy Principles (APPs), and the <em>Privacy and Data Protection Act 2014</em> (Vic).</p>
+  </div>
+
+  <h2>1. Who We Are</h2>
+  <p>UnveilArt is an art curation business based in Collingwood, Victoria, Australia. We connect emerging Melbourne artists with hospitality venues (hotels, restaurants, cafés, and boutique spaces). Our website is <a href="https://www.unveilart.com.au">www.unveilart.com.au</a> and our primary contact email is <a href="mailto:contact@unveilart.com.au">contact@unveilart.com.au</a>.</p>
+
+  <h2>2. What Personal Information We Collect</h2>
+  <p>We collect personal information only when you voluntarily provide it through our website contact forms. Depending on the form you complete, this may include:</p>
+  <h3>Venue Inquiry Form</h3>
+  <ul>
+    <li>Company name</li>
+    <li>Your name</li>
+    <li>Email address</li>
+    <li>Venue type</li>
+    <li>Message content</li>
+  </ul>
+  <h3>Artist Application Form</h3>
+  <ul>
+    <li>Your name</li>
+    <li>Email address</li>
+    <li>Portfolio URL</li>
+    <li>Message content</li>
+  </ul>
+  <p>We do not collect sensitive information (as defined under the Privacy Act 1988) and we do not collect payment information through this website.</p>
+
+  <h2>3. How We Collect Personal Information</h2>
+  <p>We collect personal information directly from you when you submit a form on our website. Form submissions are processed by <strong>Formspree</strong> (a third-party service) and delivered to our email inbox. We do not use cookies, tracking pixels, or analytics tools that collect personal information without your knowledge.</p>
+  <p>Our website is hosted on <strong>GitHub Pages</strong> (GitHub, Inc.), which may collect standard server log data (such as IP addresses and browser type) as part of normal infrastructure operation. This data is not shared with us and is governed by <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">GitHub's Privacy Statement</a>. Fonts are served by <strong>Google Fonts</strong> (Google LLC); Google may log requests as per <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a>.</p>
+
+  <h2>4. Why We Collect Personal Information</h2>
+  <p>We collect your personal information for the following purposes (consistent with APP 3 — Collection of Solicited Personal Information):</p>
+  <ul>
+    <li>To respond to venue partnership inquiries</li>
+    <li>To review and respond to artist applications</li>
+    <li>To communicate with you about opportunities relevant to your inquiry</li>
+    <li>To fulfil obligations arising from any agreement we enter into with you</li>
+  </ul>
+  <p>We will not use your personal information for any purpose other than those listed above without your consent, unless required or authorised by law.</p>
+
+  <h2>5. Disclosure of Personal Information</h2>
+  <p>We do not sell, rent, or trade your personal information. We may disclose your personal information to:</p>
+  <ul>
+    <li><strong>Formspree, Inc.</strong> — our form processing provider, solely for the purpose of delivering form submissions to our inbox. Formspree stores submission data on servers in the United States. By submitting a form, you consent to this transfer. Formspree's privacy policy is available at <a href="https://formspree.io/legal/privacy-policy" target="_blank" rel="noopener">formspree.io/legal/privacy-policy</a>.</li>
+    <li><strong>Law enforcement or regulators</strong> — where required by Australian law, a court order, or to protect the rights and safety of UnveilArt or others.</li>
+  </ul>
+  <p>We will not otherwise disclose your personal information to third parties without your consent, consistent with APP 6.</p>
+
+  <h2>6. Cross-Border Disclosure</h2>
+  <p>Form submission data is processed by Formspree, which operates servers in the United States. Before submitting personal information, you should be aware that this data will be transferred outside Australia. We take reasonable steps to ensure Formspree handles your information consistently with the Australian Privacy Principles (APP 8).</p>
+
+  <h2>7. Data Retention</h2>
+  <p>We retain personal information for as long as necessary to respond to your inquiry and for a reasonable period thereafter in case of follow-up contact, typically no longer than 24 months from receipt. After this period, information is securely deleted from our email systems. You may request earlier deletion at any time (see Section 9).</p>
+
+  <h2>8. Security</h2>
+  <p>We take reasonable steps to protect personal information from misuse, interference, loss, and unauthorised access, modification, or disclosure (APP 11). Our email is secured by Google Workspace. However, no internet transmission is completely secure and we cannot guarantee absolute security.</p>
+
+  <h2>9. Access and Correction</h2>
+  <p>Under APP 12 and APP 13, you have the right to request access to personal information we hold about you, and to request that we correct any inaccurate, out-of-date, or incomplete information. To make such a request, please contact us at <a href="mailto:contact@unveilart.com.au">contact@unveilart.com.au</a>. We will respond within 30 days.</p>
+  <p>We will not charge a fee for access requests. In limited circumstances we may decline access where required by law; if so, we will advise you in writing of the reason.</p>
+
+  <h2>10. Spam Act Compliance</h2>
+  <p>Any commercial electronic messages we send comply with the <em>Spam Act 2003</em> (Cth). We will only send you commercial messages if you have consented to receive them, either directly or by making an inquiry that reasonably implies consent. All commercial messages will include a functional unsubscribe mechanism.</p>
+
+  <h2>11. Complaints</h2>
+  <p>If you believe we have breached the Australian Privacy Principles or the <em>Privacy and Data Protection Act 2014</em> (Vic), please contact us first:</p>
+  <ul>
+    <li><strong>Email:</strong> <a href="mailto:contact@unveilart.com.au">contact@unveilart.com.au</a></li>
+  </ul>
+  <p>We will acknowledge your complaint within 5 business days and aim to resolve it within 30 days.</p>
+  <p>If you are not satisfied with our response, you may lodge a complaint with:</p>
+  <ul>
+    <li><strong>Office of the Australian Information Commissioner (OAIC)</strong><br><a href="https://www.oaic.gov.au" target="_blank" rel="noopener">www.oaic.gov.au</a> &nbsp;·&nbsp; 1300 363 992</li>
+    <li><strong>Office of the Victorian Information Commissioner (OVIC)</strong> (for Victorian public sector privacy issues)<br><a href="https://ovic.vic.gov.au" target="_blank" rel="noopener">ovic.vic.gov.au</a></li>
+  </ul>
+
+  <h2>12. Changes to This Policy</h2>
+  <p>We may update this Privacy Policy from time to time. The current version will always be available at <a href="https://www.unveilart.com.au/privacy.html">www.unveilart.com.au/privacy.html</a>. Continued use of our website after changes constitutes acceptance of the updated policy.</p>
+
+  <h2>13. Contact Us</h2>
+  <p>For any privacy-related queries, please contact:</p>
+  <ul>
+    <li><strong>UnveilArt</strong></li>
+    <li>Collingwood, Victoria, Australia</li>
+    <li>Email: <a href="mailto:contact@unveilart.com.au">contact@unveilart.com.au</a></li>
+    <li>Website: <a href="https://www.unveilart.com.au">www.unveilart.com.au</a></li>
+  </ul>
+</div>
+
+<footer class="policy-footer">
+  <a href="index.html" class="logo"><b>Unveil</b>art</a>
+  <p>Curating Melbourne's emerging artists into the spaces that matter.</p>
+  <div class="policy-footer-links">
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="terms.html">Terms of Service</a>
+    <a href="cookies.html">Cookie Policy</a>
+    <span>© 2026 UnveilArt. All rights reserved.</span>
+  </div>
+</footer>
+
+</body>
+</html>
