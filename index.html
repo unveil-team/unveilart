@@ -439,56 +439,80 @@ section {
   line-height: 1.6;
 }
 
-/* Masonry gallery */
+/* Carousel gallery */
 .gallery {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  grid-auto-rows: 8px;
-  gap: 24px;
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   margin-bottom: 100px;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
 }
-.tile { position: relative; overflow: hidden; background: var(--bone); cursor: pointer; transition: opacity 0.5s ease; }
-.gallery:hover .tile:not(:hover) { opacity: 0.45; }
+.gallery::-webkit-scrollbar { display: none; }
+.gallery.grabbing { cursor: grabbing; }
+.tile {
+  flex: 0 0 calc(25% - 15px);
+  aspect-ratio: 3 / 4;
+  scroll-snap-align: start;
+  position: relative;
+  overflow: hidden;
+  background: var(--bone);
+  cursor: pointer;
+}
 .tile-img {
   position: absolute;
   inset: 0;
   background-size: cover;
   background-position: center;
-  filter: saturate(0.7);
+  filter: saturate(0.75);
   transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1), filter 0.6s ease;
 }
-.tile:hover .tile-img { transform: scale(1.06); filter: saturate(0.95); }
-.tile-meta {
+.tile:hover .tile-img { transform: scale(1.05); filter: saturate(1); }
+.tile-overlay {
   position: absolute;
-  left: 0; right: 0; bottom: 0;
-  padding: 22px;
-  color: var(--off-white);
-  background: linear-gradient(180deg, transparent, rgba(10,10,10,0.78));
-  transform: translateY(40%);
-  opacity: 0;
-  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.45s ease;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+  background: rgba(10,10,10,0);
+  transition: background 0.45s ease;
 }
-.tile:hover .tile-meta { transform: translateY(0); opacity: 1; }
-.tile-meta .name {
+.tile:hover .tile-overlay { background: rgba(10,10,10,0.68); }
+.tile-overlay .name {
   font-family: var(--serif);
   font-size: 22px;
   font-weight: 360;
+  color: var(--off-white);
   letter-spacing: -0.01em;
+  transform: translateY(10px);
+  opacity: 0;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease;
 }
-.tile-meta .medium {
+.tile-overlay .medium {
   font-size: 11px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--gold-whisper);
-  margin-top: 4px;
+  margin-top: 8px;
+  transform: translateY(10px);
+  opacity: 0;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.06s, opacity 0.4s ease 0.06s;
 }
-/* masonry tile sizing */
-.tile.t1 { grid-column: span 4; grid-row: span 56; }
-.tile.t2 { grid-column: span 4; grid-row: span 76; }
-.tile.t3 { grid-column: span 4; grid-row: span 44; }
-.tile.t4 { grid-column: span 4; grid-row: span 68; }
-.tile.t5 { grid-column: span 4; grid-row: span 50; }
-.tile.t6 { grid-column: span 4; grid-row: span 60; }
+.tile:hover .tile-overlay .name,
+.tile:hover .tile-overlay .medium { transform: translateY(0); opacity: 1; }
+/* Touch devices: always show overlay */
+@media (hover: none) {
+  .tile-overlay { background: rgba(10,10,10,0.42); }
+  .tile-overlay .name,
+  .tile-overlay .medium { transform: translateY(0); opacity: 1; }
+}
 
 /* Artist application bridge */
 .bridge {
@@ -816,20 +840,8 @@ footer ul a:hover { color: var(--off-white); }
   /* Gallery */
   .artists-head { flex-direction: column; align-items: flex-start; gap: 16px; margin-bottom: 40px; }
   .artists-head p { text-align: left; max-width: 100%; }
-  .gallery {
-    grid-template-columns: 1fr 1fr;
-    grid-auto-rows: auto;
-    gap: 12px;
-    margin-bottom: 60px;
-  }
-  .tile.t1, .tile.t2, .tile.t3,
-  .tile.t4, .tile.t5, .tile.t6 {
-    grid-column: span 1;
-    grid-row: span 1;
-    aspect-ratio: 3 / 4;
-    min-height: 200px;
-  }
-  .tile-meta { transform: translateY(0); opacity: 1; background: linear-gradient(180deg, transparent 40%, rgba(10,10,10,0.7)); }
+  .gallery { gap: 12px; margin-bottom: 60px; }
+  .tile { flex: 0 0 calc(50% - 6px); }
 
   /* Bridge */
   .bridge { grid-template-columns: 1fr; gap: 48px; padding-top: 56px; }
@@ -850,11 +862,9 @@ footer ul a:hover { color: var(--off-white); }
 }
 
 @media (max-width: 480px) {
-  .gallery { grid-template-columns: 1fr; }
-  .tile.t1, .tile.t2, .tile.t3,
-  .tile.t4, .tile.t5, .tile.t6 { aspect-ratio: 4 / 3; min-height: 220px; }
-  .hero-actions { gap: 14px; }
-  .hero-actions .btn { padding: 14px 32px; font-size: 12px; }
+  .tile { flex: 0 0 80%; }
+  .hero-actions { gap: 12px; }
+  .hero-actions .btn { padding: 14px 28px; font-size: 12px; }
 }
 </style>
 </head>
@@ -901,7 +911,7 @@ footer ul a:hover { color: var(--off-white); }
     </p>
     <div class="hero-actions">
       <a href="#contact" class="btn invert">Partner With Us <span>→</span></a>
-      <a href="#artists" class="link" style="color:var(--off-white)">Apply as Artist <span>→</span></a>
+      <a href="#artists" class="btn invert">Apply as Artist <span>→</span></a>
     </div>
   </div>
   <div class="hero-meta">
@@ -1006,29 +1016,29 @@ footer ul a:hover { color: var(--off-white); }
 
   <div class="reveal">
     <div class="gallery" id="gallery">
-      <div class="tile t1">
+      <div class="tile">
         <div class="tile-img" style="background-image:url('https://images.unsplash.com/photo-1578321272176-b7bbc0679853?auto=format&fit=crop&w=1200&q=80')"></div>
-        <div class="tile-meta"><div class="name">Mira Chen</div><div class="medium">Mixed media · 2025</div></div>
+        <div class="tile-overlay"><div class="name">Mira Chen</div><div class="medium">Mixed media · 2025</div></div>
       </div>
-      <div class="tile t2">
+      <div class="tile">
         <div class="tile-img" style="background-image:url('https://images.unsplash.com/photo-1549887534-1541e9326642?auto=format&fit=crop&w=1200&q=80')"></div>
-        <div class="tile-meta"><div class="name">Tomás Whitfield</div><div class="medium">Oil on linen · 2024</div></div>
+        <div class="tile-overlay"><div class="name">Tomás Whitfield</div><div class="medium">Oil on linen · 2024</div></div>
       </div>
-      <div class="tile t3">
+      <div class="tile">
         <div class="tile-img" style="background-image:url('https://images.unsplash.com/photo-1554907984-15263bfd63bd?auto=format&fit=crop&w=1200&q=80')"></div>
-        <div class="tile-meta"><div class="name">Aiyana Park</div><div class="medium">Photography · 2025</div></div>
+        <div class="tile-overlay"><div class="name">Aiyana Park</div><div class="medium">Photography · 2025</div></div>
       </div>
-      <div class="tile t4">
+      <div class="tile">
         <div class="tile-img" style="background-image:url('https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=1200&q=80')"></div>
-        <div class="tile-meta"><div class="name">Joaquín Reyes</div><div class="medium">Acrylic &amp; ink · 2025</div></div>
+        <div class="tile-overlay"><div class="name">Joaquín Reyes</div><div class="medium">Acrylic &amp; ink · 2025</div></div>
       </div>
-      <div class="tile t5">
+      <div class="tile">
         <div class="tile-img" style="background-image:url('https://images.unsplash.com/photo-1577720580479-7d839d829c73?auto=format&fit=crop&w=1200&q=80')"></div>
-        <div class="tile-meta"><div class="name">Saoirse Halloran</div><div class="medium">Textile · 2024</div></div>
+        <div class="tile-overlay"><div class="name">Saoirse Halloran</div><div class="medium">Textile · 2024</div></div>
       </div>
-      <div class="tile t6">
+      <div class="tile">
         <div class="tile-img" style="background-image:url('https://images.unsplash.com/photo-1605721911519-3dfeb3be25e7?auto=format&fit=crop&w=1200&q=80')"></div>
-        <div class="tile-meta"><div class="name">Kenji Moreau</div><div class="medium">Pigment on paper · 2025</div></div>
+        <div class="tile-overlay"><div class="name">Kenji Moreau</div><div class="medium">Pigment on paper · 2025</div></div>
       </div>
     </div>
   </div>
@@ -1367,6 +1377,30 @@ footer ul a:hover { color: var(--off-white); }
     document.addEventListener('click', function () {
       wrap.classList.remove('open');
       trigger.setAttribute('aria-expanded', 'false');
+    });
+  }());
+
+  /* ── Gallery drag-scroll ──────────────────────────────── */
+  (function () {
+    var gallery = document.getElementById('gallery');
+    if (!gallery) return;
+    var isDown = false, startX, scrollLeft;
+
+    gallery.addEventListener('mousedown', function (e) {
+      isDown = true;
+      gallery.classList.add('grabbing');
+      startX = e.pageX - gallery.offsetLeft;
+      scrollLeft = gallery.scrollLeft;
+    });
+    document.addEventListener('mouseup', function () {
+      isDown = false;
+      gallery.classList.remove('grabbing');
+    });
+    gallery.addEventListener('mousemove', function (e) {
+      if (!isDown) return;
+      e.preventDefault();
+      var x = e.pageX - gallery.offsetLeft;
+      gallery.scrollLeft = scrollLeft - (x - startX) * 1.2;
     });
   }());
 
