@@ -30,7 +30,6 @@
 
 <script src="js/auth.js"></script>
 <script>
-  // Redirect if already logged in
   if (getToken()) window.location.href = 'index.html';
 
   document.getElementById('login-form').addEventListener('submit', async e => {
@@ -40,16 +39,9 @@
     errEl.classList.remove('show');
     btn.disabled = true;
     btn.textContent = 'Signing in…';
-
     try {
-      const res = await fetch(API_BASE + '/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: e.target.password.value }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Login failed');
-      setToken(data.token);
+      const token = await adminLogin(e.target.password.value);
+      setToken(token);
       window.location.href = 'index.html';
     } catch (err) {
       errEl.textContent = err.message;

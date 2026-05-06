@@ -1,4 +1,3 @@
-/* Venue detail page — depends on auth.js */
 document.addEventListener('DOMContentLoaded', () => {
   requireLogin();
   document.getElementById('btn-logout').addEventListener('click', logout);
@@ -13,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function loadVenue() {
     try {
-      venueData = await apiFetch('/venues/' + venueId);
+      venueData = await fnFetch('admin-venues?id=' + venueId);
       renderVenueHeader(venueData);
       renderSubscriptionCard(venueData);
       renderArtworks(venueData.artworks || []);
@@ -28,66 +27,56 @@ document.addEventListener('DOMContentLoaded', () => {
     document.title = v.name + ' — UnveilArt Admin';
     document.getElementById('venue-name').textContent = v.name;
     document.getElementById('info-contact').textContent = v.contact_name || '—';
-    document.getElementById('info-email').textContent = v.email;
-    document.getElementById('info-phone').textContent = v.phone || '—';
-    document.getElementById('info-type').textContent = v.venue_type || '—';
+    document.getElementById('info-email').textContent   = v.email;
+    document.getElementById('info-phone').textContent   = v.phone || '—';
+    document.getElementById('info-type').textContent    = v.venue_type || '—';
     document.getElementById('info-address').textContent = v.address || '—';
     document.getElementById('status-badge').textContent = v.status.replace('_', ' ');
-    document.getElementById('status-badge').className = 'badge badge-' + v.status;
+    document.getElementById('status-badge').className   = 'badge badge-' + v.status;
   }
 
   function renderSubscriptionCard(v) {
     const card = document.getElementById('sub-card');
     if (!v.stripe_subscription_id && v.artwork_count === 0) {
-      card.innerHTML = '<p style="color:var(--stone-gray);font-size:14px;">No active subscription. Add artworks to begin billing.</p>';
+      card.innerHTML = '<p style="color:var(--stone-gray);font-size:14px;margin:0;">No active subscription. Add artworks to begin billing.</p>';
       return;
     }
-    const gstNote = v.artwork_count > 0 ? ` + $${v.monthly_gst.toFixed(2)} GST = $${v.monthly_total.toFixed(2)}` : '';
     card.innerHTML = `
       <div class="item"><div class="label">Artworks</div><div class="value">${v.artwork_count}</div></div>
-      <div class="item"><div class="label">Monthly (ex-GST)</div><div class="value">$${v.monthly_amount.toFixed(2)} AUD</div></div>
-      <div class="item"><div class="label">Monthly Total</div><div class="value">$${v.monthly_total.toFixed(2)} AUD</div></div>
+      <div class="item"><div class="label">Monthly (ex-GST)</div><div class="value">$${(v.monthly_amount||0).toFixed(2)} AUD</div></div>
+      <div class="item"><div class="label">Monthly Total</div><div class="value">$${(v.monthly_total||0).toFixed(2)} AUD</div></div>
       <div class="item"><div class="label">Status</div><div class="value"><span class="badge badge-${v.status}">${v.status.replace('_',' ')}</span></div></div>
       ${v.stripe_subscription_id ? `<div class="item"><div class="label">Customer Portal</div><div class="value"><a href="#" id="portal-link" style="color:var(--gold-deep);text-decoration:underline;">Open →</a></div></div>` : ''}
     `;
-    const portalLink = document.getElementById('portal-link');
-    if (portalLink) {
-      portalLink.addEventListener('click', async e => {
-        e.preventDefault();
-        try {
-          const { url } = await apiFetch('/subscriptions/portal/' + venueId, { method: 'POST', body: {} });
-          window.open(url, '_blank');
-        } catch (err) { showToast(err.message, true); }
-      });
-    }
+    document.getElementById('portal-link')?.addEventListener('click', async e => {
+      e.preventDefault();
+      try {
+        const { url } = await fnFetch('admin-subscriptions', { method: 'POST', body: { action: 'portal', venue_id: venueId } });
+        window.open(url, '_blank');
+      } catch (err) { showToast(err.message, true); }
+    });
   }
 
   function renderArtworks(artworks) {
     const tbody = document.getElementById('artworks-tbody');
-    const installed = artworks.filter(a => a.status === 'installed');
-    const removed   = artworks.filter(a => a.status !== 'installed');
-    const all = [...installed, ...removed];
-
-    if (all.length === 0) {
+    if (artworks.length === 0) {
       tbody.innerHTML = `<tr><td colspan="6" class="empty-state">No artworks yet. Add the first one to start billing.</td></tr>`;
       return;
     }
-
-    tbody.innerHTML = all.map(a => `
+    const installed = artworks.filter(a => a.status === 'installed');
+    const others    = artworks.filter(a => a.status !== 'installed');
+    tbody.innerHTML = [...installed, ...others].map(a => `
       <tr>
         <td>${esc(a.title || '—')}</td>
         <td>${esc(a.artist_name || '—')}</td>
         <td>${a.installed_at || '—'}</td>
         <td>${esc(a.condition_on_arrival || '—')}</td>
         <td><span class="badge badge-${a.status === 'installed' ? 'active' : 'inactive'}">${a.status}</span></td>
-        <td>
-          ${a.status === 'installed'
-            ? `<button class="action-btn remove" data-id="${a.id}">Remove</button>`
-            : `<span style="color:var(--stone-gray);font-size:12px;">${a.removed_at || ''}</span>`}
-        </td>
+        <td>${a.status === 'installed'
+          ? `<button class="action-btn remove" data-id="${a.id}">Remove</button>`
+          : `<span style="color:var(--stone-gray);font-size:12px;">${a.removed_at || ''}</span>`}</td>
       </tr>
     `).join('');
-
     tbody.querySelectorAll('.action-btn.remove').forEach(btn => {
       btn.addEventListener('click', () => openRemoveModal(btn.dataset.id));
     });
@@ -112,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
     `).join('');
   }
 
-  // ── Add Artwork Modal ───────────────────────────────────
+  // Add Artwork Modal
   const addModal = document.getElementById('modal-artwork');
   document.getElementById('btn-add-artwork').addEventListener('click', () => addModal.classList.add('open'));
   document.getElementById('modal-artwork-close').addEventListener('click', () => addModal.classList.remove('open'));
@@ -123,14 +112,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const btn = e.target.querySelector('[type=submit]');
     btn.disabled = true; btn.textContent = 'Saving…';
     try {
-      await apiFetch('/venues/' + venueId + '/artworks', {
+      await fnFetch('admin-artworks', {
         method: 'POST',
         body: {
-          title:               e.target.title.value.trim(),
-          artist_name:         e.target.artist_name.value.trim(),
-          installed_at:        e.target.installed_at.value,
-          condition_on_arrival:e.target.condition_on_arrival.value.trim(),
-          notes:               e.target.notes.value.trim(),
+          venue_id:             venueId,
+          title:                e.target.title.value.trim(),
+          artist_name:          e.target.artist_name.value.trim(),
+          installed_at:         e.target.installed_at.value,
+          condition_on_arrival: e.target.condition_on_arrival.value.trim(),
+          notes:                e.target.notes.value.trim(),
         },
       });
       addModal.classList.remove('open');
@@ -143,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // ── Remove Artwork Modal ────────────────────────────────
+  // Remove Artwork Modal
   const removeModal = document.getElementById('modal-remove');
   let removeArtworkId = null;
 
@@ -161,11 +151,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const btn = e.target.querySelector('[type=submit]');
     btn.disabled = true; btn.textContent = 'Removing…';
     try {
-      await apiFetch('/venues/' + venueId + '/artworks/' + removeArtworkId, {
+      await fnFetch(`admin-artworks?id=${removeArtworkId}&venue_id=${venueId}`, {
         method: 'DELETE',
         body: {
-          removed_at:           e.target.removed_at.value,
-          condition_on_return:  e.target.condition_on_return.value.trim(),
+          removed_at:          e.target.removed_at.value,
+          condition_on_return: e.target.condition_on_return.value.trim(),
         },
       });
       removeModal.classList.remove('open');
@@ -178,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // ── Cancel Subscription ─────────────────────────────────
+  // Cancel Subscription Modal
   const cancelModal = document.getElementById('modal-cancel');
   document.getElementById('btn-cancel-sub')?.addEventListener('click', () => cancelModal.classList.add('open'));
   document.getElementById('modal-cancel-close').addEventListener('click', () => cancelModal.classList.remove('open'));
@@ -190,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const btn = e.target.querySelector('[type=submit]');
     btn.disabled = true; btn.textContent = 'Cancelling…';
     try {
-      await apiFetch('/subscriptions/cancel/' + venueId, { method: 'POST', body: { cancel_immediately: immediately } });
+      await fnFetch('admin-subscriptions', { method: 'POST', body: { action: 'cancel', venue_id: venueId, cancel_immediately: immediately } });
       cancelModal.classList.remove('open');
       showToast(immediately ? 'Subscription cancelled immediately' : 'Subscription will cancel at period end');
       await loadVenue();
