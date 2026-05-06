@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
     tbody.innerHTML = [...installed, ...others].map(a => `
       <tr>
         <td>${esc(a.title || '—')}</td>
-        <td>${esc(a.artist_name || '—')}</td>
+        <td>${a.artists ? `<a href="artist.html?id=${a.artists.id}" style="color:var(--gold-deep)">${esc(a.artists.name)}</a>` : esc(a.artist_name || '—')}</td>
         <td>${a.installed_at || '—'}</td>
         <td>${esc(a.condition_on_arrival || '—')}</td>
         <td><span class="badge badge-${a.status === 'installed' ? 'active' : 'inactive'}">${a.status}</span></td>
@@ -101,11 +101,38 @@ document.addEventListener('DOMContentLoaded', () => {
     `).join('');
   }
 
-  // Add Artwork Modal
+  // Add Artwork Modal — load artists into dropdown
   const addModal = document.getElementById('modal-artwork');
-  document.getElementById('btn-add-artwork').addEventListener('click', () => addModal.classList.add('open'));
+
+  async function openAddModal() {
+    addModal.classList.add('open');
+    const sel = document.getElementById('artist-select');
+    if (sel.dataset.loaded) return;
+    try {
+      const artists = await fnFetch('admin-artists');
+      sel.innerHTML = '<option value="">Select artist…</option>' +
+        artists.filter(a => a.status === 'active').map(a =>
+          `<option value="${a.id}">${esc(a.name)}</option>`
+        ).join('') +
+        '<option value="" disabled>──────────</option>' +
+        '<option value="__new__">+ Add new artist</option>';
+      sel.dataset.loaded = '1';
+    } catch (_) {
+      sel.innerHTML = '<option value="">Failed to load artists</option>';
+    }
+  }
+
+  document.getElementById('btn-add-artwork').addEventListener('click', openAddModal);
   document.getElementById('modal-artwork-close').addEventListener('click', () => addModal.classList.remove('open'));
   addModal.addEventListener('click', e => { if (e.target === addModal) addModal.classList.remove('open'); });
+
+  document.getElementById('artist-select').addEventListener('change', e => {
+    if (e.target.value === '__new__') {
+      window.open('artists.html', '_blank');
+      e.target.value = '';
+      e.target.dataset.loaded = '';
+    }
+  });
 
   document.getElementById('form-artwork').addEventListener('submit', async e => {
     e.preventDefault();
@@ -117,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
         body: {
           venue_id:             venueId,
           title:                e.target.title.value.trim(),
-          artist_name:          e.target.artist_name.value.trim(),
+          artist_id:            e.target.artist_id.value || null,
           installed_at:         e.target.installed_at.value,
           condition_on_arrival: e.target.condition_on_arrival.value.trim(),
           notes:                e.target.notes.value.trim(),
@@ -125,6 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       addModal.classList.remove('open');
       e.target.reset();
+      document.getElementById('artist-select').dataset.loaded = '';
       showToast('Artwork added — subscription updated');
       await loadVenue();
     } catch (err) {

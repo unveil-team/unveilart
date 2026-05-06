@@ -12,6 +12,7 @@
   <div class="logo"><b>Unveil</b>Art <span style="font-size:13px;letter-spacing:0.14em;font-style:normal;color:rgba(250,250,247,0.45);margin-left:12px;">ADMIN</span></div>
   <div class="nav-right">
     <a href="index.html">Dashboard</a>
+    <a href="artists.html">Artists</a>
     <button class="btn-logout" id="btn-logout">Logout</button>
   </div>
 </nav>
@@ -108,8 +109,10 @@
           <input type="text" name="title" placeholder="Untitled" />
         </div>
         <div class="form-group">
-          <label>Artist Name</label>
-          <input type="text" name="artist_name" />
+          <label>Artist *</label>
+          <select name="artist_id" id="artist-select" required>
+            <option value="">Loading artists…</option>
+          </select>
         </div>
       </div>
       <div class="form-group">

@@ -21,7 +21,7 @@ Deno.serve(async (req) => {
     if (id) {
       const [venueRes, artworksRes, paymentsRes] = await Promise.all([
         supabase.from('venues').select('*').eq('id', id).single(),
-        supabase.from('artworks').select('*').eq('venue_id', id).order('installed_at', { ascending: false }),
+        supabase.from('artworks').select('*, artists(id, name, instagram)').eq('venue_id', id).order('installed_at', { ascending: false }),
         supabase.from('payments').select('*').eq('venue_id', id).order('created_at', { ascending: false }),
       ]);
       if (venueRes.error) return json({ error: venueRes.error.message }, 400);

@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Artist — UnveilArt Admin</title>
+<link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+
+<nav class="admin-nav">
+  <div class="logo"><b>Unveil</b>Art <span style="font-size:13px;letter-spacing:0.14em;font-style:normal;color:rgba(250,250,247,0.45);margin-left:12px;">ADMIN</span></div>
+  <div class="nav-right">
+    <a href="index.html">Dashboard</a>
+    <a href="artists.html">Artists</a>
+    <button class="btn-logout" id="btn-logout">Logout</button>
+  </div>
+</nav>
+
+<div class="admin-wrap">
+  <a href="artists.html" class="back-link">← Back to Artists</a>
+
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:32px;">
+    <h1 class="page-title" id="artist-name" style="margin:0;">Loading…</h1>
+    <span class="badge" id="status-badge">—</span>
+  </div>
+
+  <div class="info-grid">
+    <div class="info-card"><div class="label">Email</div><div class="value" id="info-email">—</div></div>
+    <div class="info-card"><div class="label">Phone</div><div class="value" id="info-phone">—</div></div>
+    <div class="info-card"><div class="label">Instagram</div><div class="value" id="info-instagram">—</div></div>
+    <div class="info-card"><div class="label">Website</div><div class="value" id="info-website">—</div></div>
+  </div>
+
+  <div class="section" id="bio-section" style="display:none;">
+    <div class="section-header"><h2 class="section-title">Bio</h2></div>
+    <div class="sub-status-card" id="info-bio" style="font-size:14px;line-height:1.7;color:var(--warm-charcoal);"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <h2 class="section-title">Installed Artworks</h2>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Venue</th>
+            <th>Installed</th>
+            <th>Condition on Arrival</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="artworks-tbody">
+          <tr><td colspan="5" class="empty-state">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  requireLogin();
+  document.getElementById('btn-logout').addEventListener('click', logout);
+
+  const params = new URLSearchParams(window.location.search);
+  const artistId = params.get('id');
+  if (!artistId) { window.location.href = 'artists.html'; return; }
+
+  loadArtist();
+
+  async function loadArtist() {
+    try {
+      const data = await fnFetch('admin-artists?id=' + artistId);
+      renderHeader(data);
+      renderArtworks(data.artworks || []);
+    } catch (err) {
+      showToast(err.message, true);
+    }
+  }
+
+  function renderHeader(a) {
+    document.title = a.name + ' — UnveilArt Admin';
+    document.getElementById('artist-name').textContent = a.name;
+    document.getElementById('status-badge').textContent = a.status;
+    document.getElementById('status-badge').className = 'badge badge-' + (a.status === 'active' ? 'active' : 'inactive');
+    document.getElementById('info-email').textContent = a.email || '—';
+    document.getElementById('info-phone').textContent = a.phone || '—';
+    if (a.instagram) {
+      document.getElementById('info-instagram').innerHTML = `<a href="https://instagram.com/${a.instagram.replace('@','')}" target="_blank" rel="noopener" style="color:var(--gold-deep)">${esc(a.instagram)}</a>`;
+    } else {
+      document.getElementById('info-instagram').textContent = '—';
+    }
+    if (a.website) {
+      document.getElementById('info-website').innerHTML = `<a href="${esc(a.website)}" target="_blank" rel="noopener" style="color:var(--gold-deep)">${esc(a.website)}</a>`;
+    } else {
+      document.getElementById('info-website').textContent = '—';
+    }
+    if (a.bio) {
+      document.getElementById('bio-section').style.display = '';
+      document.getElementById('info-bio').textContent = a.bio;
+    }
+  }
+
+  function renderArtworks(artworks) {
+    const tbody = document.getElementById('artworks-tbody');
+    if (artworks.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="5" class="empty-state">No artworks installed yet.</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = artworks.map(a => `
+      <tr>
+        <td>${esc(a.title || '—')}</td>
+        <td>${a.venues ? `<a href="venue.html?id=${a.venue_id}" style="color:var(--gold-deep)">${esc(a.venues.name)}</a>` : '—'}</td>
+        <td>${a.installed_at || '—'}</td>
+        <td>${esc(a.condition_on_arrival || '—')}</td>
+        <td><span class="badge badge-${a.status === 'installed' ? 'active' : 'inactive'}">${a.status}</span></td>
+      </tr>
+    `).join('');
+  }
+});
+
+function esc(str) {
+  if (!str) return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function showToast(msg, isError = false) {
+  let t = document.getElementById('toast');
+  if (!t) { t = document.createElement('div'); t.id = 'toast'; t.className = 'toast'; document.body.appendChild(t); }
+  t.textContent = msg;
+  t.className = 'toast' + (isError ? ' error' : '');
+  requestAnimationFrame(() => { requestAnimationFrame(() => { t.classList.add('show'); }); });
+  setTimeout(() => { t.classList.remove('show'); }, 3500);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Artists — UnveilArt Admin</title>
+<link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+
+<nav class="admin-nav">
+  <div class="logo"><b>Unveil</b>Art <span style="font-size:13px;letter-spacing:0.14em;font-style:normal;color:rgba(250,250,247,0.45);margin-left:12px;">ADMIN</span></div>
+  <div class="nav-right">
+    <a href="index.html">Dashboard</a>
+    <button class="btn-logout" id="btn-logout">Logout</button>
+  </div>
+</nav>
+
+<div class="admin-wrap">
+  <h1 class="page-title">Artists</h1>
+
+  <div class="toolbar">
+    <div class="filter-tabs">
+      <button class="filter-tab active" data-filter="all">All</button>
+      <button class="filter-tab" data-filter="active">Active</button>
+      <button class="filter-tab" data-filter="inactive">Inactive</button>
+    </div>
+    <button class="btn-primary" id="btn-add-artist">+ Add Artist</button>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Instagram</th>
+          <th>Installed Works</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="artists-tbody">
+        <tr><td colspan="7" class="empty-state">Loading…</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Add Artist Modal -->
+<div class="modal-backdrop" id="modal-artist">
+  <div class="modal">
+    <button class="modal-close" id="modal-artist-close">×</button>
+    <h2 class="modal-title">Add Artist</h2>
+    <form id="form-artist">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Name *</label>
+          <input type="text" name="name" required />
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" name="email" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Phone</label>
+          <input type="tel" name="phone" />
+        </div>
+        <div class="form-group">
+          <label>Instagram</label>
+          <input type="text" name="instagram" placeholder="@handle" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Website</label>
+        <input type="url" name="website" placeholder="https://" />
+      </div>
+      <div class="form-group">
+        <label>Bio</label>
+        <textarea name="bio" placeholder="Short artist biography…"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Notes</label>
+        <textarea name="notes"></textarea>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" onclick="document.getElementById('modal-artist').classList.remove('open')">Cancel</button>
+        <button type="submit" class="btn-primary">Save Artist</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  requireLogin();
+  document.getElementById('btn-logout').addEventListener('click', logout);
+
+  let allArtists = [];
+  let currentFilter = 'all';
+
+  loadArtists();
+
+  async function loadArtists() {
+    try {
+      allArtists = await fnFetch('admin-artists');
+      renderTable(allArtists);
+    } catch (err) {
+      showToast(err.message, true);
+    }
+  }
+
+  function renderTable(artists) {
+    const filtered = currentFilter === 'all' ? artists : artists.filter(a => a.status === currentFilter);
+    const tbody = document.getElementById('artists-tbody');
+    if (filtered.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="7" class="empty-state">No artists found.</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = filtered.map(a => `
+      <tr>
+        <td><a href="artist.html?id=${a.id}" class="venue-name-link">${esc(a.name)}</a></td>
+        <td>${esc(a.email || '—')}</td>
+        <td>${esc(a.phone || '—')}</td>
+        <td>${a.instagram ? `<a href="https://instagram.com/${a.instagram.replace('@','')}" target="_blank" rel="noopener" style="color:var(--gold-deep)">${esc(a.instagram)}</a>` : '—'}</td>
+        <td>${a.installed_count || 0}</td>
+        <td><span class="badge badge-${a.status === 'active' ? 'active' : 'inactive'}">${a.status}</span></td>
+        <td><a href="artist.html?id=${a.id}" class="action-btn">View →</a></td>
+      </tr>
+    `).join('');
+  }
+
+  document.querySelectorAll('.filter-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentFilter = btn.dataset.filter;
+      renderTable(allArtists);
+    });
+  });
+
+  const modal = document.getElementById('modal-artist');
+  document.getElementById('btn-add-artist').addEventListener('click', () => modal.classList.add('open'));
+  document.getElementById('modal-artist-close').addEventListener('click', () => modal.classList.remove('open'));
+  modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
+
+  document.getElementById('form-artist').addEventListener('submit', async e => {
+    e.preventDefault();
+    const btn = e.target.querySelector('[type=submit]');
+    btn.disabled = true; btn.textContent = 'Saving…';
+    try {
+      const artist = await fnFetch('admin-artists', {
+        method: 'POST',
+        body: {
+          name:      e.target.name.value.trim(),
+          email:     e.target.email.value.trim(),
+          phone:     e.target.phone.value.trim(),
+          instagram: e.target.instagram.value.trim(),
+          website:   e.target.website.value.trim(),
+          bio:       e.target.bio.value.trim(),
+          notes:     e.target.notes.value.trim(),
+        },
+      });
+      modal.classList.remove('open');
+      e.target.reset();
+      showToast('Artist added');
+      window.location.href = 'artist.html?id=' + artist.id;
+    } catch (err) {
+      showToast(err.message, true);
+      btn.disabled = false; btn.textContent = 'Save Artist';
+    }
+  });
+});
+
+function esc(str) {
+  if (!str) return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function showToast(msg, isError = false) {
+  let t = document.getElementById('toast');
+  if (!t) { t = document.createElement('div'); t.id = 'toast'; t.className = 'toast'; document.body.appendChild(t); }
+  t.textContent = msg;
+  t.className = 'toast' + (isError ? ' error' : '');
+  requestAnimationFrame(() => { requestAnimationFrame(() => { t.classList.add('show'); }); });
+  setTimeout(() => { t.classList.remove('show'); }, 3500);
+}
+</script>
+</body>
+</html>
