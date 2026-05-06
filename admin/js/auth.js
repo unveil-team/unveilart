@@ -1,9 +1,10 @@
 const API_BASE = (() => {
   if (typeof window === 'undefined') return 'http://localhost:3000/api';
-  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    return 'http://localhost:3000/api';
-  }
-  return 'https://api.unveilart.com.au/api'; // update after deployment
+  const h = window.location.hostname;
+  if (h === 'localhost' || h === '127.0.0.1') return 'http://localhost:3000/api';
+  // Update VERCEL_URL after first deployment
+  const VERCEL_URL = 'https://unveilart.vercel.app';
+  return VERCEL_URL + '/api';
 })();
 
 function getToken() {
