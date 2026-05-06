@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dashboard — UnveilArt Admin</title>
+<link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+
+<nav class="admin-nav">
+  <div class="logo"><b>Unveil</b>Art <span style="font-size:13px;letter-spacing:0.14em;font-style:normal;color:rgba(250,250,247,0.45);margin-left:12px;">ADMIN</span></div>
+  <div class="nav-right">
+    <button class="btn-logout" id="btn-logout">Logout</button>
+  </div>
+</nav>
+
+<div class="admin-wrap">
+  <h1 class="page-title">Dashboard</h1>
+
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="label">Active Venues</div>
+      <div class="value" id="stat-venues">—</div>
+      <div class="sub">Currently billing</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">Monthly Revenue</div>
+      <div class="value" id="stat-revenue">—</div>
+      <div class="sub">AUD ex-GST</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">Installed Artworks</div>
+      <div class="value" id="stat-artworks">—</div>
+      <div class="sub">Across all venues</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">Past Due</div>
+      <div class="value" id="stat-pastdue">—</div>
+      <div class="sub">Require attention</div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="filter-tabs">
+      <button class="filter-tab active" data-filter="all">All</button>
+      <button class="filter-tab" data-filter="active">Active</button>
+      <button class="filter-tab" data-filter="past_due">Past Due</button>
+      <button class="filter-tab" data-filter="inactive">Inactive</button>
+      <button class="filter-tab" data-filter="cancelled">Cancelled</button>
+    </div>
+    <button class="btn-primary" id="btn-add-venue">+ Add Venue</button>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Venue</th>
+          <th>Contact</th>
+          <th>Artworks</th>
+          <th>Monthly Total</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="venues-tbody">
+        <tr><td colspan="6" class="empty-state">Loading…</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Add Venue Modal -->
+<div class="modal-backdrop" id="modal-venue">
+  <div class="modal">
+    <button class="modal-close" id="modal-close">×</button>
+    <h2 class="modal-title">Add Venue</h2>
+    <form id="form-venue">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="f-name">Venue Name *</label>
+          <input type="text" id="f-name" name="name" required />
+        </div>
+        <div class="form-group">
+          <label for="f-type">Venue Type</label>
+          <select id="f-type" name="venue_type">
+            <option value="">Select…</option>
+            <option value="hotel">Hotel</option>
+            <option value="restaurant">Restaurant</option>
+            <option value="cafe">Café</option>
+            <option value="bar">Bar</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="f-contact">Contact Name</label>
+          <input type="text" id="f-contact" name="contact_name" />
+        </div>
+        <div class="form-group">
+          <label for="f-email">Email *</label>
+          <input type="email" id="f-email" name="email" required />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="f-phone">Phone</label>
+          <input type="tel" id="f-phone" name="phone" />
+        </div>
+        <div class="form-group">
+          <label for="f-address">Address</label>
+          <input type="text" id="f-address" name="address" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="f-notes">Notes</label>
+        <textarea id="f-notes" name="notes"></textarea>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" id="modal-cancel-btn" onclick="document.getElementById('modal-venue').classList.remove('open')">Cancel</button>
+        <button type="submit" class="btn-primary">Save Venue</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Admin Login — UnveilArt</title>
+<link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+<div class="login-wrap">
+  <div class="login-box">
+    <div class="login-logo"><b>Unveil</b>Art</div>
+    <div class="login-sub">Admin Portal</div>
+
+    <div class="login-error" id="login-error"></div>
+
+    <form id="login-form">
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter admin password" required autofocus />
+      </div>
+      <div style="margin-top: 28px;">
+        <button type="submit" class="btn-primary" style="width:100%;justify-content:center;" id="login-btn">
+          Sign In
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script>
+  // Redirect if already logged in
+  if (getToken()) window.location.href = 'index.html';
+
+  document.getElementById('login-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const btn = document.getElementById('login-btn');
+    const errEl = document.getElementById('login-error');
+    errEl.classList.remove('show');
+    btn.disabled = true;
+    btn.textContent = 'Signing in…';
+
+    try {
+      const res = await fetch(API_BASE + '/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: e.target.password.value }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Login failed');
+      setToken(data.token);
+      window.location.href = 'index.html';
+    } catch (err) {
+      errEl.textContent = err.message;
+      errEl.classList.add('show');
+      btn.disabled = false;
+      btn.textContent = 'Sign In';
+    }
+  });
+</script>
+</body>
+</html>

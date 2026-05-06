@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Venue — UnveilArt Admin</title>
+<link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+
+<nav class="admin-nav">
+  <div class="logo"><b>Unveil</b>Art <span style="font-size:13px;letter-spacing:0.14em;font-style:normal;color:rgba(250,250,247,0.45);margin-left:12px;">ADMIN</span></div>
+  <div class="nav-right">
+    <a href="index.html">Dashboard</a>
+    <button class="btn-logout" id="btn-logout">Logout</button>
+  </div>
+</nav>
+
+<div class="admin-wrap">
+  <a href="index.html" class="back-link">← Back to Dashboard</a>
+
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:32px;">
+    <h1 class="page-title" id="venue-name" style="margin:0;">Loading…</h1>
+    <span class="badge" id="status-badge">—</span>
+  </div>
+
+  <!-- Venue Info -->
+  <div class="info-grid">
+    <div class="info-card"><div class="label">Contact</div><div class="value" id="info-contact">—</div></div>
+    <div class="info-card"><div class="label">Email</div><div class="value" id="info-email">—</div></div>
+    <div class="info-card"><div class="label">Phone</div><div class="value" id="info-phone">—</div></div>
+    <div class="info-card"><div class="label">Type</div><div class="value" id="info-type">—</div></div>
+    <div class="info-card"><div class="label">Address</div><div class="value" id="info-address">—</div></div>
+  </div>
+
+  <!-- Subscription Status -->
+  <div class="section">
+    <div class="section-header">
+      <h2 class="section-title">Subscription</h2>
+      <button class="btn-danger" id="btn-cancel-sub" style="display:none;">Cancel Subscription</button>
+    </div>
+    <div class="sub-status-card" id="sub-card">
+      <p style="color:var(--stone-gray);font-size:14px;margin:0;">Loading…</p>
+    </div>
+  </div>
+
+  <!-- Artworks -->
+  <div class="section">
+    <div class="section-header">
+      <h2 class="section-title">Installed Artworks</h2>
+      <button class="btn-primary" id="btn-add-artwork">+ Add Artwork</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Artist</th>
+            <th>Installed</th>
+            <th>Condition on Arrival</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="artworks-tbody">
+          <tr><td colspan="6" class="empty-state">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Payment History -->
+  <div class="section">
+    <div class="section-header">
+      <h2 class="section-title">Payment History</h2>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Artworks</th>
+            <th>Amount (ex-GST)</th>
+            <th>GST</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Invoice</th>
+          </tr>
+        </thead>
+        <tbody id="payments-tbody">
+          <tr><td colspan="7" class="empty-state">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Add Artwork Modal -->
+<div class="modal-backdrop" id="modal-artwork">
+  <div class="modal">
+    <button class="modal-close" id="modal-artwork-close">×</button>
+    <h2 class="modal-title">Add Artwork</h2>
+    <p style="font-size:13px;color:var(--stone-gray);margin:-12px 0 24px;">Adding an artwork will update the Stripe subscription and adjust billing immediately.</p>
+    <form id="form-artwork">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Artwork Title</label>
+          <input type="text" name="title" placeholder="Untitled" />
+        </div>
+        <div class="form-group">
+          <label>Artist Name</label>
+          <input type="text" name="artist_name" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Installation Date *</label>
+        <input type="date" name="installed_at" required />
+      </div>
+      <div class="form-group">
+        <label>Condition on Arrival</label>
+        <textarea name="condition_on_arrival" placeholder="Note any existing damage or condition details…"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Notes</label>
+        <textarea name="notes"></textarea>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" onclick="document.getElementById('modal-artwork').classList.remove('open')">Cancel</button>
+        <button type="submit" class="btn-primary">Add Artwork</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Remove Artwork Modal -->
+<div class="modal-backdrop" id="modal-remove">
+  <div class="modal">
+    <button class="modal-close" id="modal-remove-close">×</button>
+    <h2 class="modal-title">Remove Artwork</h2>
+    <p style="font-size:13px;color:var(--stone-gray);margin:-12px 0 24px;">Removing this artwork will reduce the subscription billing amount automatically.</p>
+    <form id="form-remove">
+      <div class="form-group">
+        <label>Removal Date *</label>
+        <input type="date" name="removed_at" id="remove-date" required />
+      </div>
+      <div class="form-group">
+        <label>Condition on Return</label>
+        <textarea name="condition_on_return" placeholder="Note the artwork's condition when returned…"></textarea>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" onclick="document.getElementById('modal-remove').classList.remove('open')">Cancel</button>
+        <button type="submit" class="btn-danger">Confirm Remove</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Cancel Subscription Modal -->
+<div class="modal-backdrop" id="modal-cancel">
+  <div class="modal">
+    <button class="modal-close" id="modal-cancel-close">×</button>
+    <h2 class="modal-title">Cancel Subscription</h2>
+    <p style="font-size:14px;color:var(--warm-charcoal);margin-bottom:24px;">Are you sure you want to cancel this venue's subscription? This will stop future billing.</p>
+    <form id="form-cancel">
+      <div class="form-group" style="display:flex;align-items:center;gap:12px;border-bottom:none;padding:0;">
+        <input type="checkbox" id="cancel-immediately" name="cancel_immediately" style="width:auto;border:none;padding:0;" />
+        <label for="cancel-immediately" style="text-transform:none;letter-spacing:0;font-size:14px;color:var(--warm-charcoal);margin:0;">Cancel immediately (vs. at end of current period)</label>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" onclick="document.getElementById('modal-cancel').classList.remove('open')">Keep Subscription</button>
+        <button type="submit" class="btn-danger">Confirm Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/venue.js"></script>
+<script>
+  // Show cancel button once venue data loads — handled in venue.js
+  document.addEventListener('venueLoaded', (e) => {
+    const v = e.detail;
+    if (v.stripe_subscription_id) {
+      document.getElementById('btn-cancel-sub').style.display = 'inline-flex';
+    }
+  });
+</script>
+</body>
+</html>
