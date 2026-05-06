@@ -1,5 +1,4 @@
 -- UnveilArt subscription billing schema
--- Run in Supabase SQL Editor: https://supabase.com/dashboard/project/frgxtqljqliaafpxgloo/sql
 
 -- venues
 CREATE TABLE IF NOT EXISTS venues (
