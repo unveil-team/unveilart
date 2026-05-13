@@ -33,7 +33,7 @@ async function fnFetch(fnName, options = {}) {
 
   if (res.status === 401) {
     clearToken();
-    window.location.href = '/admin/login.html';
+    window.location.href = '/admin/login.html?redirect=' + encodeURIComponent(window.location.href);
     throw new Error('Session expired');
   }
 
