@@ -1,21 +1,47 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-import { handleOptions, json } from '../_shared/cors.ts';
-import { verifyAdminToken } from '../_shared/auth.ts';
 
-const sb = () => createClient(
-  Deno.env.get('SUPABASE_URL')!,
-  Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-);
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-admin-token',
+  'Access-Control-Allow-Methods': 'GET, POST, PATCH, DELETE, OPTIONS',
+};
+
+function handleOptions() {
+  return new Response(null, { status: 204, headers: corsHeaders });
+}
+
+function json(data: unknown, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  });
+}
+
+async function verifyAdminToken(req: Request): Promise<boolean> {
+  const password = Deno.env.get('ADMIN_PASSWORD');
+  if (!password) return false;
+  const token = req.headers.get('x-admin-token') || '';
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password + ':unveilart-admin');
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const expected = Array.from(new Uint8Array(hashBuffer))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+  return token === expected;
+}
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return handleOptions();
   if (!await verifyAdminToken(req)) return json({ error: 'Unauthorised' }, 401);
 
+  const supabase = createClient(
+    Deno.env.get('SUPABASE_URL')!,
+    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
+  );
+
   const url = new URL(req.url);
   const id = url.searchParams.get('id');
-  const supabase = sb();
 
-  // GET — list all artists or single artist detail
   if (req.method === 'GET') {
     if (id) {
       const [artistRes, artworksRes] = await Promise.all([
@@ -29,7 +55,6 @@ Deno.serve(async (req) => {
     const { data, error } = await supabase.from('artists').select('*').order('name', { ascending: true });
     if (error) return json({ error: error.message }, 400);
 
-    // Artwork counts per artist
     const { data: counts } = await supabase.from('artworks').select('artist_id').eq('status', 'installed');
     const countMap: Record<string, number> = {};
     (counts || []).forEach((a: { artist_id: string }) => {
@@ -38,7 +63,6 @@ Deno.serve(async (req) => {
     return json((data || []).map((a: { id: string }) => ({ ...a, installed_count: countMap[a.id] || 0 })));
   }
 
-  // POST — create artist
   if (req.method === 'POST') {
     const body = await req.json();
     const { name, email, phone, instagram, website, bio, notes } = body;
@@ -48,7 +72,6 @@ Deno.serve(async (req) => {
     return json(data, 201);
   }
 
-  // PATCH — update artist
   if (req.method === 'PATCH' && id) {
     const body = await req.json();
     const allowed = ['name', 'email', 'phone', 'instagram', 'website', 'bio', 'notes', 'status'];
