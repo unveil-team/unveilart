@@ -114,8 +114,8 @@ async function getInstalledCount(
 }
 
 function calcPriceTier(price: number): 'entry' | 'mid' | 'premium' {
-  if (price < 1500)  return 'entry';
-  if (price <= 5000) return 'mid';
+  if (price < 2000)  return 'entry';
+  if (price <= 7000) return 'mid';
   return 'premium';
 }
 
@@ -125,14 +125,10 @@ function calcSaleSplits(salePrice: number, tier: 'entry' | 'mid' | 'premium'): {
   venue_commission: number;
   ua_share: number;
 } {
-  const artistRates = { entry: 0.80, mid: 0.85, premium: 0.90 };
-  const venueCommissionRate = 0.50; // 50% of UA's share
-
-  const artistRate      = artistRates[tier];
-  const artist_share    = +(salePrice * artistRate).toFixed(2);
-  const ua_gross        = +(salePrice - artist_share).toFixed(2);
-  const venue_commission = +(ua_gross * venueCommissionRate).toFixed(2);
-  const ua_share        = +(ua_gross - venue_commission).toFixed(2);
+  const rates = { entry: 0.80, mid: 0.85, premium: 0.90 };
+  const artist_share    = +(salePrice * rates[tier]).toFixed(2);
+  const ua_share        = +(salePrice - artist_share).toFixed(2);
+  const venue_commission = 0;
 
   return { artist_share, venue_commission, ua_share };
 }

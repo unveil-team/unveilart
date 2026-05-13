@@ -66,8 +66,8 @@ const API = {
  */
 function priceTier(price) {
   const n = Number(price) || 0;
-  if (n < 1500)  return 'entry';
-  if (n <= 5000) return 'mid';
+  if (n < 2000)  return 'entry';
+  if (n <= 7000) return 'mid';
   return 'premium';
 }
 
@@ -77,7 +77,7 @@ function priceTier(price) {
  * @returns {string}
  */
 function priceTierLabel(tier) {
-  const map = { entry: 'Entry', mid: 'Mid', premium: 'Premium' };
+  const map = { entry: 'Under $2,000', mid: '$2,000–$7,000', premium: 'Over $7,000' };
   return map[tier] || tier;
 }
 
@@ -158,25 +158,17 @@ function calcSplits(salePrice, tier, hasVenue) {
   const price = Number(salePrice) || 0;
 
   const rates = {
-    entry:   { artist: 0.75, venue: 0.15, ua: 0.10 },
-    mid:     { artist: 0.70, venue: 0.20, ua: 0.10 },
-    premium: { artist: 0.65, venue: 0.25, ua: 0.10 },
+    entry:   { artist: 0.80, ua: 0.20 },
+    mid:     { artist: 0.85, ua: 0.15 },
+    premium: { artist: 0.90, ua: 0.10 },
   };
 
   const r = rates[tier] || rates.entry;
 
-  if (!hasVenue) {
-    // Venue's cut rolls up to artist
-    const uaShare      = round2(price * r.ua);
-    const artistShare  = round2(price - uaShare);
-    return { artistShare, venueCommission: 0, uaShare };
-  }
+  const uaShare     = round2(price * r.ua);
+  const artistShare = round2(price - uaShare);
 
-  const venueCommission = round2(price * r.venue);
-  const uaShare         = round2(price * r.ua);
-  const artistShare     = round2(price - venueCommission - uaShare);
-
-  return { artistShare, venueCommission, uaShare };
+  return { artistShare, venueCommission: 0, uaShare };
 }
 
 /** @param {number} n @returns {number} */
