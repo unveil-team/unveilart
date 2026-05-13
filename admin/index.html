@@ -82,15 +82,29 @@
 
   (async () => {
     try {
-      const [venuesRaw, artworksRaw, artistsRaw] = await Promise.all([
+      const [venuesRes, artworksRes, artistsRes] = await Promise.allSettled([
         API.venues.list(),
         API.artworks.list(),
         API.artists.list(),
       ]);
 
+      const venuesRaw   = venuesRes.status   === 'fulfilled' ? venuesRes.value   : [];
+      const artworksRaw = artworksRes.status === 'fulfilled' ? artworksRes.value : null;
+      const artistsRaw  = artistsRes.status  === 'fulfilled' ? artistsRes.value  : [];
+
       const venues   = Array.isArray(venuesRaw)   ? venuesRaw   : (venuesRaw.venues     || []);
-      const artworks = Array.isArray(artworksRaw) ? artworksRaw : (artworksRaw.artworks || []);
       const artists  = Array.isArray(artistsRaw)  ? artistsRaw  : (artistsRaw.artists   || []);
+
+      // Artworks: use API data if available, otherwise derive count from venue fields
+      let artworks = [];
+      let installedCount = 0;
+      if (artworksRaw !== null) {
+        artworks = Array.isArray(artworksRaw) ? artworksRaw : (artworksRaw.artworks || []);
+        installedCount = artworks.filter(a => a.status === 'installed').length;
+      } else {
+        // Fallback: sum installed_count from each venue
+        installedCount = venues.reduce((sum, v) => sum + (v.installed_count || v.artwork_count || 0), 0);
+      }
 
       // ── Derived stats ────────────────────────────────────────
       const activeVenues    = venues.filter(v => v.status === 'active');
@@ -98,7 +112,7 @@
       const installedWorks  = artworks.filter(a => a.status === 'installed');
       const activeArtists   = artists.filter(a => a.status === 'active');
 
-      const subscriptionRevenue = installedWorks.length * 150;
+      const subscriptionRevenue = installedCount * 150;
 
       // Previous month estimate: use 95% as a simple prior (no historical data)
       const prevRevenue   = subscriptionRevenue * 0.95;
@@ -137,7 +151,7 @@
       document.getElementById('kpi-venues').onclick = () => window.location.href = 'venues.html';
 
       document.getElementById('kpi-artworks').innerHTML = `
-        <div class="kpi-value">${installedWorks.length}</div>
+        <div class="kpi-value">${installedCount}</div>
         <div class="kpi-label">Installed Artworks</div>
         <div class="kpi-sub">Across all venues</div>`;
       document.getElementById('kpi-artworks').style.cursor = 'pointer';
@@ -212,14 +226,14 @@
       }
 
     } catch (err) {
-      // Clear skeleton states on error
       ['kpi-revenue','kpi-venues','kpi-artworks','kpi-artists'].forEach(id => {
         const el = document.getElementById(id);
         if (el) {
           const label = el.querySelector('.kpi-label');
-          el.innerHTML = `<div class="kpi-value">—</div>${label ? label.outerHTML : ''}<div class="kpi-sub" style="color:var(--red,#e35)">Failed to load</div>`;
+          el.innerHTML = `<div class="kpi-value">—</div>${label ? label.outerHTML : ''}<div class="kpi-sub" style="color:var(--red,#e35)">Error</div>`;
         }
       });
+      console.error('Dashboard error:', err);
       toast(err.message || 'Failed to load dashboard data', 'error');
     }
   })();
