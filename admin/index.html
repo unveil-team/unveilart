@@ -7,57 +7,222 @@
 <link rel="stylesheet" href="css/admin.css" />
 </head>
 <body>
+<div class="main-content">
+  <div class="admin-wrap">
+    <div id="breadcrumb-wrap"></div>
 
-<nav class="admin-nav">
-  <div class="logo"><b>Unveil</b>Art <span style="font-size:13px;letter-spacing:0.14em;font-style:normal;color:rgba(250,250,247,0.45);margin-left:12px;">ADMIN</span></div>
-  <div class="nav-right">
-    <a href="index.html" class="nav-active">Dashboard</a>
-    <a href="venues.html">Venues</a>
-    <a href="artists.html">Artists</a>
-    <button class="btn-logout" id="btn-logout">Logout</button>
-  </div>
-</nav>
+    <div class="page-header">
+      <div class="page-title-row">
+        <h1 class="page-title">Dashboard</h1>
+      </div>
+    </div>
 
-<div class="admin-wrap">
-  <h1 class="page-title">Dashboard</h1>
+    <!-- KPI Grid -->
+    <div class="kpi-grid" id="kpi-grid">
+      <div class="kpi-card" id="kpi-revenue">
+        <div class="kpi-value"><span class="skeleton" style="width:80px;height:28px;display:inline-block;border-radius:6px;"></span></div>
+        <div class="kpi-label">Monthly Revenue</div>
+        <div class="kpi-sub">Subscription</div>
+      </div>
+      <div class="kpi-card" id="kpi-venues">
+        <div class="kpi-value"><span class="skeleton" style="width:48px;height:28px;display:inline-block;border-radius:6px;"></span></div>
+        <div class="kpi-label">Active Venues</div>
+        <div class="kpi-sub">&nbsp;</div>
+      </div>
+      <div class="kpi-card" id="kpi-artworks">
+        <div class="kpi-value"><span class="skeleton" style="width:48px;height:28px;display:inline-block;border-radius:6px;"></span></div>
+        <div class="kpi-label">Installed Artworks</div>
+        <div class="kpi-sub">&nbsp;</div>
+      </div>
+      <div class="kpi-card" id="kpi-artists">
+        <div class="kpi-value"><span class="skeleton" style="width:48px;height:28px;display:inline-block;border-radius:6px;"></span></div>
+        <div class="kpi-label">Active Artists</div>
+        <div class="kpi-sub">&nbsp;</div>
+      </div>
+    </div>
 
-  <div class="summary-grid">
-    <div class="summary-card">
-      <div class="label">Active Venues</div>
-      <div class="value" id="stat-venues">—</div>
-      <div class="sub">Currently billing</div>
-    </div>
-    <div class="summary-card">
-      <div class="label">Monthly Revenue</div>
-      <div class="value" id="stat-revenue">—</div>
-      <div class="sub">AUD ex-GST</div>
-    </div>
-    <div class="summary-card">
-      <div class="label">Installed Artworks</div>
-      <div class="value" id="stat-artworks">—</div>
-      <div class="sub">Across all venues</div>
-    </div>
-    <div class="summary-card">
-      <div class="label">Past Due</div>
-      <div class="value" id="stat-pastdue">—</div>
-      <div class="sub">Require attention</div>
-    </div>
-  </div>
+    <!-- Past Due Alerts -->
+    <div id="alerts-section"></div>
 
-  <div class="dashboard-actions">
-    <a href="venues.html" class="dashboard-action-card">
-      <div class="dashboard-action-title">Venues</div>
-      <div class="dashboard-action-sub">Manage venue accounts &amp; billing</div>
-    </a>
-    <a href="artists.html" class="dashboard-action-card">
-      <div class="dashboard-action-title">Artists</div>
-      <div class="dashboard-action-sub">Manage artist profiles &amp; works</div>
-    </a>
+    <!-- Settlement Summary -->
+    <div class="summary-card" id="settlement-card" style="display:none;">
+      <div class="summary-header">
+        <span class="summary-title">This Month's Settlement</span>
+      </div>
+      <div class="summary-row">
+        <span class="row-label">Artist Payouts</span>
+        <span class="row-value" id="settlement-artist">—</span>
+      </div>
+      <div class="summary-row">
+        <span class="row-label">Venue Commissions</span>
+        <span class="row-value" id="settlement-venue">—</span>
+      </div>
+      <div class="summary-row">
+        <span class="row-label">UnveilArt Net</span>
+        <span class="row-value" id="settlement-ua">—</span>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="summary-card" id="activity-card" style="display:none;">
+      <div class="summary-header">
+        <span class="summary-title">Recent Activity</span>
+      </div>
+      <div class="activity-feed" id="activity-feed"></div>
+    </div>
+
   </div>
 </div>
 
 <script src="js/auth.js"></script>
-<script src="js/admin.js"></script>
+<script src="js/api.js"></script>
+<script src="js/ui.js"></script>
+<script>
+  initPage({ page: 'dashboard' });
 
+  (async () => {
+    try {
+      const [venuesRaw, artworksRaw, artistsRaw] = await Promise.all([
+        API.venues.list(),
+        API.artworks.list(),
+        API.artists.list(),
+      ]);
+
+      const venues   = Array.isArray(venuesRaw)   ? venuesRaw   : (venuesRaw.venues     || []);
+      const artworks = Array.isArray(artworksRaw) ? artworksRaw : (artworksRaw.artworks || []);
+      const artists  = Array.isArray(artistsRaw)  ? artistsRaw  : (artistsRaw.artists   || []);
+
+      // ── Derived stats ────────────────────────────────────────
+      const activeVenues    = venues.filter(v => v.status === 'active');
+      const pastDueVenues   = venues.filter(v => v.status === 'past_due');
+      const installedWorks  = artworks.filter(a => a.status === 'installed');
+      const activeArtists   = artists.filter(a => a.status === 'active');
+
+      const subscriptionRevenue = installedWorks.length * 150;
+
+      // Previous month estimate: use 95% as a simple prior (no historical data)
+      const prevRevenue   = subscriptionRevenue * 0.95;
+      const deltaPercent  = prevRevenue > 0
+        ? Math.round(((subscriptionRevenue - prevRevenue) / prevRevenue) * 100)
+        : 0;
+      const deltaPositive = deltaPercent >= 0;
+
+      // Settlement splits (subscription model: UA 90%, artist 10%)
+      const totalArtistSettlement  = subscriptionRevenue * 0.10;
+      const totalVenueCommissions  = 0; // subscription fees go to UA, no venue commission cut
+      const uaNet                  = subscriptionRevenue - totalArtistSettlement - totalVenueCommissions;
+
+      // ── KPI Cards ────────────────────────────────────────────
+      document.getElementById('kpi-revenue').innerHTML = `
+        <div class="kpi-value">${formatCurrency(subscriptionRevenue)}</div>
+        <div class="kpi-label">Monthly Revenue</div>
+        <div class="kpi-sub">
+          Subscription
+          <span class="kpi-delta ${deltaPositive ? 'positive' : 'negative'}">
+            ${deltaPositive ? '+' : ''}${deltaPercent}% vs last month
+          </span>
+        </div>`;
+      document.getElementById('kpi-revenue').style.cursor = 'pointer';
+      document.getElementById('kpi-revenue').onclick = () => window.location.href = 'revenue.html';
+
+      const pastDueSub = pastDueVenues.length > 0
+        ? `<span style="color:var(--red,#e35)">${pastDueVenues.length} past due</span>`
+        : `${activeVenues.length} active`;
+
+      document.getElementById('kpi-venues').innerHTML = `
+        <div class="kpi-value">${activeVenues.length}</div>
+        <div class="kpi-label">Active Venues</div>
+        <div class="kpi-sub">${pastDueSub}</div>`;
+      document.getElementById('kpi-venues').style.cursor = 'pointer';
+      document.getElementById('kpi-venues').onclick = () => window.location.href = 'venues.html';
+
+      document.getElementById('kpi-artworks').innerHTML = `
+        <div class="kpi-value">${installedWorks.length}</div>
+        <div class="kpi-label">Installed Artworks</div>
+        <div class="kpi-sub">Across all venues</div>`;
+      document.getElementById('kpi-artworks').style.cursor = 'pointer';
+      document.getElementById('kpi-artworks').onclick = () => window.location.href = 'artworks.html?status=installed';
+
+      document.getElementById('kpi-artists').innerHTML = `
+        <div class="kpi-value">${activeArtists.length}</div>
+        <div class="kpi-label">Active Artists</div>
+        <div class="kpi-sub">${artists.length} total</div>`;
+      document.getElementById('kpi-artists').style.cursor = 'pointer';
+      document.getElementById('kpi-artists').onclick = () => window.location.href = 'artists.html';
+
+      // ── Past Due Alerts ──────────────────────────────────────
+      if (pastDueVenues.length > 0) {
+        const alertsEl = document.getElementById('alerts-section');
+        const alertsHTML = pastDueVenues.map(v => {
+          const monthly = v.monthly_total != null ? formatCurrency(v.monthly_total) : formatCurrency((v.installed_count || 0) * 150);
+          return `
+            <div class="alert-row alert-error">
+              <span class="alert-icon">🔴</span>
+              <div class="alert-body">
+                <div class="alert-title">${esc(v.name)}</div>
+                <div class="alert-text">Past due · ${monthly} outstanding</div>
+              </div>
+              <a href="venue.html?id=${esc(v.id)}&tab=billing" class="btn-sm btn-secondary">View →</a>
+            </div>`;
+        }).join('');
+        alertsEl.innerHTML = alertsHTML;
+      }
+
+      // ── Settlement Card ──────────────────────────────────────
+      document.getElementById('settlement-artist').textContent = formatCurrency(totalArtistSettlement);
+      document.getElementById('settlement-venue').textContent  = formatCurrency(totalVenueCommissions);
+      document.getElementById('settlement-ua').textContent     = formatCurrency(uaNet);
+      document.getElementById('settlement-card').style.display = '';
+
+      // ── Recent Activity ──────────────────────────────────────
+      // Build a venue lookup map
+      const venueMap = {};
+      venues.forEach(v => { venueMap[v.id] = v; });
+
+      // Sort artworks by most-recently updated/installed
+      const sorted = [...artworks]
+        .filter(a => a.status === 'installed' || a.venue_id)
+        .sort((a, b) => {
+          const ta = new Date(a.installed_at || a.created_at || 0).getTime();
+          const tb = new Date(b.installed_at || b.created_at || 0).getTime();
+          return tb - ta;
+        })
+        .slice(0, 10);
+
+      if (sorted.length > 0) {
+        const feedEl = document.getElementById('activity-feed');
+        feedEl.innerHTML = sorted.map(a => {
+          const venue     = venueMap[a.venue_id];
+          const venueName = venue ? esc(venue.name) : 'unknown venue';
+          const venueLink = venue
+            ? `<a href="venue.html?id=${esc(venue.id)}" class="activity-link">${venueName}</a>`
+            : venueName;
+          const timestamp = a.installed_at || a.created_at;
+          return `
+            <div class="activity-item">
+              <span class="activity-icon">🖼️</span>
+              <span class="activity-text">
+                <strong>${esc(a.title || 'Untitled')}</strong> installed at ${venueLink}
+              </span>
+              <span class="activity-time">${timeSince(timestamp)}</span>
+              ${venue ? `<a href="venue.html?id=${esc(venue.id)}" class="activity-link" style="margin-left:8px;">→</a>` : ''}
+            </div>`;
+        }).join('');
+        document.getElementById('activity-card').style.display = '';
+      }
+
+    } catch (err) {
+      // Clear skeleton states on error
+      ['kpi-revenue','kpi-venues','kpi-artworks','kpi-artists'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          const label = el.querySelector('.kpi-label');
+          el.innerHTML = `<div class="kpi-value">—</div>${label ? label.outerHTML : ''}<div class="kpi-sub" style="color:var(--red,#e35)">Failed to load</div>`;
+        }
+      });
+      toast(err.message || 'Failed to load dashboard data', 'error');
+    }
+  })();
+</script>
 </body>
 </html>

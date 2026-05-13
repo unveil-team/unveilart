@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Artwork — UnveilArt Admin</title>
+<link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+<div class="main-content">
+  <div class="admin-wrap">
+    <div id="breadcrumb-wrap"></div>
+
+    <div class="page-header">
+      <div class="page-title-row">
+        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+          <h1 class="page-title" id="artwork-title">Loading…</h1>
+          <span id="tier-badge"></span>
+          <span id="status-badge"></span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+          <span id="artwork-price" style="font-family:var(--serif);font-size:24px;font-weight:280;color:var(--deep-black);"></span>
+          <button class="btn-secondary" id="btn-sell" style="display:none;">Sell Artwork</button>
+          <button class="btn-secondary" id="btn-edit">Edit</button>
+          <button class="btn-primary"   id="btn-save" style="display:none;">Save Changes</button>
+          <button class="btn-secondary" id="btn-cancel-edit" style="display:none;">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info 2-col layout -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:28px;" id="info-grid-wrap">
+      <!-- Left col -->
+      <div>
+        <div class="summary-card" style="margin-bottom:0;">
+          <div class="summary-header">
+            <span class="summary-title">Artwork Details</span>
+          </div>
+          <div class="summary-row">
+            <span class="row-label">Artist</span>
+            <span class="row-value" id="info-artist">—</span>
+          </div>
+          <div class="summary-row">
+            <span class="row-label">Price</span>
+            <span class="row-value" id="info-price">—</span>
+          </div>
+          <div class="summary-row">
+            <span class="row-label">Tier</span>
+            <span class="row-value" id="info-tier">—</span>
+          </div>
+          <div class="summary-row">
+            <span class="row-label">Genre</span>
+            <span class="row-value" id="info-genre">—</span>
+          </div>
+          <div class="summary-row" id="desc-row">
+            <span class="row-label">Description</span>
+            <span class="row-value" id="info-description" style="text-align:left;max-width:320px;line-height:1.6;"></span>
+          </div>
+        </div>
+      </div>
+      <!-- Right col -->
+      <div>
+        <div class="summary-card" style="margin-bottom:0;">
+          <div class="summary-header">
+            <span class="summary-title">Location &amp; Status</span>
+          </div>
+          <div class="summary-row">
+            <span class="row-label">Current Venue</span>
+            <span class="row-value" id="info-venue">—</span>
+          </div>
+          <div class="summary-row">
+            <span class="row-label">Status</span>
+            <span class="row-value" id="info-status">—</span>
+          </div>
+          <div class="summary-row">
+            <span class="row-label">Installed At</span>
+            <span class="row-value" id="info-installed">—</span>
+          </div>
+          <div class="summary-row">
+            <span class="row-label">Removed At</span>
+            <span class="row-value" id="info-removed">—</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit form (hidden until edit mode) -->
+    <div id="edit-form-wrap" style="display:none;margin-bottom:28px;">
+      <div class="summary-card">
+        <div class="summary-header">
+          <span class="summary-title">Edit Artwork</span>
+        </div>
+        <form id="form-edit" novalidate style="padding-top:8px;">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Title *</label>
+              <input type="text" id="fe-title" name="title" />
+            </div>
+            <div class="form-group">
+              <label>Price (AUD)</label>
+              <input type="number" id="fe-price" name="price" min="0" step="0.01" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Genre</label>
+              <input type="text" id="fe-genre" name="genre" />
+            </div>
+            <div class="form-group">
+              <label>Status</label>
+              <select id="fe-status" name="status">
+                <option value="stored">Stored</option>
+                <option value="installed">Installed</option>
+                <option value="sold">Sold</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Installed At</label>
+              <input type="date" id="fe-installed" name="installed_at" />
+            </div>
+            <div class="form-group">
+              <label>Removed At</label>
+              <input type="date" id="fe-removed" name="removed_at" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea id="fe-desc" name="description"></textarea>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Condition Card -->
+    <div class="summary-card" id="condition-card">
+      <div class="summary-header">
+        <span class="summary-title">Condition</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+        <div>
+          <div style="font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--stone-gray);margin-bottom:8px;">Arrival Condition</div>
+          <div id="condition-arrival" style="font-size:14px;color:var(--warm-charcoal);line-height:1.6;">—</div>
+          <div id="condition-arrival-date" style="font-size:11px;color:var(--stone-gray);margin-top:6px;"></div>
+        </div>
+        <div>
+          <div style="font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--stone-gray);margin-bottom:8px;">Return Condition</div>
+          <div id="condition-return" style="font-size:14px;color:var(--warm-charcoal);line-height:1.6;">Not yet returned</div>
+          <div id="condition-return-date" style="font-size:11px;color:var(--stone-gray);margin-top:6px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Movement Timeline -->
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">Movement History</h2>
+      </div>
+      <div class="timeline" id="movement-timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <p style="color:var(--stone-gray);">Loading…</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sale Info (shown only when sold) -->
+    <div class="summary-card" id="sale-card" style="display:none;">
+      <div class="summary-header">
+        <span class="summary-title">Sale Details</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
+        <div>
+          <div class="summary-row">
+            <span class="row-label">Sale Price</span>
+            <span class="row-value" id="sale-price">—</span>
+          </div>
+          <div class="summary-row">
+            <span class="row-label">Tier</span>
+            <span class="row-value" id="sale-tier">—</span>
+          </div>
+          <div class="summary-row">
+            <span class="row-label">Buyer Name</span>
+            <span class="row-value" id="sale-buyer">—</span>
+          </div>
+          <div class="summary-row">
+            <span class="row-label">Buyer Email</span>
+            <span class="row-value" id="sale-email">—</span>
+          </div>
+          <div class="summary-row">
+            <span class="row-label">Delivery Date</span>
+            <span class="row-value" id="sale-delivery">—</span>
+          </div>
+          <div class="summary-row">
+            <span class="row-label">Delivered At</span>
+            <span class="row-value" id="sale-delivered">—</span>
+          </div>
+        </div>
+        <div>
+          <div class="summary-row">
+            <span class="row-label">Artist Share</span>
+            <span class="row-value" id="sale-artist-share">—</span>
+          </div>
+          <div class="summary-row">
+            <span class="row-label">Venue Commission</span>
+            <span class="row-value" id="sale-venue-commission">—</span>
+          </div>
+          <div class="summary-row">
+            <span class="row-label">UA Share</span>
+            <span class="row-value" id="sale-ua-share">—</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Sell Artwork Modal -->
+<div class="modal-backdrop" id="modal-sell">
+  <div class="modal">
+    <button class="modal-close" id="modal-sell-close">✕</button>
+    <h2 class="modal-title">Sell Artwork</h2>
+    <form id="form-sell" novalidate>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="s-price">Sale Price * (AUD)</label>
+          <input type="number" id="s-price" name="sale_price" min="0" step="0.01" required placeholder="0.00" />
+        </div>
+        <div class="form-group">
+          <label for="s-delivery">Delivery Date</label>
+          <input type="date" id="s-delivery" name="delivery_date" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="s-buyer">Buyer Name *</label>
+          <input type="text" id="s-buyer" name="buyer_name" required />
+        </div>
+        <div class="form-group">
+          <label for="s-email">Buyer Email</label>
+          <input type="email" id="s-email" name="buyer_email" />
+        </div>
+      </div>
+
+      <!-- Live split preview -->
+      <div class="summary-card" id="split-preview" style="margin-bottom:0;background:var(--cream);">
+        <div class="summary-header" style="border-bottom:1px solid var(--bone);">
+          <span class="summary-title" style="font-size:14px;">Revenue Split Preview</span>
+        </div>
+        <div class="summary-row">
+          <span class="row-label">Artist Share</span>
+          <span class="row-value" id="split-artist">—</span>
+        </div>
+        <div class="summary-row">
+          <span class="row-label">Venue Commission</span>
+          <span class="row-value" id="split-venue">—</span>
+        </div>
+        <div class="summary-row">
+          <span class="row-label">UA Share</span>
+          <span class="row-value" id="split-ua">—</span>
+        </div>
+      </div>
+
+      <div id="sell-form-error" class="alert-row alert-error" style="display:none;margin-top:16px;">
+        <div class="alert-body"><span id="sell-form-error-msg"></span></div>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" id="btn-sell-cancel">Cancel</button>
+        <button type="submit" class="btn-primary" id="btn-sell-confirm">Record Sale</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/api.js"></script>
+<script src="js/ui.js"></script>
+<script>
+  const params    = new URLSearchParams(window.location.search);
+  const artworkId = params.get('id');
+
+  if (!artworkId) { window.location.href = 'artworks.html'; }
+
+  let artworkData = null;
+
+  initPage({ page: 'artworks', breadcrumb: [
+    { label: 'Dashboard', href: 'index.html' },
+    { label: 'Artworks',  href: 'artworks.html' },
+    { label: 'Loading…' },
+  ]});
+
+  // ── Load ───────────────────────────────────────────────────
+  async function loadArtwork() {
+    try {
+      const data = await API.artworks.get(artworkId);
+      artworkData = data;
+      renderPage(data);
+    } catch (err) {
+      toast(err.message || 'Failed to load artwork', 'error');
+    }
+  }
+
+  function renderPage(a) {
+    document.title = (a.title || 'Artwork') + ' — UnveilArt Admin';
+
+    // Update breadcrumb
+    const crumb = document.querySelector('.breadcrumb span.current');
+    if (crumb) crumb.textContent = a.title;
+
+    // Header
+    document.getElementById('artwork-title').textContent = a.title;
+    const tier = a.price_tier || priceTier(a.price);
+    document.getElementById('tier-badge').innerHTML   = badge(tier, priceTierLabel(tier));
+    document.getElementById('status-badge').innerHTML = badge(a.status);
+    document.getElementById('artwork-price').textContent = a.price ? formatCurrency(a.price) : '';
+
+    if (a.status !== 'sold') {
+      document.getElementById('btn-sell').style.display = 'inline-flex';
+    }
+
+    // Info cards
+    const artistCell = a.artist_id
+      ? `<a href="artist.html?id=${esc(a.artist_id)}" class="venue-name-link">${esc(a.artist_name || a.artist_id)}</a>`
+      : '—';
+    document.getElementById('info-artist').innerHTML      = artistCell;
+    document.getElementById('info-price').textContent     = a.price ? formatCurrency(a.price) : '—';
+    document.getElementById('info-tier').innerHTML        = badge(tier, priceTierLabel(tier));
+    document.getElementById('info-genre').textContent     = a.genre || '—';
+    document.getElementById('info-description').textContent = a.description || '—';
+
+    const venueCell = a.venue_id
+      ? `<a href="venue.html?id=${esc(a.venue_id)}" class="venue-name-link">${esc(a.venue_name || a.venue_id)}</a>`
+      : '—';
+    document.getElementById('info-venue').innerHTML    = venueCell;
+    document.getElementById('info-status').innerHTML   = badge(a.status);
+    document.getElementById('info-installed').textContent = formatDate(a.installed_at);
+    document.getElementById('info-removed').textContent   = formatDate(a.removed_at);
+
+    // Condition card
+    document.getElementById('condition-arrival').textContent     = a.condition_on_arrival || '—';
+    document.getElementById('condition-arrival-date').textContent = a.installed_at ? 'Installed ' + formatDate(a.installed_at) : '';
+    if (a.condition_on_return) {
+      document.getElementById('condition-return').textContent = a.condition_on_return;
+    }
+    document.getElementById('condition-return-date').textContent = a.removed_at ? 'Removed ' + formatDate(a.removed_at) : '';
+
+    // Timeline
+    renderTimeline(a);
+
+    // Sale card
+    if (a.status === 'sold') {
+      renderSaleCard(a);
+    }
+  }
+
+  function renderTimeline(a) {
+    const timeline = document.getElementById('movement-timeline');
+    const items = [];
+
+    // Current/most recent state at top
+    if (a.status === 'sold') {
+      items.push({
+        dot: 'active',
+        title: 'Sold',
+        detail: a.buyer_name ? 'Buyer: ' + a.buyer_name : '',
+        date: a.sold_at || a.updated_at,
+      });
+    }
+
+    if (a.removed_at) {
+      items.push({
+        dot: 'warn',
+        title: 'Removed from venue',
+        detail: a.venue_name ? 'From: ' + a.venue_name : '',
+        date: a.removed_at,
+      });
+    }
+
+    if (a.venue_id || a.installed_at) {
+      const dotClass = a.status === 'installed' ? 'active' : '';
+      const venueLink = a.venue_id
+        ? `<a href="venue.html?id=${esc(a.venue_id)}" style="color:var(--gold-deep)">${esc(a.venue_name || a.venue_id)}</a>`
+        : '—';
+      items.push({
+        dot: dotClass,
+        titleHTML: 'Installed at ' + venueLink,
+        detail: a.condition_on_arrival ? 'Condition: ' + a.condition_on_arrival : '',
+        date: a.installed_at,
+      });
+    }
+
+    // Registration
+    items.push({
+      dot: '',
+      title: 'Registered',
+      detail: a.artist_name ? 'Artist: ' + a.artist_name : '',
+      date: a.created_at,
+    });
+
+    timeline.innerHTML = items.map(item => `
+      <div class="timeline-item">
+        <div class="timeline-dot ${item.dot || ''}"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">${formatDate(item.date)}</div>
+          <p><strong>${item.titleHTML || esc(item.title || '')}</strong></p>
+          ${item.detail ? `<p style="margin-top:4px;color:var(--stone-gray);font-size:12px;">${esc(item.detail)}</p>` : ''}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function renderSaleCard(a) {
+    const saleCard = document.getElementById('sale-card');
+    saleCard.style.display = '';
+
+    const salePrice = a.sale_price || a.price || 0;
+    const tier      = priceTier(salePrice);
+    const splits    = calcSplits(salePrice, tier, !!a.venue_id);
+
+    document.getElementById('sale-price').textContent     = formatCurrency(salePrice);
+    document.getElementById('sale-tier').innerHTML        = badge(tier, priceTierLabel(tier));
+    document.getElementById('sale-buyer').textContent     = a.buyer_name  || '—';
+    document.getElementById('sale-email').textContent     = a.buyer_email || '—';
+    document.getElementById('sale-delivery').textContent  = formatDate(a.delivery_date);
+    document.getElementById('sale-delivered').textContent = formatDate(a.delivered_at);
+    document.getElementById('sale-artist-share').textContent     = formatCurrency(splits.artistShare);
+    document.getElementById('sale-venue-commission').textContent = formatCurrency(splits.venueCommission);
+    document.getElementById('sale-ua-share').textContent         = formatCurrency(splits.uaShare);
+  }
+
+  // ── Edit mode ──────────────────────────────────────────────
+  function setEditMode(on) {
+    document.getElementById('info-grid-wrap').style.display  = on ? 'none' : '';
+    document.getElementById('edit-form-wrap').style.display  = on ? '' : 'none';
+    document.getElementById('btn-edit').style.display        = on ? 'none' : 'inline-flex';
+    document.getElementById('btn-sell').style.display        = (on || !artworkData || artworkData.status === 'sold') ? 'none' : 'inline-flex';
+    document.getElementById('btn-save').style.display        = on ? 'inline-flex' : 'none';
+    document.getElementById('btn-cancel-edit').style.display = on ? 'inline-flex' : 'none';
+
+    if (on && artworkData) {
+      document.getElementById('fe-title').value     = artworkData.title       || '';
+      document.getElementById('fe-price').value     = artworkData.price       || '';
+      document.getElementById('fe-genre').value     = artworkData.genre       || '';
+      document.getElementById('fe-status').value    = artworkData.status      || 'stored';
+      document.getElementById('fe-installed').value = artworkData.installed_at ? artworkData.installed_at.slice(0, 10) : '';
+      document.getElementById('fe-removed').value   = artworkData.removed_at  ? artworkData.removed_at.slice(0, 10)  : '';
+      document.getElementById('fe-desc').value      = artworkData.description || '';
+    }
+  }
+
+  document.getElementById('btn-edit').addEventListener('click', () => setEditMode(true));
+  document.getElementById('btn-cancel-edit').addEventListener('click', () => setEditMode(false));
+
+  document.getElementById('btn-save').addEventListener('click', async () => {
+    const btn = document.getElementById('btn-save');
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+
+    const data = {
+      title:        document.getElementById('fe-title').value.trim()  || null,
+      price:        parseFloat(document.getElementById('fe-price').value) || null,
+      genre:        document.getElementById('fe-genre').value.trim()  || null,
+      status:       document.getElementById('fe-status').value,
+      installed_at: document.getElementById('fe-installed').value     || null,
+      removed_at:   document.getElementById('fe-removed').value       || null,
+      description:  document.getElementById('fe-desc').value.trim()   || null,
+    };
+
+    try {
+      await API.artworks.update(artworkId, data);
+      toast('Artwork updated', 'success');
+      setEditMode(false);
+      loadArtwork();
+    } catch (err) {
+      toast(err.message || 'Failed to save', 'error');
+      btn.disabled = false;
+      btn.textContent = 'Save Changes';
+    }
+  });
+
+  // ── Sell Modal ─────────────────────────────────────────────
+  const sellModal = document.getElementById('modal-sell');
+  const sellForm  = document.getElementById('form-sell');
+
+  document.getElementById('btn-sell').addEventListener('click', () => {
+    sellForm.reset();
+    document.getElementById('sell-form-error').style.display = 'none';
+    updateSplitPreview();
+    sellModal.classList.add('open');
+  });
+  document.getElementById('modal-sell-close').addEventListener('click', () => sellModal.classList.remove('open'));
+  document.getElementById('btn-sell-cancel').addEventListener('click',   () => sellModal.classList.remove('open'));
+  sellModal.addEventListener('click', e => { if (e.target === sellModal) sellModal.classList.remove('open'); });
+
+  function updateSplitPreview() {
+    const price = parseFloat(document.getElementById('s-price').value) || 0;
+    if (!price) {
+      document.getElementById('split-artist').textContent = '—';
+      document.getElementById('split-venue').textContent  = '—';
+      document.getElementById('split-ua').textContent     = '—';
+      return;
+    }
+    const tier   = priceTier(price);
+    const splits = calcSplits(price, tier, !!(artworkData && artworkData.venue_id));
+    document.getElementById('split-artist').textContent = formatCurrency(splits.artistShare);
+    document.getElementById('split-venue').textContent  = formatCurrency(splits.venueCommission);
+    document.getElementById('split-ua').textContent     = formatCurrency(splits.uaShare);
+  }
+
+  document.getElementById('s-price').addEventListener('input', updateSplitPreview);
+
+  sellForm.addEventListener('submit', async e => {
+    e.preventDefault();
+
+    const errEl  = document.getElementById('sell-form-error');
+    const errMsg = document.getElementById('sell-form-error-msg');
+    errEl.style.display = 'none';
+
+    const salePrice = parseFloat(document.getElementById('s-price').value);
+    const buyerName = document.getElementById('s-buyer').value.trim();
+
+    if (!salePrice || salePrice <= 0) {
+      errMsg.textContent = 'Sale price is required.';
+      errEl.style.display = '';
+      return;
+    }
+    if (!buyerName) {
+      errMsg.textContent = 'Buyer name is required.';
+      errEl.style.display = '';
+      return;
+    }
+
+    const btn = document.getElementById('btn-sell-confirm');
+    btn.disabled = true;
+    btn.textContent = 'Recording…';
+
+    const data = {
+      artwork_id:    artworkId,
+      sale_price:    salePrice,
+      buyer_name:    buyerName,
+      buyer_email:   document.getElementById('s-email').value.trim()    || null,
+      delivery_date: document.getElementById('s-delivery').value        || null,
+    };
+
+    try {
+      await API.artworks.sell(data);
+      sellModal.classList.remove('open');
+      toast('Sale recorded', 'success');
+      loadArtwork();
+    } catch (err) {
+      errMsg.textContent = err.message || 'Failed to record sale.';
+      errEl.style.display = '';
+      btn.disabled = false;
+      btn.textContent = 'Record Sale';
+    }
+  });
+
+  // ── Init ───────────────────────────────────────────────────
+  loadArtwork();
+</script>
+</body>
+</html>

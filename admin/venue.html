@@ -8,129 +8,234 @@
 </head>
 <body>
 
-<nav class="admin-nav">
-  <div class="logo"><b>Unveil</b>Art <span style="font-size:13px;letter-spacing:0.14em;font-style:normal;color:rgba(250,250,247,0.45);margin-left:12px;">ADMIN</span></div>
-  <div class="nav-right">
-    <a href="index.html">Dashboard</a>
-    <a href="venues.html">Venues</a>
-    <a href="artists.html">Artists</a>
-    <button class="btn-logout" id="btn-logout">Logout</button>
-  </div>
-</nav>
+<div class="main-content">
+  <div class="admin-wrap">
 
-<div class="admin-wrap">
-  <a href="index.html" class="back-link">← Back to Dashboard</a>
+    <div class="page-header" id="page-header">
+      <div id="breadcrumb-wrap"></div>
 
-  <div style="display:flex;align-items:center;gap:16px;margin-bottom:32px;">
-    <h1 class="page-title" id="venue-name" style="margin:0;">Loading…</h1>
-    <span class="badge" id="status-badge">—</span>
-  </div>
+      <div class="page-title-row">
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+          <h1 class="page-title" id="venue-name" style="font-family:var(--serif);font-style:italic;">Loading…</h1>
+          <span id="type-badge"></span>
+          <span id="status-badge"></span>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn-secondary btn-sm" id="btn-edit-toggle">Edit</button>
+          <button class="btn-danger btn-sm" id="btn-delete">Delete</button>
+        </div>
+      </div>
+      <div id="venue-monthly" style="font-size:13px;color:var(--gold-deep);letter-spacing:0.06em;margin-top:6px;"></div>
+    </div>
 
-  <!-- Venue Info -->
-  <div class="info-grid">
-    <div class="info-card"><div class="label">Contact</div><div class="value" id="info-contact">—</div></div>
-    <div class="info-card"><div class="label">Email</div><div class="value" id="info-email">—</div></div>
-    <div class="info-card"><div class="label">Phone</div><div class="value" id="info-phone">—</div></div>
-    <div class="info-card"><div class="label">Type</div><div class="value" id="info-type">—</div></div>
-    <div class="info-card"><div class="label">Address</div><div class="value" id="info-address">—</div></div>
-  </div>
+    <!-- Tab bar -->
+    <div class="tab-bar" id="tab-bar">
+      <button class="tab active" data-tab="info">Info</button>
+      <button class="tab" data-tab="artworks">Artworks</button>
+      <button class="tab" data-tab="billing">Billing</button>
+      <button class="tab" data-tab="contract">Contract</button>
+    </div>
 
-  <!-- Subscription Status -->
-  <div class="section">
-    <div class="section-header">
-      <h2 class="section-title">Subscription</h2>
-      <button class="btn-danger" id="btn-cancel-sub" style="display:none;">Cancel Subscription</button>
-    </div>
-    <div class="sub-status-card" id="sub-card">
-      <p style="color:var(--stone-gray);font-size:14px;margin:0;">Loading…</p>
-    </div>
-  </div>
+    <div class="tab-content" id="tab-content">
 
-  <!-- Artworks -->
-  <div class="section">
-    <div class="section-header">
-      <h2 class="section-title">Installed Artworks</h2>
-      <button class="btn-primary" id="btn-add-artwork">+ Add Artwork</button>
-    </div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Artist</th>
-            <th>Installed</th>
-            <th>Condition on Arrival</th>
-            <th>Status</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="artworks-tbody">
-          <tr><td colspan="6" class="empty-state">Loading…</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+      <!-- ─── INFO TAB ──────────────────────────────────────── -->
+      <div class="tab-pane active" id="tab-info">
+        <form id="form-info" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="i-name">Venue Name</label>
+              <input type="text" id="i-name" name="name" required />
+            </div>
+            <div class="form-group">
+              <label for="i-type">Venue Type</label>
+              <select id="i-type" name="venue_type">
+                <option value="">Select…</option>
+                <option value="hotel">Hotel</option>
+                <option value="restaurant">Restaurant</option>
+                <option value="cafe">Café</option>
+                <option value="bar">Bar</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="i-address">Address</label>
+            <input type="text" id="i-address" name="address" />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="i-contact">Contact Name</label>
+              <input type="text" id="i-contact" name="contact_name" />
+            </div>
+            <div class="form-group">
+              <label for="i-email">Email</label>
+              <input type="email" id="i-email" name="email" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="i-phone">Phone</label>
+            <input type="tel" id="i-phone" name="phone" />
+          </div>
+          <div class="form-group">
+            <label for="i-notes">Notes</label>
+            <textarea id="i-notes" name="notes"></textarea>
+          </div>
+          <div id="info-error" class="alert-row alert-error" style="display:none;">
+            <div class="alert-body"><span id="info-error-msg"></span></div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn-primary" id="btn-save-info">Save Changes</button>
+          </div>
+        </form>
+      </div>
 
-  <!-- Payment History -->
-  <div class="section">
-    <div class="section-header">
-      <h2 class="section-title">Payment History</h2>
-    </div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Artworks</th>
-            <th>Amount (ex-GST)</th>
-            <th>GST</th>
-            <th>Total</th>
-            <th>Status</th>
-            <th>Invoice</th>
-          </tr>
-        </thead>
-        <tbody id="payments-tbody">
-          <tr><td colspan="7" class="empty-state">Loading…</td></tr>
-        </tbody>
-      </table>
-    </div>
+      <!-- ─── ARTWORKS TAB ──────────────────────────────────── -->
+      <div class="tab-pane" id="tab-artworks">
+        <div style="display:flex;justify-content:flex-end;margin-bottom:20px;">
+          <button class="btn-primary" id="btn-add-artwork">+ Add Artwork</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Artwork</th>
+                <th>Artist</th>
+                <th>Installed</th>
+                <th>Condition</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="artworks-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ─── BILLING TAB ───────────────────────────────────── -->
+      <div class="tab-pane" id="tab-billing">
+        <div class="summary-card" id="billing-summary">
+          <div class="summary-header">
+            <span class="summary-title">Subscription Summary</span>
+            <span id="billing-status-badge"></span>
+          </div>
+          <div id="billing-rows">
+            <div class="summary-row">
+              <span class="row-label">Loading…</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;margin-bottom:20px;" id="cancel-sub-wrap" style="display:none;">
+          <button class="btn-danger btn-sm" id="btn-cancel-sub">Cancel Subscription</button>
+        </div>
+
+        <div class="section">
+          <div class="section-header">
+            <h2 class="section-title">Payment History</h2>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Description</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Invoice</th>
+                </tr>
+              </thead>
+              <tbody id="billing-tbody">
+                <tr><td colspan="5" class="empty-state">No payment history available.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── CONTRACT TAB ─────────────────────────────────── -->
+      <div class="tab-pane" id="tab-contract">
+        <form id="form-contract" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="c-start">Contract Start</label>
+              <input type="date" id="c-start" name="contract_start" />
+            </div>
+            <div class="form-group">
+              <label for="c-renewal">Contract Renewal</label>
+              <input type="date" id="c-renewal" name="contract_renewal" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="c-status">Contract Status</label>
+              <select id="c-status" name="contract_status">
+                <option value="">Select…</option>
+                <option value="active">Active</option>
+                <option value="expired">Expired</option>
+                <option value="negotiating">Negotiating</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="c-url">Contract URL</label>
+              <input type="url" id="c-url" name="contract_url" placeholder="https://" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="c-notes">Contract Notes</label>
+            <textarea id="c-notes" name="contract_notes"></textarea>
+          </div>
+          <div id="contract-error" class="alert-row alert-error" style="display:none;">
+            <div class="alert-body"><span id="contract-error-msg"></span></div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn-primary" id="btn-save-contract">Save Contract</button>
+          </div>
+        </form>
+      </div>
+
+    </div><!-- /tab-content -->
   </div>
 </div>
 
 <!-- Add Artwork Modal -->
 <div class="modal-backdrop" id="modal-artwork">
   <div class="modal">
-    <button class="modal-close" id="modal-artwork-close">×</button>
+    <button class="modal-close" id="modal-artwork-close">✕</button>
     <h2 class="modal-title">Add Artwork</h2>
     <p style="font-size:13px;color:var(--stone-gray);margin:-12px 0 24px;">Adding an artwork will update the Stripe subscription and adjust billing immediately.</p>
-    <form id="form-artwork">
+    <form id="form-artwork" novalidate>
       <div class="form-row">
         <div class="form-group">
-          <label>Artwork Title</label>
-          <input type="text" name="title" placeholder="Untitled" />
+          <label for="a-title">Artwork Title *</label>
+          <input type="text" id="a-title" name="title" required placeholder="Untitled" />
         </div>
         <div class="form-group">
-          <label>Artist *</label>
-          <select name="artist_id" id="artist-select" required>
-            <option value="">Loading artists…</option>
+          <label for="a-artist">Artist *</label>
+          <select id="a-artist" name="artist_id" required>
+            <option value="">Select artist…</option>
           </select>
         </div>
       </div>
-      <div class="form-group">
-        <label>Installation Date *</label>
-        <input type="date" name="installed_at" required />
+      <div class="form-row">
+        <div class="form-group">
+          <label for="a-price">Price (AUD)</label>
+          <input type="number" id="a-price" name="price" min="0" step="0.01" placeholder="0.00" />
+        </div>
+        <div class="form-group">
+          <label for="a-install-date">Install Date</label>
+          <input type="date" id="a-install-date" name="installed_at" />
+        </div>
       </div>
       <div class="form-group">
-        <label>Condition on Arrival</label>
-        <textarea name="condition_on_arrival" placeholder="Note any existing damage or condition details…"></textarea>
+        <label for="a-condition">Arrival Condition</label>
+        <textarea id="a-condition" name="arrival_condition" placeholder="Note any existing damage or condition details…"></textarea>
       </div>
-      <div class="form-group">
-        <label>Notes</label>
-        <textarea name="notes"></textarea>
+      <div id="artwork-error" class="alert-row alert-error" style="display:none;">
+        <div class="alert-body"><span id="artwork-error-msg"></span></div>
       </div>
       <div class="form-actions">
-        <button type="button" class="btn-secondary" onclick="document.getElementById('modal-artwork').classList.remove('open')">Cancel</button>
-        <button type="submit" class="btn-primary">Add Artwork</button>
+        <button type="button" class="btn-secondary" id="btn-cancel-artwork">Cancel</button>
+        <button type="submit" class="btn-primary" id="btn-save-artwork">Add Artwork</button>
       </div>
     </form>
   </div>
@@ -139,55 +244,513 @@
 <!-- Remove Artwork Modal -->
 <div class="modal-backdrop" id="modal-remove">
   <div class="modal">
-    <button class="modal-close" id="modal-remove-close">×</button>
+    <button class="modal-close" id="modal-remove-close">✕</button>
     <h2 class="modal-title">Remove Artwork</h2>
     <p style="font-size:13px;color:var(--stone-gray);margin:-12px 0 24px;">Removing this artwork will reduce the subscription billing amount automatically.</p>
-    <form id="form-remove">
+    <form id="form-remove" novalidate>
       <div class="form-group">
-        <label>Removal Date *</label>
-        <input type="date" name="removed_at" id="remove-date" required />
+        <label>Arrival Condition</label>
+        <div id="remove-arrival-condition" style="font-size:14px;color:var(--warm-charcoal);padding:8px 0 12px;border-bottom:1px solid var(--bone);min-height:40px;"></div>
       </div>
       <div class="form-group">
-        <label>Condition on Return</label>
-        <textarea name="condition_on_return" placeholder="Note the artwork's condition when returned…"></textarea>
+        <label for="r-condition">Return Condition *</label>
+        <textarea id="r-condition" name="return_condition" required placeholder="Describe the artwork's condition on return…"></textarea>
+      </div>
+      <input type="hidden" id="r-artwork-id" name="artwork_id" />
+      <div id="remove-error" class="alert-row alert-error" style="display:none;">
+        <div class="alert-body"><span id="remove-error-msg"></span></div>
       </div>
       <div class="form-actions">
-        <button type="button" class="btn-secondary" onclick="document.getElementById('modal-remove').classList.remove('open')">Cancel</button>
-        <button type="submit" class="btn-danger">Confirm Remove</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- Cancel Subscription Modal -->
-<div class="modal-backdrop" id="modal-cancel">
-  <div class="modal">
-    <button class="modal-close" id="modal-cancel-close">×</button>
-    <h2 class="modal-title">Cancel Subscription</h2>
-    <p style="font-size:14px;color:var(--warm-charcoal);margin-bottom:24px;">Are you sure you want to cancel this venue's subscription? This will stop future billing.</p>
-    <form id="form-cancel">
-      <div class="form-group" style="display:flex;align-items:center;gap:12px;border-bottom:none;padding:0;">
-        <input type="checkbox" id="cancel-immediately" name="cancel_immediately" style="width:auto;border:none;padding:0;" />
-        <label for="cancel-immediately" style="text-transform:none;letter-spacing:0;font-size:14px;color:var(--warm-charcoal);margin:0;">Cancel immediately (vs. at end of current period)</label>
-      </div>
-      <div class="form-actions">
-        <button type="button" class="btn-secondary" onclick="document.getElementById('modal-cancel').classList.remove('open')">Keep Subscription</button>
-        <button type="submit" class="btn-danger">Confirm Cancel</button>
+        <button type="button" class="btn-secondary" id="btn-cancel-remove">Cancel</button>
+        <button type="submit" class="btn-danger" id="btn-confirm-remove">Confirm Remove</button>
       </div>
     </form>
   </div>
 </div>
 
 <script src="js/auth.js"></script>
-<script src="js/venue.js"></script>
+<script src="js/api.js"></script>
+<script src="js/ui.js"></script>
 <script>
-  // Show cancel button once venue data loads — handled in venue.js
-  document.addEventListener('venueLoaded', (e) => {
-    const v = e.detail;
-    if (v.stripe_subscription_id) {
-      document.getElementById('btn-cancel-sub').style.display = 'inline-flex';
+  // ── State ──────────────────────────────────────────────────
+  const params  = new URLSearchParams(location.search);
+  const venueId = params.get('id');
+  const tabParam = params.get('tab');
+
+  let venueData   = null;
+  let artworksData = [];
+  let artistsData  = [];
+
+  if (!venueId) {
+    window.location.href = 'venues.html';
+  }
+
+  // ── Init page (auth + sidebar, breadcrumb updated after load) ──
+  initPage({ page: 'venues' });
+
+  // ── Tab logic ──────────────────────────────────────────────
+  function activateTab(tabId) {
+    document.querySelectorAll('.tab').forEach(t => {
+      t.classList.toggle('active', t.dataset.tab === tabId);
+    });
+    document.querySelectorAll('.tab-pane').forEach(p => {
+      p.classList.toggle('active', p.id === 'tab-' + tabId);
+    });
+  }
+
+  document.querySelectorAll('.tab').forEach(btn => {
+    btn.addEventListener('click', () => activateTab(btn.dataset.tab));
+  });
+
+  // ── Load all data in parallel ──────────────────────────────
+  async function loadAll() {
+    // Show skeletons
+    document.getElementById('artworks-tbody').innerHTML = skeleton(4, 6);
+
+    try {
+      const [venue, artworks, artists] = await Promise.all([
+        API.venues.get(venueId),
+        API.artworks.list({ venue_id: venueId }),
+        API.artists.list(),
+      ]);
+
+      venueData    = Array.isArray(venue) ? venue[0] : venue;
+      artworksData = Array.isArray(artworks) ? artworks : (artworks.artworks || []);
+      artistsData  = Array.isArray(artists)  ? artists  : (artists.artists  || []);
+
+      renderHeader();
+      prefillInfoForm();
+      prefillContractForm();
+      renderArtworks();
+      renderBilling();
+      populateArtistSelect();
+      updateBreadcrumb();
+
+      // Auto-open tab from URL param
+      if (tabParam && ['info','artworks','billing','contract'].includes(tabParam)) {
+        activateTab(tabParam);
+      }
+
+    } catch (err) {
+      toast('Failed to load venue: ' + err.message, 'error');
+    }
+  }
+
+  // ── Header ─────────────────────────────────────────────────
+  function renderHeader() {
+    const v = venueData;
+    document.title = (v.name || 'Venue') + ' — UnveilArt Admin';
+
+    document.getElementById('venue-name').textContent = v.name || 'Unnamed Venue';
+
+    const typeLabel = v.venue_type
+      ? v.venue_type.charAt(0).toUpperCase() + v.venue_type.slice(1)
+      : null;
+
+    document.getElementById('type-badge').innerHTML = typeLabel
+      ? `<span class="badge badge-inactive">${esc(typeLabel)}</span>`
+      : '';
+
+    document.getElementById('status-badge').innerHTML = badge(v.status);
+
+    const monthly = document.getElementById('venue-monthly');
+    if (v.artwork_count > 0 && v.monthly_total) {
+      monthly.textContent = formatCurrency(v.monthly_total) + ' / month inc. GST';
+    } else {
+      monthly.textContent = '';
+    }
+
+    // Show cancel subscription button if active
+    const cancelWrap = document.getElementById('cancel-sub-wrap');
+    if (cancelWrap && (v.status === 'active' || v.status === 'past_due')) {
+      cancelWrap.style.display = 'flex';
+    }
+  }
+
+  function updateBreadcrumb() {
+    const name = venueData ? venueData.name : 'Venue';
+    // Re-init page with breadcrumb now that we have the name
+    const wrap = document.getElementById('breadcrumb-wrap');
+    const nav = document.createElement('nav');
+    nav.className = 'breadcrumb';
+    nav.innerHTML = [
+      `<a href="index.html">Dashboard</a> <span class="sep">›</span>`,
+      `<a href="venues.html">Venues</a> <span class="sep">›</span>`,
+      `<span class="current">${esc(name)}</span>`,
+    ].join(' ');
+    wrap.innerHTML = '';
+    wrap.appendChild(nav);
+  }
+
+  // ── Info form ──────────────────────────────────────────────
+  function prefillInfoForm() {
+    const v = venueData;
+    const f = document.getElementById('form-info');
+    f.name.value         = v.name         || '';
+    f.venue_type.value   = v.venue_type   || '';
+    f.address.value      = v.address      || '';
+    f.contact_name.value = v.contact_name || '';
+    f.email.value        = v.email        || '';
+    f.phone.value        = v.phone        || '';
+    f.notes.value        = v.notes        || '';
+  }
+
+  document.getElementById('form-info').addEventListener('submit', async e => {
+    e.preventDefault();
+    const errEl  = document.getElementById('info-error');
+    const errMsg = document.getElementById('info-error-msg');
+    errEl.style.display = 'none';
+
+    const btn = document.getElementById('btn-save-info');
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+
+    const f = e.target;
+    const data = {
+      name:         f.name.value.trim(),
+      venue_type:   f.venue_type.value || null,
+      address:      f.address.value.trim() || null,
+      contact_name: f.contact_name.value.trim() || null,
+      email:        f.email.value.trim() || null,
+      phone:        f.phone.value.trim() || null,
+      notes:        f.notes.value.trim() || null,
+    };
+
+    try {
+      const updated = await API.venues.update(venueId, data);
+      venueData = updated;
+      renderHeader();
+      toast('Venue updated', 'success');
+    } catch (err) {
+      errMsg.textContent = err.message || 'Failed to save.';
+      errEl.style.display = '';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Save Changes';
     }
   });
+
+  // Edit toggle (no-op here — form is always editable, button scrolls to form)
+  document.getElementById('btn-edit-toggle').addEventListener('click', () => {
+    activateTab('info');
+    document.getElementById('i-name').focus();
+  });
+
+  // ── Artworks ───────────────────────────────────────────────
+  function renderArtworks() {
+    const tbody = document.getElementById('artworks-tbody');
+    if (artworksData.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" class="empty-state">No artworks installed at this venue.</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = artworksData.map(a => {
+      const artistName = a.artist_name || (a.artists && a.artists.name) || '—';
+      const artistId   = a.artist_id;
+      const artistCell = artistId
+        ? `<a href="artist.html?id=${esc(artistId)}" class="venue-name-link">${esc(artistName)}</a>`
+        : esc(artistName);
+
+      return `<tr>
+        <td>${esc(a.title || 'Untitled')}</td>
+        <td>${artistCell}</td>
+        <td>${formatDate(a.installed_at)}</td>
+        <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${esc(a.arrival_condition || a.condition_on_arrival || '')}">${esc(a.arrival_condition || a.condition_on_arrival || '—')}</td>
+        <td>${badge(a.status)}</td>
+        <td><button class="action-btn remove" data-id="${esc(a.id)}" data-condition="${esc(a.arrival_condition || a.condition_on_arrival || '')}">Remove</button></td>
+      </tr>`;
+    }).join('');
+
+    // Attach remove handlers
+    tbody.querySelectorAll('.action-btn.remove').forEach(btn => {
+      btn.addEventListener('click', () => openRemoveModal(btn.dataset.id, btn.dataset.condition));
+    });
+  }
+
+  function populateArtistSelect() {
+    const sel = document.getElementById('a-artist');
+    const active = artistsData.filter(a => a.status === 'active' || !a.status);
+    sel.innerHTML = '<option value="">Select artist…</option>' +
+      active.map(a => `<option value="${esc(a.id)}">${esc(a.name)}</option>`).join('');
+  }
+
+  // Add Artwork Modal
+  const modalArtwork = document.getElementById('modal-artwork');
+  document.getElementById('btn-add-artwork').addEventListener('click', () => {
+    document.getElementById('form-artwork').reset();
+    document.getElementById('artwork-error').style.display = 'none';
+    // Default install date to today
+    const today = new Date().toISOString().slice(0, 10);
+    document.getElementById('a-install-date').value = today;
+    modalArtwork.classList.add('open');
+  });
+  document.getElementById('modal-artwork-close').addEventListener('click', () => modalArtwork.classList.remove('open'));
+  document.getElementById('btn-cancel-artwork').addEventListener('click', () => modalArtwork.classList.remove('open'));
+  modalArtwork.addEventListener('click', e => { if (e.target === modalArtwork) modalArtwork.classList.remove('open'); });
+
+  document.getElementById('form-artwork').addEventListener('submit', async e => {
+    e.preventDefault();
+    const errEl  = document.getElementById('artwork-error');
+    const errMsg = document.getElementById('artwork-error-msg');
+    errEl.style.display = 'none';
+
+    const btn = document.getElementById('btn-save-artwork');
+    btn.disabled = true;
+    btn.textContent = 'Adding…';
+
+    const f = e.target;
+    const data = {
+      title:             f.title.value.trim() || 'Untitled',
+      artist_id:         f.artist_id.value || null,
+      venue_id:          venueId,
+      price:             f.price.value ? parseFloat(f.price.value) : null,
+      arrival_condition: f.arrival_condition.value.trim() || null,
+      installed_at:      f.installed_at.value || null,
+    };
+
+    if (!data.artist_id) {
+      errMsg.textContent = 'Please select an artist.';
+      errEl.style.display = '';
+      btn.disabled = false;
+      btn.textContent = 'Add Artwork';
+      return;
+    }
+
+    try {
+      await API.artworks.create(data);
+      modalArtwork.classList.remove('open');
+      toast('Artwork added — subscription updated', 'success');
+      // Refresh artworks and billing
+      const [artworks, venue] = await Promise.all([
+        API.artworks.list({ venue_id: venueId }),
+        API.venues.get(venueId),
+      ]);
+      artworksData = Array.isArray(artworks) ? artworks : (artworks.artworks || []);
+      venueData    = Array.isArray(venue) ? venue[0] : venue;
+      renderArtworks();
+      renderHeader();
+      renderBilling();
+    } catch (err) {
+      errMsg.textContent = err.message || 'Failed to add artwork.';
+      errEl.style.display = '';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Add Artwork';
+    }
+  });
+
+  // Remove Artwork Modal
+  const modalRemove = document.getElementById('modal-remove');
+
+  function openRemoveModal(artworkId, arrivalCondition) {
+    document.getElementById('form-remove').reset();
+    document.getElementById('remove-error').style.display = 'none';
+    document.getElementById('r-artwork-id').value = artworkId;
+    document.getElementById('remove-arrival-condition').textContent = arrivalCondition || '—';
+    modalRemove.classList.add('open');
+  }
+
+  document.getElementById('modal-remove-close').addEventListener('click', () => modalRemove.classList.remove('open'));
+  document.getElementById('btn-cancel-remove').addEventListener('click', () => modalRemove.classList.remove('open'));
+  modalRemove.addEventListener('click', e => { if (e.target === modalRemove) modalRemove.classList.remove('open'); });
+
+  document.getElementById('form-remove').addEventListener('submit', async e => {
+    e.preventDefault();
+    const errEl  = document.getElementById('remove-error');
+    const errMsg = document.getElementById('remove-error-msg');
+    errEl.style.display = 'none';
+
+    const f = e.target;
+    const returnCondition = f.return_condition.value.trim();
+
+    if (!returnCondition) {
+      errMsg.textContent = 'Return condition is required.';
+      errEl.style.display = '';
+      return;
+    }
+
+    const btn = document.getElementById('btn-confirm-remove');
+    btn.disabled = true;
+    btn.textContent = 'Removing…';
+
+    try {
+      await API.artworks.remove({
+        artwork_id:       f.artwork_id.value,
+        return_condition: returnCondition,
+      });
+      modalRemove.classList.remove('open');
+      toast('Artwork removed — subscription updated', 'success');
+      // Refresh artworks and billing
+      const [artworks, venue] = await Promise.all([
+        API.artworks.list({ venue_id: venueId }),
+        API.venues.get(venueId),
+      ]);
+      artworksData = Array.isArray(artworks) ? artworks : (artworks.artworks || []);
+      venueData    = Array.isArray(venue) ? venue[0] : venue;
+      renderArtworks();
+      renderHeader();
+      renderBilling();
+    } catch (err) {
+      errMsg.textContent = err.message || 'Failed to remove artwork.';
+      errEl.style.display = '';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Confirm Remove';
+    }
+  });
+
+  // ── Billing ────────────────────────────────────────────────
+  function renderBilling() {
+    const v = venueData;
+    const count    = v.artwork_count || artworksData.filter(a => a.status === 'installed').length || 0;
+    const rate     = 150;
+    const subtotal = count * rate;
+    const gst      = subtotal * 0.1;
+    const total    = subtotal + gst;
+
+    document.getElementById('billing-status-badge').innerHTML = badge(v.status);
+
+    document.getElementById('billing-rows').innerHTML = `
+      <div class="summary-row">
+        <span class="row-label">Artworks</span>
+        <span class="row-value">${count}</span>
+      </div>
+      <div class="summary-row">
+        <span class="row-label">Rate</span>
+        <span class="row-value">$150 / artwork / month</span>
+      </div>
+      <div class="summary-row">
+        <span class="row-label">Subtotal</span>
+        <span class="row-value">${formatCurrency(subtotal)}</span>
+      </div>
+      <div class="summary-row">
+        <span class="row-label">GST (10%)</span>
+        <span class="row-value">${formatCurrency(gst)}</span>
+      </div>
+      <div class="summary-row">
+        <span class="row-label">Total</span>
+        <span class="row-value bold" style="font-size:16px;font-family:var(--serif);">${formatCurrency(total)}</span>
+      </div>
+      ${v.stripe_customer_id ? `
+      <div class="summary-row">
+        <span class="row-label">Stripe Customer</span>
+        <span class="row-value" style="font-size:12px;font-family:monospace;">${esc(v.stripe_customer_id)}</span>
+      </div>` : ''}
+    `;
+
+    // Payment history
+    const billingTbody = document.getElementById('billing-tbody');
+    const history = v.billing_history;
+    if (history && history.length > 0) {
+      billingTbody.innerHTML = history.map(p => `
+        <tr>
+          <td>${formatDate(p.date || p.created)}</td>
+          <td>${esc(p.description || '—')}</td>
+          <td>${formatCurrency(p.amount)}</td>
+          <td>${badge(p.status || 'completed')}</td>
+          <td>${p.invoice_url
+            ? `<a href="${esc(p.invoice_url)}" target="_blank" rel="noopener" class="action-btn">View →</a>`
+            : '—'}</td>
+        </tr>
+      `).join('');
+    } else {
+      billingTbody.innerHTML = `<tr><td colspan="5" class="empty-state">No payment history available.</td></tr>`;
+    }
+  }
+
+  // Cancel subscription
+  document.getElementById('btn-cancel-sub').addEventListener('click', () => {
+    showModal(
+      'Cancel Subscription',
+      `<p style="font-size:14px;color:var(--warm-charcoal);margin-bottom:8px;">Are you sure you want to cancel the subscription for <strong>${esc(venueData ? venueData.name : 'this venue')}</strong>?</p>
+       <p style="font-size:13px;color:var(--stone-gray);">This will stop future billing. All installed artworks will remain on record.</p>`,
+      async () => {
+        await API.venues.update(venueId, { status: 'cancelled' });
+        toast('Subscription cancelled', 'success');
+        const venue = await API.venues.get(venueId);
+        venueData = Array.isArray(venue) ? venue[0] : venue;
+        renderHeader();
+        renderBilling();
+        document.getElementById('cancel-sub-wrap').style.display = 'none';
+      },
+      'Cancel Subscription'
+    ).catch(() => {});
+  });
+
+  // ── Contract form ──────────────────────────────────────────
+  function prefillContractForm() {
+    const v = venueData;
+    document.getElementById('c-start').value    = v.contract_start   || '';
+    document.getElementById('c-renewal').value  = v.contract_renewal || '';
+    document.getElementById('c-status').value   = v.contract_status  || '';
+    document.getElementById('c-url').value      = v.contract_url     || '';
+    document.getElementById('c-notes').value    = v.contract_notes   || '';
+  }
+
+  document.getElementById('form-contract').addEventListener('submit', async e => {
+    e.preventDefault();
+    const errEl  = document.getElementById('contract-error');
+    const errMsg = document.getElementById('contract-error-msg');
+    errEl.style.display = 'none';
+
+    const btn = document.getElementById('btn-save-contract');
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+
+    const f = e.target;
+    const data = {
+      contract_start:   f.contract_start.value   || null,
+      contract_renewal: f.contract_renewal.value || null,
+      contract_status:  f.contract_status.value  || null,
+      contract_url:     f.contract_url.value.trim() || null,
+      contract_notes:   f.contract_notes.value.trim() || null,
+    };
+
+    try {
+      const updated = await API.venues.update(venueId, data);
+      venueData = updated;
+      toast('Contract saved', 'success');
+    } catch (err) {
+      errMsg.textContent = err.message || 'Failed to save contract.';
+      errEl.style.display = '';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Save Contract';
+    }
+  });
+
+  // ── Delete venue ───────────────────────────────────────────
+  document.getElementById('btn-delete').addEventListener('click', () => {
+    const name = venueData ? venueData.name : 'this venue';
+    showModal(
+      'Delete Venue',
+      `<p style="font-size:14px;color:var(--warm-charcoal);margin-bottom:8px;">Are you sure you want to delete <strong>${esc(name)}</strong>?</p>
+       <p style="font-size:13px;color:var(--stone-gray);">This will mark the venue as cancelled and stop all billing. This action cannot be undone.</p>`,
+      async () => {
+        await API.venues.update(venueId, { status: 'cancelled' });
+        window.location.href = 'venues.html';
+      },
+      'Delete'
+    ).catch(() => {});
+
+    // Style the confirm button as danger after modal renders
+    setTimeout(() => {
+      const confirmBtn = document.getElementById('__ui-modal-confirm');
+      if (confirmBtn) {
+        confirmBtn.className = 'btn-danger';
+      }
+    }, 60);
+  });
+
+  // ── Close modals on Escape ─────────────────────────────────
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      modalArtwork.classList.remove('open');
+      modalRemove.classList.remove('open');
+    }
+  });
+
+  // ── Boot ───────────────────────────────────────────────────
+  loadAll();
 </script>
 </body>
 </html>

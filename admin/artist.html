@@ -7,136 +7,479 @@
 <link rel="stylesheet" href="css/admin.css" />
 </head>
 <body>
+<div class="main-content">
+  <div class="admin-wrap">
+    <div id="breadcrumb-wrap"></div>
 
-<nav class="admin-nav">
-  <div class="logo"><b>Unveil</b>Art <span style="font-size:13px;letter-spacing:0.14em;font-style:normal;color:rgba(250,250,247,0.45);margin-left:12px;">ADMIN</span></div>
-  <div class="nav-right">
-    <a href="index.html">Dashboard</a>
-    <a href="venues.html">Venues</a>
-    <a href="artists.html">Artists</a>
-    <button class="btn-logout" id="btn-logout">Logout</button>
-  </div>
-</nav>
-
-<div class="admin-wrap">
-  <a href="artists.html" class="back-link">← Back to Artists</a>
-
-  <div style="display:flex;align-items:center;gap:16px;margin-bottom:32px;">
-    <h1 class="page-title" id="artist-name" style="margin:0;">Loading…</h1>
-    <span class="badge" id="status-badge">—</span>
-  </div>
-
-  <div class="info-grid">
-    <div class="info-card"><div class="label">Email</div><div class="value" id="info-email">—</div></div>
-    <div class="info-card"><div class="label">Phone</div><div class="value" id="info-phone">—</div></div>
-    <div class="info-card"><div class="label">Instagram</div><div class="value" id="info-instagram">—</div></div>
-    <div class="info-card"><div class="label">Website</div><div class="value" id="info-website">—</div></div>
-  </div>
-
-  <div class="section" id="bio-section" style="display:none;">
-    <div class="section-header"><h2 class="section-title">Bio</h2></div>
-    <div class="sub-status-card" id="info-bio" style="font-size:14px;line-height:1.7;color:var(--warm-charcoal);"></div>
-  </div>
-
-  <div class="section">
-    <div class="section-header">
-      <h2 class="section-title">Installed Artworks</h2>
+    <div class="page-header">
+      <div class="page-title-row">
+        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+          <h1 class="page-title" id="artist-name">Loading…</h1>
+          <span id="status-badge"></span>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn-secondary" id="btn-edit" style="display:none;">Edit</button>
+          <button class="btn-primary"   id="btn-save" style="display:none;">Save Changes</button>
+          <button class="btn-secondary" id="btn-cancel-edit" style="display:none;">Cancel</button>
+        </div>
+      </div>
     </div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Venue</th>
-            <th>Installed</th>
-            <th>Condition on Arrival</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody id="artworks-tbody">
-          <tr><td colspan="5" class="empty-state">Loading…</td></tr>
-        </tbody>
-      </table>
+
+    <!-- Tabs -->
+    <div class="tab-bar">
+      <button class="tab active" data-tab="info">Info</button>
+      <button class="tab" data-tab="artworks">Artworks</button>
+      <button class="tab" data-tab="settlement">Settlement</button>
     </div>
+
+    <div class="tab-content">
+
+      <!-- ── INFO TAB ──────────────────────────────────────── -->
+      <div class="tab-pane active" id="tab-info">
+        <form id="form-info" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Name *</label>
+              <input type="text" name="name" id="fi-name" disabled />
+            </div>
+            <div class="form-group">
+              <label>Status</label>
+              <select name="status" id="fi-status" disabled>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" name="email" id="fi-email" disabled />
+            </div>
+            <div class="form-group">
+              <label>Phone</label>
+              <input type="tel" name="phone" id="fi-phone" disabled />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Instagram</label>
+              <input type="text" name="instagram" id="fi-instagram" placeholder="@handle" disabled />
+            </div>
+            <div class="form-group">
+              <label>Website</label>
+              <input type="url" name="website" id="fi-website" placeholder="https://" disabled />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Genre</label>
+              <input type="text" name="genre" id="fi-genre" disabled />
+            </div>
+            <div class="form-group">
+              <label>Style</label>
+              <input type="text" name="style" id="fi-style" disabled />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Portfolio URL</label>
+              <input type="url" name="portfolio_url" id="fi-portfolio" placeholder="https://" disabled />
+            </div>
+            <div class="form-group">
+              <label>Contract Date</label>
+              <input type="date" name="contract_date" id="fi-contract" disabled />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Bio</label>
+            <textarea name="bio" id="fi-bio" disabled></textarea>
+          </div>
+          <div class="form-group">
+            <label>Notes</label>
+            <textarea name="notes" id="fi-notes" disabled></textarea>
+          </div>
+        </form>
+      </div>
+
+      <!-- ── ARTWORKS TAB ──────────────────────────────────── -->
+      <div class="tab-pane" id="tab-artworks">
+        <div style="display:flex;justify-content:flex-end;margin-bottom:16px;">
+          <button class="btn-primary" id="btn-add-artwork">+ Add Artwork</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Venue</th>
+                <th>Price</th>
+                <th>Tier</th>
+                <th>Status</th>
+                <th>Installed At</th>
+              </tr>
+            </thead>
+            <tbody id="artworks-tbody">
+              <tr><td colspan="6" class="empty-state">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── SETTLEMENT TAB ────────────────────────────────── -->
+      <div class="tab-pane" id="tab-settlement">
+        <div class="summary-card" id="settlement-summary">
+          <div class="summary-header">
+            <span class="summary-title">Settlement Estimate</span>
+            <button class="btn-secondary btn-sm" id="btn-mark-settled">Mark as Settled</button>
+          </div>
+          <div class="summary-row">
+            <span class="row-label">Installed Works</span>
+            <span class="row-value" id="settle-works">—</span>
+          </div>
+          <div class="summary-row">
+            <span class="row-label">Subscription Share (10% × $150/work)</span>
+            <span class="row-value" id="settle-sub">—</span>
+          </div>
+          <div class="summary-row">
+            <span class="row-label">Sales Commission</span>
+            <span class="row-value" id="settle-sales">—</span>
+          </div>
+          <div class="summary-row" style="border-top:1px solid var(--bone);margin-top:4px;padding-top:12px;">
+            <span class="row-label" style="font-weight:600;color:var(--deep-black);">Total Estimate</span>
+            <span class="row-value" id="settle-total" style="font-size:16px;"></span>
+          </div>
+        </div>
+
+        <div class="section-header" style="margin-top:32px;">
+          <h2 class="section-title">Settlement History</h2>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Month</th>
+                <th>Subscription</th>
+                <th>Sales</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="settlements-tbody">
+              <tr><td colspan="6" class="empty-state">No settlement history available.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /tab-content -->
+  </div>
+</div>
+
+<!-- Add Artwork Modal -->
+<div class="modal-backdrop" id="modal-artwork">
+  <div class="modal">
+    <button class="modal-close" id="modal-artwork-close">✕</button>
+    <h2 class="modal-title">Add Artwork</h2>
+    <form id="form-artwork" novalidate>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="aw-title">Title *</label>
+          <input type="text" id="aw-title" name="title" required />
+        </div>
+        <div class="form-group">
+          <label for="aw-price">Price (AUD)</label>
+          <input type="number" id="aw-price" name="price" min="0" step="0.01" placeholder="0.00" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="aw-genre">Genre</label>
+          <input type="text" id="aw-genre" name="genre" />
+        </div>
+        <div class="form-group">
+          <label for="aw-status">Status</label>
+          <select id="aw-status" name="status">
+            <option value="stored">Stored</option>
+            <option value="installed">Installed</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group" id="venue-group" style="display:none;">
+        <label for="aw-venue">Venue</label>
+        <select id="aw-venue" name="venue_id">
+          <option value="">Select venue…</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="aw-desc">Description</label>
+        <textarea id="aw-desc" name="description"></textarea>
+      </div>
+      <div id="artwork-form-error" class="alert-row alert-error" style="display:none;">
+        <div class="alert-body"><span id="artwork-form-error-msg"></span></div>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" id="btn-artwork-cancel">Cancel</button>
+        <button type="submit" class="btn-primary" id="btn-artwork-save">Add Artwork</button>
+      </div>
+    </form>
   </div>
 </div>
 
 <script src="js/auth.js"></script>
+<script src="js/api.js"></script>
+<script src="js/ui.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  requireLogin();
-  document.getElementById('btn-logout').addEventListener('click', logout);
-
-  const params = new URLSearchParams(window.location.search);
+  const params   = new URLSearchParams(window.location.search);
   const artistId = params.get('id');
-  if (!artistId) { window.location.href = 'artists.html'; return; }
 
-  loadArtist();
+  if (!artistId) { window.location.href = 'artists.html'; }
 
+  let artistData  = null;
+  let editMode    = false;
+
+  // ── Init page (breadcrumb populated after load) ────────────
+  initPage({ page: 'artists', breadcrumb: [
+    { label: 'Dashboard', href: 'index.html' },
+    { label: 'Artists',   href: 'artists.html' },
+    { label: 'Loading…' },
+  ]});
+
+  // ── Tabs ───────────────────────────────────────────────────
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+    });
+  });
+
+  // ── Load artist ────────────────────────────────────────────
   async function loadArtist() {
     try {
-      const data = await fnFetch('admin-artists?id=' + artistId);
+      const data = await API.artists.get(artistId);
+      artistData = data;
       renderHeader(data);
+      renderInfoForm(data);
       renderArtworks(data.artworks || []);
+      renderSettlement(data);
+      updateBreadcrumb(data.name);
     } catch (err) {
-      showToast(err.message, true);
+      toast(err.message || 'Failed to load artist', 'error');
     }
   }
 
+  function updateBreadcrumb(name) {
+    const crumb = document.querySelector('.breadcrumb span.current');
+    if (crumb) crumb.textContent = name;
+    document.title = name + ' — UnveilArt Admin';
+  }
+
   function renderHeader(a) {
-    document.title = a.name + ' — UnveilArt Admin';
     document.getElementById('artist-name').textContent = a.name;
-    document.getElementById('status-badge').textContent = a.status;
-    document.getElementById('status-badge').className = 'badge badge-' + (a.status === 'active' ? 'active' : 'inactive');
-    document.getElementById('info-email').textContent = a.email || '—';
-    document.getElementById('info-phone').textContent = a.phone || '—';
-    if (a.instagram) {
-      document.getElementById('info-instagram').innerHTML = `<a href="https://instagram.com/${a.instagram.replace('@','')}" target="_blank" rel="noopener" style="color:var(--gold-deep)">${esc(a.instagram)}</a>`;
-    } else {
-      document.getElementById('info-instagram').textContent = '—';
-    }
-    if (a.website) {
-      document.getElementById('info-website').innerHTML = `<a href="${esc(a.website)}" target="_blank" rel="noopener" style="color:var(--gold-deep)">${esc(a.website)}</a>`;
-    } else {
-      document.getElementById('info-website').textContent = '—';
-    }
-    if (a.bio) {
-      document.getElementById('bio-section').style.display = '';
-      document.getElementById('info-bio').textContent = a.bio;
-    }
+    document.getElementById('status-badge').innerHTML  = badge(a.status);
+    document.getElementById('btn-edit').style.display  = 'inline-flex';
+  }
+
+  function renderInfoForm(a) {
+    document.getElementById('fi-name').value      = a.name        || '';
+    document.getElementById('fi-email').value     = a.email       || '';
+    document.getElementById('fi-phone').value     = a.phone       || '';
+    document.getElementById('fi-instagram').value = a.instagram ? ('@' + a.instagram.replace(/^@/, '')) : '';
+    document.getElementById('fi-website').value   = a.website     || '';
+    document.getElementById('fi-genre').value     = a.genre       || '';
+    document.getElementById('fi-style').value     = a.style       || '';
+    document.getElementById('fi-portfolio').value = a.portfolio_url || '';
+    document.getElementById('fi-contract').value  = a.contract_date ? a.contract_date.slice(0, 10) : '';
+    document.getElementById('fi-bio').value       = a.bio         || '';
+    document.getElementById('fi-notes').value     = a.notes       || '';
+    document.getElementById('fi-status').value    = a.status      || 'active';
   }
 
   function renderArtworks(artworks) {
     const tbody = document.getElementById('artworks-tbody');
-    if (artworks.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="5" class="empty-state">No artworks installed yet.</td></tr>`;
+    if (!artworks.length) {
+      tbody.innerHTML = `<tr><td colspan="6" class="empty-state">No artworks yet.</td></tr>`;
       return;
     }
-    tbody.innerHTML = artworks.map(a => `
-      <tr>
-        <td>${esc(a.title || '—')}</td>
-        <td>${a.venues ? `<a href="venue.html?id=${a.venue_id}" style="color:var(--gold-deep)">${esc(a.venues.name)}</a>` : '—'}</td>
-        <td>${a.installed_at || '—'}</td>
-        <td>${esc(a.condition_on_arrival || '—')}</td>
-        <td><span class="badge badge-${a.status === 'installed' ? 'active' : 'inactive'}">${a.status}</span></td>
-      </tr>
-    `).join('');
+    tbody.innerHTML = artworks.map(aw => {
+      const tier = priceTier(aw.price);
+      const venueCell = aw.venue_id
+        ? `<a href="venue.html?id=${esc(aw.venue_id)}" class="venue-name-link">${esc(aw.venue_name || aw.venue_id)}</a>`
+        : '—';
+      return `<tr>
+        <td><a href="artwork.html?id=${esc(aw.id)}" class="venue-name-link">${esc(aw.title)}</a></td>
+        <td>${venueCell}</td>
+        <td>${aw.price != null ? formatCurrency(aw.price) : '—'}</td>
+        <td>${badge(tier, priceTierLabel(tier))}</td>
+        <td>${badge(aw.status)}</td>
+        <td>${formatDate(aw.installed_at)}</td>
+      </tr>`;
+    }).join('');
   }
-});
 
-function esc(str) {
-  if (!str) return '';
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+  function renderSettlement(a) {
+    const artworks      = a.artworks || [];
+    const installedWork = artworks.filter(aw => aw.status === 'installed');
+    const soldWorks     = artworks.filter(aw => aw.status === 'sold');
 
-function showToast(msg, isError = false) {
-  let t = document.getElementById('toast');
-  if (!t) { t = document.createElement('div'); t.id = 'toast'; t.className = 'toast'; document.body.appendChild(t); }
-  t.textContent = msg;
-  t.className = 'toast' + (isError ? ' error' : '');
-  requestAnimationFrame(() => { requestAnimationFrame(() => { t.classList.add('show'); }); });
-  setTimeout(() => { t.classList.remove('show'); }, 3500);
-}
+    const subIncome = installedWork.length * 15; // 10% of $150
+
+    let salesCommission = 0;
+    soldWorks.forEach(aw => {
+      if (aw.price) {
+        const splits = calcSplits(aw.sale_price || aw.price, priceTier(aw.sale_price || aw.price), !!aw.venue_id);
+        salesCommission += splits.artistShare;
+      }
+    });
+
+    const total = subIncome + salesCommission;
+
+    document.getElementById('settle-works').textContent = installedWork.length;
+    document.getElementById('settle-sub').textContent   = formatCurrency(subIncome);
+    document.getElementById('settle-sales').textContent = formatCurrency(salesCommission);
+    document.getElementById('settle-total').textContent = formatCurrency(total);
+  }
+
+  // ── Edit mode ──────────────────────────────────────────────
+  function setEditMode(on) {
+    editMode = on;
+    const fields = document.querySelectorAll('#form-info input, #form-info select, #form-info textarea');
+    fields.forEach(f => { f.disabled = !on; });
+    document.getElementById('btn-edit').style.display        = on ? 'none' : 'inline-flex';
+    document.getElementById('btn-save').style.display        = on ? 'inline-flex' : 'none';
+    document.getElementById('btn-cancel-edit').style.display = on ? 'inline-flex' : 'none';
+  }
+
+  document.getElementById('btn-edit').addEventListener('click', () => setEditMode(true));
+  document.getElementById('btn-cancel-edit').addEventListener('click', () => {
+    renderInfoForm(artistData);
+    setEditMode(false);
+  });
+
+  document.getElementById('btn-save').addEventListener('click', async () => {
+    const btn = document.getElementById('btn-save');
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+
+    const igRaw = document.getElementById('fi-instagram').value.trim();
+    const data = {
+      name:          document.getElementById('fi-name').value.trim(),
+      email:         document.getElementById('fi-email').value.trim()     || null,
+      phone:         document.getElementById('fi-phone').value.trim()     || null,
+      instagram:     igRaw ? igRaw.replace(/^@/, '') : null,
+      website:       document.getElementById('fi-website').value.trim()   || null,
+      genre:         document.getElementById('fi-genre').value.trim()     || null,
+      style:         document.getElementById('fi-style').value.trim()     || null,
+      portfolio_url: document.getElementById('fi-portfolio').value.trim() || null,
+      contract_date: document.getElementById('fi-contract').value         || null,
+      bio:           document.getElementById('fi-bio').value.trim()       || null,
+      notes:         document.getElementById('fi-notes').value.trim()     || null,
+      status:        document.getElementById('fi-status').value,
+    };
+
+    try {
+      const updated = await API.artists.update(artistId, data);
+      artistData = { ...artistData, ...data };
+      renderHeader(artistData);
+      setEditMode(false);
+      toast('Artist updated', 'success');
+    } catch (err) {
+      toast(err.message || 'Failed to save', 'error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Save Changes';
+    }
+  });
+
+  // ── Mark as Settled ────────────────────────────────────────
+  document.getElementById('btn-mark-settled').addEventListener('click', () => {
+    showModal(
+      'Mark as Settled',
+      '<p style="font-size:14px;color:var(--warm-charcoal);">Mark this artist\'s current settlement as complete? This records payment as processed.</p>',
+      async () => {
+        toast('Settlement marked as complete', 'success');
+      },
+      'Mark Complete'
+    );
+  });
+
+  // ── Add Artwork Modal ──────────────────────────────────────
+  const artworkModal = document.getElementById('modal-artwork');
+  const artworkForm  = document.getElementById('form-artwork');
+
+  document.getElementById('btn-add-artwork').addEventListener('click', async () => {
+    artworkForm.reset();
+    document.getElementById('artwork-form-error').style.display = 'none';
+    document.getElementById('venue-group').style.display = 'none';
+
+    // Load venues into selector
+    try {
+      const venueData = await API.venues.list();
+      const venues = Array.isArray(venueData) ? venueData : (venueData.venues || []);
+      const sel = document.getElementById('aw-venue');
+      sel.innerHTML = '<option value="">Select venue…</option>' +
+        venues.map(v => `<option value="${esc(v.id)}">${esc(v.name)}</option>`).join('');
+    } catch (e) { /* ignore */ }
+
+    artworkModal.classList.add('open');
+  });
+
+  document.getElementById('modal-artwork-close').addEventListener('click', () => artworkModal.classList.remove('open'));
+  document.getElementById('btn-artwork-cancel').addEventListener('click', () => artworkModal.classList.remove('open'));
+  artworkModal.addEventListener('click', e => { if (e.target === artworkModal) artworkModal.classList.remove('open'); });
+
+  // Show/hide venue selector based on status
+  document.getElementById('aw-status').addEventListener('change', e => {
+    document.getElementById('venue-group').style.display = e.target.value === 'installed' ? '' : 'none';
+  });
+
+  artworkForm.addEventListener('submit', async e => {
+    e.preventDefault();
+
+    const errEl  = document.getElementById('artwork-form-error');
+    const errMsg = document.getElementById('artwork-form-error-msg');
+    errEl.style.display = 'none';
+
+    const title = document.getElementById('aw-title').value.trim();
+    if (!title) {
+      errMsg.textContent = 'Artwork title is required.';
+      errEl.style.display = '';
+      return;
+    }
+
+    const btn = document.getElementById('btn-artwork-save');
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+
+    const statusVal = document.getElementById('aw-status').value;
+    const data = {
+      title,
+      artist_id:   artistId,
+      price:       parseFloat(document.getElementById('aw-price').value) || null,
+      genre:       document.getElementById('aw-genre').value.trim()  || null,
+      description: document.getElementById('aw-desc').value.trim()   || null,
+      status:      statusVal,
+      venue_id:    statusVal === 'installed' ? (document.getElementById('aw-venue').value || null) : null,
+      installed_at: statusVal === 'installed' ? new Date().toISOString().slice(0, 10) : null,
+    };
+
+    try {
+      await API.artworks.create(data);
+      artworkModal.classList.remove('open');
+      toast('Artwork added', 'success');
+      loadArtist();
+    } catch (err) {
+      errMsg.textContent = err.message || 'Failed to add artwork.';
+      errEl.style.display = '';
+      btn.disabled = false;
+      btn.textContent = 'Add Artwork';
+    }
+  });
+
+  // ── Init ───────────────────────────────────────────────────
+  loadArtist();
 </script>
 </body>
 </html>

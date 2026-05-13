@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Revenue — UnveilArt Admin</title>
+<link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+<div class="main-content">
+  <div class="admin-wrap">
+    <div id="breadcrumb-wrap"></div>
+
+    <div class="page-header">
+      <div class="page-title-row">
+        <h1 class="page-title">Revenue</h1>
+      </div>
+      <!-- Period selector -->
+      <div class="filter-tabs" id="period-tabs" style="margin-top:12px;">
+        <button class="filter-tab active" data-period="current_month">This Month</button>
+        <button class="filter-tab" data-period="last_month">Last Month</button>
+        <button class="filter-tab" data-period="current_quarter">This Quarter</button>
+        <button class="filter-tab" data-period="current_year">This Year</button>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tab-bar" style="margin-top:8px;">
+      <button class="tab active" data-tab="subscription">Subscription</button>
+      <button class="tab" data-tab="sales">Sales</button>
+      <button class="tab" data-tab="settlements">Settlements</button>
+    </div>
+
+    <div class="tab-content">
+
+      <!-- ── SUBSCRIPTION TAB ──────────────────────────────── -->
+      <div class="tab-pane active" id="tab-subscription">
+        <div class="summary-card">
+          <div class="summary-header">
+            <span class="summary-title">Subscription Revenue</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+            <div>
+              <div style="font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--stone-gray);margin-bottom:8px;">Total (inc. GST)</div>
+              <div id="sub-total" style="font-family:var(--serif);font-size:32px;font-weight:280;letter-spacing:-0.02em;">—</div>
+            </div>
+            <div>
+              <div style="font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--stone-gray);margin-bottom:8px;">GST</div>
+              <div id="sub-gst" style="font-family:var(--serif);font-size:32px;font-weight:280;letter-spacing:-0.02em;">—</div>
+            </div>
+            <div>
+              <div style="font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--stone-gray);margin-bottom:8px;">Net (ex. GST)</div>
+              <div id="sub-net" style="font-family:var(--serif);font-size:32px;font-weight:280;letter-spacing:-0.02em;">—</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Venue</th>
+                <th>Artworks</th>
+                <th>Rate</th>
+                <th>Subtotal</th>
+                <th>GST</th>
+                <th>Total</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="sub-tbody"></tbody>
+            <tfoot id="sub-tfoot" style="background:var(--cream);">
+              <tr>
+                <td colspan="3" style="font-weight:600;font-size:12px;letter-spacing:0.04em;padding:12px 16px;">Totals</td>
+                <td id="foot-subtotal" style="font-weight:600;padding:12px 16px;"></td>
+                <td id="foot-gst"      style="font-weight:600;padding:12px 16px;"></td>
+                <td id="foot-total"    style="font-weight:600;padding:12px 16px;"></td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── SALES TAB ─────────────────────────────────────── -->
+      <div class="tab-pane" id="tab-sales">
+        <div class="summary-card">
+          <div class="summary-header">
+            <span class="summary-title">Sales Summary</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;">
+            <div>
+              <div style="font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--stone-gray);margin-bottom:8px;">Total Sales</div>
+              <div id="sales-total" style="font-family:var(--serif);font-size:32px;font-weight:280;letter-spacing:-0.02em;">—</div>
+            </div>
+            <div>
+              <div style="font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--stone-gray);margin-bottom:8px;">Entry (&lt;$1,500)</div>
+              <div id="sales-entry" style="font-family:var(--serif);font-size:32px;font-weight:280;letter-spacing:-0.02em;">—</div>
+            </div>
+            <div>
+              <div style="font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--stone-gray);margin-bottom:8px;">Mid ($1.5k–5k)</div>
+              <div id="sales-mid" style="font-family:var(--serif);font-size:32px;font-weight:280;letter-spacing:-0.02em;">—</div>
+            </div>
+            <div>
+              <div style="font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--stone-gray);margin-bottom:8px;">Premium (&gt;$5k)</div>
+              <div id="sales-premium" style="font-family:var(--serif);font-size:32px;font-weight:280;letter-spacing:-0.02em;">—</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Artwork</th>
+                <th>Artist</th>
+                <th>Venue</th>
+                <th>Sale Price</th>
+                <th>Tier</th>
+                <th>Artist Share</th>
+                <th>Venue Comm.</th>
+                <th>UA Share</th>
+                <th>Sold Date</th>
+              </tr>
+            </thead>
+            <tbody id="sales-tbody">
+              <tr><td colspan="9" class="empty-state">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── SETTLEMENTS TAB ───────────────────────────────── -->
+      <div class="tab-pane" id="tab-settlements">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Artist</th>
+                <th>Subscription</th>
+                <th>Sales</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="settle-tbody">
+              <tr><td colspan="6" class="empty-state">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /tab-content -->
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/api.js"></script>
+<script src="js/ui.js"></script>
+<script>
+  initPage({ page: 'revenue' });
+
+  let currentPeriod = 'current_month';
+
+  // ── Tabs ───────────────────────────────────────────────────
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+    });
+  });
+
+  // ── Period selector ────────────────────────────────────────
+  document.querySelectorAll('[data-period]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-period]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentPeriod = btn.dataset.period;
+      loadAll();
+    });
+  });
+
+  // ── Load everything ────────────────────────────────────────
+  async function loadAll() {
+    loadSubscription();
+    loadSales();
+    loadSettlements();
+  }
+
+  // ── Subscription ───────────────────────────────────────────
+  async function loadSubscription() {
+    const tbody = document.getElementById('sub-tbody');
+    tbody.innerHTML = skeleton(4, 7);
+
+    try {
+      // Try API first; fallback to computing from venues list
+      let rows = [];
+      let useComputed = false;
+
+      try {
+        const rev = await API.revenue.get(currentPeriod);
+        rows = rev.subscription || [];
+        if (!rows.length) useComputed = true;
+      } catch (e) {
+        useComputed = true;
+      }
+
+      if (useComputed) {
+        const venueData = await API.venues.list();
+        const venues = Array.isArray(venueData) ? venueData : (venueData.venues || []);
+        rows = venues
+          .filter(v => v.status === 'active' || v.status === 'past_due')
+          .map(v => ({
+            venue_id:   v.id,
+            venue_name: v.name,
+            artwork_count: v.artwork_count || 0,
+            rate:       150,
+            status:     v.status,
+          }));
+      }
+
+      const GST_RATE = 0.10;
+
+      let totalSubtotal = 0;
+      let totalGST      = 0;
+      let totalTotal    = 0;
+
+      if (!rows.length) {
+        tbody.innerHTML = `<tr><td colspan="7" class="empty-state">No subscription data for this period.</td></tr>`;
+        ['sub-total','sub-gst','sub-net'].forEach(id => document.getElementById(id).textContent = formatCurrency(0));
+        return;
+      }
+
+      tbody.innerHTML = rows.map(row => {
+        const count    = row.artwork_count || 0;
+        const rate     = row.rate || 150;
+        const subtotal = count * rate;
+        const gst      = subtotal * GST_RATE;
+        const total    = subtotal + gst;
+
+        totalSubtotal += subtotal;
+        totalGST      += gst;
+        totalTotal    += total;
+
+        return `<tr>
+          <td><a href="venue.html?id=${esc(row.venue_id)}" class="venue-name-link">${esc(row.venue_name)}</a></td>
+          <td>${count}</td>
+          <td>${formatCurrency(rate)}/artwork</td>
+          <td>${formatCurrency(subtotal)}</td>
+          <td>${formatCurrency(gst)}</td>
+          <td>${formatCurrency(total)}</td>
+          <td>${badge(row.status)}</td>
+        </tr>`;
+      }).join('');
+
+      document.getElementById('foot-subtotal').textContent = formatCurrency(totalSubtotal);
+      document.getElementById('foot-gst').textContent      = formatCurrency(totalGST);
+      document.getElementById('foot-total').textContent    = formatCurrency(totalTotal);
+
+      document.getElementById('sub-total').textContent = formatCurrency(totalTotal);
+      document.getElementById('sub-gst').textContent   = formatCurrency(totalGST);
+      document.getElementById('sub-net').textContent   = formatCurrency(totalSubtotal);
+
+    } catch (err) {
+      tbody.innerHTML = `<tr><td colspan="7" class="empty-state">Failed to load subscription data: ${esc(err.message)}</td></tr>`;
+    }
+  }
+
+  // ── Sales ──────────────────────────────────────────────────
+  async function loadSales() {
+    const tbody = document.getElementById('sales-tbody');
+    tbody.innerHTML = skeleton(4, 9);
+
+    try {
+      const data = await API.artworks.list({ status: 'sold' });
+      const artworks = Array.isArray(data) ? data : (data.artworks || []);
+
+      if (!artworks.length) {
+        tbody.innerHTML = `<tr><td colspan="9" class="empty-state">No sales recorded yet.</td></tr>`;
+        ['sales-total','sales-entry','sales-mid','sales-premium'].forEach(id =>
+          document.getElementById(id).textContent = '0'
+        );
+        document.getElementById('sales-total').textContent = formatCurrency(0);
+        return;
+      }
+
+      let totalSales = 0;
+      let entryCount = 0, midCount = 0, premiumCount = 0;
+
+      tbody.innerHTML = artworks.map(a => {
+        const salePrice = a.sale_price || a.price || 0;
+        const tier      = priceTier(salePrice);
+        const splits    = calcSplits(salePrice, tier, !!a.venue_id);
+
+        totalSales += salePrice;
+        if (tier === 'entry')   entryCount++;
+        if (tier === 'mid')     midCount++;
+        if (tier === 'premium') premiumCount++;
+
+        const artworkCell = `<a href="artwork.html?id=${esc(a.id)}" class="venue-name-link">${esc(a.title)}</a>`;
+        const artistCell  = a.artist_id
+          ? `<a href="artist.html?id=${esc(a.artist_id)}" class="venue-name-link">${esc(a.artist_name || a.artist_id)}</a>`
+          : '—';
+        const venueCell   = a.venue_id
+          ? `<a href="venue.html?id=${esc(a.venue_id)}" class="venue-name-link">${esc(a.venue_name || a.venue_id)}</a>`
+          : '—';
+
+        return `<tr>
+          <td>${artworkCell}</td>
+          <td>${artistCell}</td>
+          <td>${venueCell}</td>
+          <td>${formatCurrency(salePrice)}</td>
+          <td>${badge(tier, priceTierLabel(tier))}</td>
+          <td>${formatCurrency(splits.artistShare)}</td>
+          <td>${formatCurrency(splits.venueCommission)}</td>
+          <td>${formatCurrency(splits.uaShare)}</td>
+          <td>${formatDate(a.sold_at || a.updated_at)}</td>
+        </tr>`;
+      }).join('');
+
+      document.getElementById('sales-total').textContent   = formatCurrency(totalSales);
+      document.getElementById('sales-entry').textContent   = entryCount;
+      document.getElementById('sales-mid').textContent     = midCount;
+      document.getElementById('sales-premium').textContent = premiumCount;
+
+    } catch (err) {
+      tbody.innerHTML = `<tr><td colspan="9" class="empty-state">Failed to load sales data: ${esc(err.message)}</td></tr>`;
+    }
+  }
+
+  // ── Settlements ────────────────────────────────────────────
+  async function loadSettlements() {
+    const tbody = document.getElementById('settle-tbody');
+    tbody.innerHTML = skeleton(4, 6);
+
+    try {
+      let settlements = [];
+      let useComputed = false;
+
+      try {
+        const data = await API.revenue.settlements();
+        settlements = Array.isArray(data) ? data : (data.settlements || []);
+        if (!settlements.length) useComputed = true;
+      } catch (e) {
+        useComputed = true;
+      }
+
+      if (useComputed) {
+        // Compute from artists + artworks
+        const [artistData, artworkData] = await Promise.all([
+          API.artists.list(),
+          API.artworks.list(),
+        ]);
+
+        const artists  = Array.isArray(artistData)  ? artistData  : (artistData.artists   || []);
+        const artworks = Array.isArray(artworkData) ? artworkData : (artworkData.artworks || []);
+
+        settlements = artists.map(artist => {
+          const myWorks = artworks.filter(aw => aw.artist_id === artist.id);
+          const installed = myWorks.filter(aw => aw.status === 'installed').length;
+          const subShare = installed * 15;
+
+          let salesShare = 0;
+          myWorks.filter(aw => aw.status === 'sold').forEach(aw => {
+            const sp = aw.sale_price || aw.price || 0;
+            const splits = calcSplits(sp, priceTier(sp), !!aw.venue_id);
+            salesShare += splits.artistShare;
+          });
+
+          return {
+            artist_id:   artist.id,
+            artist_name: artist.name,
+            sub_share:   subShare,
+            sales_share: salesShare,
+            total:       subShare + salesShare,
+            status:      'pending',
+          };
+        }).filter(s => s.total > 0);
+      }
+
+      if (!settlements.length) {
+        tbody.innerHTML = `<tr><td colspan="6" class="empty-state">No settlements to display.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = settlements.map(s => {
+        const settlId = s.id || s.artist_id;
+        const actionBtn = s.status !== 'completed'
+          ? `<button class="action-btn success" onclick="completeSettlement('${esc(settlId)}', this)">Mark Complete</button>`
+          : '—';
+
+        return `<tr>
+          <td><a href="artist.html?id=${esc(s.artist_id)}" class="venue-name-link">${esc(s.artist_name)}</a></td>
+          <td>${formatCurrency(s.sub_share   || s.subscription || 0)}</td>
+          <td>${formatCurrency(s.sales_share || s.sales        || 0)}</td>
+          <td>${formatCurrency(s.total       || 0)}</td>
+          <td>${badge(s.status || 'pending')}</td>
+          <td>${actionBtn}</td>
+        </tr>`;
+      }).join('');
+
+    } catch (err) {
+      tbody.innerHTML = `<tr><td colspan="6" class="empty-state">Failed to load settlements: ${esc(err.message)}</td></tr>`;
+    }
+  }
+
+  async function completeSettlement(id, btn) {
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+    try {
+      await API.revenue.completeSettlement(id);
+      toast('Settlement marked complete', 'success');
+      loadSettlements();
+    } catch (err) {
+      toast(err.message || 'Failed to update settlement', 'error');
+      btn.disabled = false;
+      btn.textContent = 'Mark Complete';
+    }
+  }
+
+  // ── Init ───────────────────────────────────────────────────
+  loadAll();
+</script>
+</body>
+</html>
