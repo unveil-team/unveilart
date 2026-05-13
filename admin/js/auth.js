@@ -7,7 +7,9 @@ function setToken(t) { localStorage.setItem('ua_admin_token', t); }
 function clearToken() { localStorage.removeItem('ua_admin_token'); }
 
 function requireLogin() {
-  if (!getToken()) window.location.href = '/admin/login.html';
+  if (!getToken()) {
+    window.location.href = '/admin/login.html?redirect=' + encodeURIComponent(window.location.href);
+  }
 }
 
 function logout() {

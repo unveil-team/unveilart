@@ -30,7 +30,8 @@
 
 <script src="js/auth.js"></script>
 <script>
-  if (getToken()) window.location.href = 'index.html';
+  const redirectTo = new URLSearchParams(window.location.search).get('redirect') || 'index.html';
+  if (getToken()) window.location.href = redirectTo;
 
   document.getElementById('login-form').addEventListener('submit', async e => {
     e.preventDefault();
@@ -42,7 +43,7 @@
     try {
       const token = await adminLogin(e.target.password.value);
       setToken(token);
-      window.location.href = 'index.html';
+      window.location.href = redirectTo;
     } catch (err) {
       errEl.textContent = err.message;
       errEl.classList.add('show');
