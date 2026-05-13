@@ -44,12 +44,19 @@ Deno.serve(async (req) => {
 
   if (req.method === 'GET') {
     if (id) {
-      const [artistRes, artworksRes] = await Promise.all([
+      const [artistRes, artworksRes, venuesRes] = await Promise.all([
         supabase.from('artists').select('*').eq('id', id).single(),
-        supabase.from('artworks').select('*, venues(name)').eq('artist_id', id).order('installed_at', { ascending: false }),
+        supabase.from('artworks').select('id, title, venue_id, price, price_tier, status, installed_at, removed_at, sold_at, artist_name').eq('artist_id', id).order('installed_at', { ascending: false }),
+        supabase.from('venues').select('id, name'),
       ]);
       if (artistRes.error) return json({ error: artistRes.error.message }, 400);
-      return json({ ...artistRes.data, artworks: artworksRes.data || [] });
+      const venueMap: Record<string, string> = {};
+      (venuesRes.data || []).forEach((v: { id: string; name: string }) => { venueMap[v.id] = v.name; });
+      const artworks = (artworksRes.data || []).map((a: { venue_id: string | null; [key: string]: unknown }) => ({
+        ...a,
+        venue_name: a.venue_id ? (venueMap[a.venue_id] ?? null) : null,
+      }));
+      return json({ ...artistRes.data, artworks });
     }
 
     const { data, error } = await supabase.from('artists').select('*').order('name', { ascending: true });

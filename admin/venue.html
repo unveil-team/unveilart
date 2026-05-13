@@ -444,19 +444,22 @@
       return;
     }
     tbody.innerHTML = artworksData.map(a => {
-      const artistName = a.artist_name || (a.artists && a.artists.name) || '—';
-      const artistId   = a.artist_id;
-      const artistCell = artistId
-        ? `<a href="artist.html?id=${esc(artistId)}" class="venue-name-link">${esc(artistName)}</a>`
+      const artistName = a.artist_name || '—';
+      const artistCell = a.artist_id
+        ? `<a href="artist.html?id=${esc(a.artist_id)}" class="venue-name-link">${esc(artistName)}</a>`
         : esc(artistName);
+      const condition  = a.arrival_condition || a.condition_on_arrival || '';
 
       return `<tr>
-        <td>${esc(a.title || 'Untitled')}</td>
+        <td><a href="artwork.html?id=${esc(a.id)}" class="venue-name-link">${esc(a.title || 'Untitled')}</a></td>
         <td>${artistCell}</td>
         <td>${formatDate(a.installed_at)}</td>
-        <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${esc(a.arrival_condition || a.condition_on_arrival || '')}">${esc(a.arrival_condition || a.condition_on_arrival || '—')}</td>
+        <td style="max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${esc(condition)}">${esc(condition || '—')}</td>
         <td>${badge(a.status)}</td>
-        <td><button class="action-btn remove" data-id="${esc(a.id)}" data-condition="${esc(a.arrival_condition || a.condition_on_arrival || '')}">Remove</button></td>
+        <td style="white-space:nowrap;">
+          <a href="artwork.html?id=${esc(a.id)}" class="action-btn" style="margin-right:6px;">View →</a>
+          <button class="action-btn remove" data-id="${esc(a.id)}" data-condition="${esc(condition)}">Remove</button>
+        </td>
       </tr>`;
     }).join('');
 

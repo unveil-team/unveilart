@@ -71,7 +71,7 @@ Deno.serve(async (req) => {
         supabase.from('venues').select('*').eq('id', id).single(),
         supabase
           .from('artworks')
-          .select('*, artists(id, name, instagram)')
+          .select('id, title, artist_id, artist_name, price, price_tier, status, installed_at, removed_at, arrival_condition, return_condition, sold_at, sale_price, notes')
           .eq('venue_id', id)
           .order('installed_at', { ascending: false }),
         supabase

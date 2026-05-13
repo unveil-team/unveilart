@@ -103,6 +103,20 @@
           </div>
           <div class="form-row">
             <div class="form-group">
+              <label>Artist</label>
+              <select id="fe-artist" name="artist_id">
+                <option value="">Loading…</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Venue</label>
+              <select id="fe-venue" name="venue_id">
+                <option value="">No venue (stored)</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
               <label>Genre</label>
               <input type="text" id="fe-genre" name="genre" />
             </div>
@@ -285,7 +299,9 @@
 
   if (!artworkId) { window.location.href = 'artworks.html'; }
 
-  let artworkData = null;
+  let artworkData  = null;
+  let allArtists   = [];
+  let allVenues    = [];
 
   initPage({ page: 'artworks', breadcrumb: [
     { label: 'Dashboard', href: 'index.html' },
@@ -296,8 +312,14 @@
   // ── Load ───────────────────────────────────────────────────
   async function loadArtwork() {
     try {
-      const data = await API.artworks.get(artworkId);
+      const [data, artistsRaw, venuesRaw] = await Promise.all([
+        API.artworks.get(artworkId),
+        allArtists.length ? Promise.resolve(allArtists) : API.artists.list(),
+        allVenues.length  ? Promise.resolve(allVenues)  : API.venues.list(),
+      ]);
       artworkData = data;
+      if (!allArtists.length) allArtists = Array.isArray(artistsRaw) ? artistsRaw : (artistsRaw.artists || []);
+      if (!allVenues.length)  allVenues  = Array.isArray(venuesRaw)  ? venuesRaw  : (venuesRaw.venues   || []);
       renderPage(data);
     } catch (err) {
       toast(err.message || 'Failed to load artwork', 'error');
@@ -449,6 +471,18 @@
       document.getElementById('fe-installed').value = artworkData.installed_at ? artworkData.installed_at.slice(0, 10) : '';
       document.getElementById('fe-removed').value   = artworkData.removed_at  ? artworkData.removed_at.slice(0, 10)  : '';
       document.getElementById('fe-desc').value      = artworkData.description || '';
+
+      // Populate artist select
+      const artistSel = document.getElementById('fe-artist');
+      artistSel.innerHTML = '<option value="">No artist</option>' +
+        allArtists.map(a => `<option value="${esc(a.id)}">${esc(a.name)}</option>`).join('');
+      artistSel.value = artworkData.artist_id || '';
+
+      // Populate venue select
+      const venueSel = document.getElementById('fe-venue');
+      venueSel.innerHTML = '<option value="">No venue (stored)</option>' +
+        allVenues.map(v => `<option value="${esc(v.id)}">${esc(v.name)}</option>`).join('');
+      venueSel.value = artworkData.venue_id || '';
     }
   }
 
@@ -460,11 +494,18 @@
     btn.disabled = true;
     btn.textContent = 'Saving…';
 
+    const selectedArtist = document.getElementById('fe-artist').value;
+    const selectedVenue  = document.getElementById('fe-venue').value;
+    const selectedStatus = document.getElementById('fe-status').value;
+    const resolvedArtist = allArtists.find(a => a.id === selectedArtist);
     const data = {
       title:        document.getElementById('fe-title').value.trim()  || null,
       price:        parseFloat(document.getElementById('fe-price').value) || null,
       genre:        document.getElementById('fe-genre').value.trim()  || null,
-      status:       document.getElementById('fe-status').value,
+      status:       selectedStatus,
+      artist_id:    selectedArtist  || null,
+      artist_name:  resolvedArtist ? resolvedArtist.name : null,
+      venue_id:     selectedVenue   || null,
       installed_at: document.getElementById('fe-installed').value     || null,
       removed_at:   document.getElementById('fe-removed').value       || null,
       description:  document.getElementById('fe-desc').value.trim()   || null,

@@ -187,39 +187,30 @@ async function handleGet(
   if (id) {
     const { data, error } = await supabase
       .from('artworks')
-      .select(`
-        *,
-        artists(id, name),
-        venues(id, name)
-      `)
+      .select('*')
       .eq('id', id)
       .single();
 
     if (error) return json({ error: error.message }, 400);
 
-    const row = data as {
-      artists: { id: string; name: string } | null;
-      venues:  { id: string; name: string } | null;
-      [key: string]: unknown;
-    };
+    const row = data as Record<string, unknown>;
+
+    // Resolve names via separate lookups
+    const [artistRes, venueRes] = await Promise.all([
+      row.artist_id ? supabase.from('artists').select('id, name').eq('id', row.artist_id).single() : Promise.resolve({ data: null }),
+      row.venue_id  ? supabase.from('venues').select('id, name').eq('id', row.venue_id).single()   : Promise.resolve({ data: null }),
+    ]);
+
     return json({
       ...row,
-      artist_name: row.artists?.name ?? (row.artist_name as string | null) ?? null,
-      venue_name:  row.venues?.name  ?? null,
+      artist_name: (artistRes.data as { name?: string } | null)?.name ?? (row.artist_name as string | null) ?? null,
+      venue_name:  (venueRes.data  as { name?: string } | null)?.name ?? null,
     });
   }
 
   let query = supabase
     .from('artworks')
-    .select(`
-      id, title, artist_id, venue_id,
-      price, price_tier, status,
-      installed_at, removed_at, arrival_condition, return_condition,
-      sold_at, sale_price,
-      artist_name,
-      artists(id, name),
-      venues(id, name)
-    `)
+    .select('id, title, artist_id, venue_id, price, price_tier, status, installed_at, removed_at, arrival_condition, return_condition, sold_at, sale_price, artist_name, notes')
     .order('installed_at', { ascending: false });
 
   if (venueId) query = query.eq('venue_id', venueId);
@@ -227,17 +218,17 @@ async function handleGet(
   const { data, error } = await query;
   if (error) return json({ error: error.message }, 400);
 
-  const rows = ((data || []) as Array<{
-    artist_name: string | null;
-    artists: { id: string; name: string } | null;
-    venues:  { id: string; name: string } | null;
-    [key: string]: unknown;
-  }>).map(row => ({
+  // Resolve venue names in bulk
+  const venueIds = [...new Set((data || []).map((r: { venue_id: string | null }) => r.venue_id).filter(Boolean))];
+  const venueMap: Record<string, string> = {};
+  if (venueIds.length > 0) {
+    const { data: vd } = await supabase.from('venues').select('id, name').in('id', venueIds);
+    (vd || []).forEach((v: { id: string; name: string }) => { venueMap[v.id] = v.name; });
+  }
+
+  const rows = (data || []).map((row: { venue_id: string | null; artist_name: string | null; [key: string]: unknown }) => ({
     ...row,
-    artist_name: row.artists?.name ?? row.artist_name ?? null,
-    venue_name:  row.venues?.name  ?? null,
-    artists:     undefined,
-    venues:      undefined,
+    venue_name: row.venue_id ? (venueMap[row.venue_id] ?? null) : null,
   }));
 
   return json(rows);
