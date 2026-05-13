@@ -56,6 +56,7 @@ input, textarea, select { font-family: var(--sans); }
   color: rgba(250,250,247,0.6);
 }
 .admin-nav .nav-right a:hover { color: var(--off-white); }
+.admin-nav .nav-right a.nav-active { color: var(--off-white); }
 .btn-logout {
   background: none;
   border: 1px solid rgba(250,250,247,0.3);
@@ -87,6 +88,38 @@ input, textarea, select { font-family: var(--sans); }
 }
 @media (max-width: 900px) { .summary-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 540px) { .summary-grid { grid-template-columns: 1fr; } }
+
+.dashboard-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 32px;
+}
+.dashboard-action-card {
+  display: block;
+  background: #fff;
+  border: 1px solid var(--bone);
+  padding: 28px 32px;
+  border-radius: 2px;
+  text-decoration: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.dashboard-action-card:hover {
+  border-color: var(--deep-black);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+.dashboard-action-title {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 300;
+  color: var(--deep-black);
+  margin-bottom: 6px;
+}
+.dashboard-action-sub {
+  font-size: 12px;
+  color: var(--stone-gray);
+  letter-spacing: 0.04em;
+}
 
 .summary-card {
   background: #fff;
