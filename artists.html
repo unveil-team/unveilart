@@ -118,9 +118,10 @@ nav {
   width: 100%; aspect-ratio: 3/4;
   object-fit: cover;
   display: block;
-  transition: transform 0.5s cubic-bezier(0.22,1,0.36,1);
+  will-change: transform;
+  transition: transform 0.28s ease-out;
 }
-.artist-card:hover .artist-card-img { transform: scale(1.03); }
+.artist-card:hover .artist-card-img { transform: scale(1.04); }
 .artist-card-inner { overflow: hidden; }
 .artist-card-info { padding: 20px 0 0; }
 .artist-card-name {
