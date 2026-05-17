@@ -472,7 +472,8 @@ section {
   object-position: center;
   display: block;
   filter: saturate(0.8);
-  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1), filter 0.6s ease;
+  will-change: transform;
+  transition: transform 0.28s ease-out, filter 0.28s ease-out;
   pointer-events: none;
 }
 .tile:hover .tile-img { transform: scale(1.05); filter: saturate(1); }
@@ -931,7 +932,7 @@ footer ul a:hover { color: var(--off-white); }
   <div class="nav-links">
     <a href="#about">About</a>
     <a href="#how">How It Works</a>
-    <a href="#artists">Artists</a>
+    <a href="artists.html">Artists</a>
     <a href="#contact" class="nav-cta">Partner With Us</a>
   </div>
   <button class="nav-hamburger" id="hamburger" aria-label="Open menu">
@@ -945,7 +946,7 @@ footer ul a:hover { color: var(--off-white); }
   </button>
   <a href="#about" class="mobile-nav-link">About</a>
   <a href="#how" class="mobile-nav-link">How It Works</a>
-  <a href="#artists" class="mobile-nav-link">Artists</a>
+  <a href="artists.html" class="mobile-nav-link">Artists</a>
   <a href="#contact" class="nav-cta mobile-nav-link">Partner With Us</a>
 </div>
 
@@ -1223,7 +1224,7 @@ footer ul a:hover { color: var(--off-white); }
       <ul>
         <li><a href="#about">About</a></li>
         <li><a href="#how">How It Works</a></li>
-        <li><a href="#artists">Artists</a></li>
+        <li><a href="artists.html">Artists</a></li>
         <li><a href="#contact">Partner With Us</a></li>
       </ul>
     </div>
