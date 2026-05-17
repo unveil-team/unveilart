@@ -82,7 +82,7 @@ nav {
 /* ── Page header ────────────────────────────────────────── */
 .page-hero {
   position: relative;
-  padding: 200px 40px 130px;
+  padding: 200px 40px 220px;
   color: var(--off-white);
   text-align: center;
   overflow: hidden;
@@ -118,7 +118,7 @@ nav {
 }
 .page-hero-indicators {
   position: absolute;
-  bottom: 32px;
+  bottom: 200px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -146,7 +146,7 @@ nav {
 .page-hero:hover .page-hero-cursor { opacity: 1; }
 .page-hero-label {
   position: absolute;
-  bottom: 32px; right: 40px;
+  bottom: 208px; right: 40px;
   font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
   color: rgba(250,250,247,0.4);
   z-index: 3;
@@ -154,7 +154,16 @@ nav {
 }
 .page-hero .eyebrow,
 .page-hero h1,
-.page-hero p { position: relative; z-index: 2; }
+.page-hero p { position: relative; z-index: 3; }
+.page-hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 320px;
+  background: linear-gradient(to top, var(--off-white) 0%, transparent 100%);
+  z-index: 2;
+  pointer-events: none;
+}
 .page-hero .eyebrow {
   display: block;
   font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
@@ -174,7 +183,7 @@ nav {
 
 /* ── Artist grid ────────────────────────────────────────── */
 .artists-section {
-  padding: 80px 40px 120px;
+  padding: 0 40px 120px;
   max-width: 1200px; margin: 0 auto;
 }
 .artists-grid {
