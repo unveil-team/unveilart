@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Artists — UnveilArt</title>
+<meta name="description" content="Meet the emerging Melbourne artists whose work rotates through UnveilArt's partner venues." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,280;0,9..144,320;0,9..144,360;0,9..144,400;1,9..144,320;1,9..144,360;1,9..144,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --off-white:    #FAFAF7;
+  --deep-black:   #0A0A0A;
+  --warm-charcoal:#1C1C1C;
+  --cream:        #F5F1EA;
+  --stone-gray:   #8B8680;
+  --bone:         #E8E4DD;
+  --gold-whisper: #B8A48A;
+  --gold-deep:    #8E7A5E;
+  --serif: "Fraunces", Georgia, serif;
+  --sans:  "Inter", system-ui, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--sans);
+  color: var(--deep-black);
+  background: var(--off-white);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+h1,h2,h3 { font-family: var(--serif); font-weight: 360; letter-spacing: -0.022em; line-height: 1.05; margin: 0; }
+p { margin: 0; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; }
+
+/* ── Nav ────────────────────────────────────────────────── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px; height: 68px;
+  background: rgba(250,250,247,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+.logo { font-family: var(--serif); font-size: 20px; font-weight: 360; letter-spacing: -0.01em; }
+.logo b { font-weight: 400; }
+.nav-links { display: flex; align-items: center; gap: 32px; font-size: 13px; letter-spacing: 0.04em; }
+.nav-links a { color: var(--stone-gray); transition: color 0.2s; }
+.nav-links a:hover, .nav-links a.active { color: var(--deep-black); }
+.nav-cta {
+  padding: 9px 20px;
+  border: 1px solid var(--deep-black);
+  color: var(--deep-black) !important;
+  font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+  transition: background 0.25s, color 0.25s;
+}
+.nav-cta:hover { background: var(--deep-black); color: var(--off-white) !important; }
+
+/* Mobile nav */
+.nav-hamburger {
+  display: none; flex-direction: column; gap: 5px;
+  background: none; border: none; padding: 4px; cursor: pointer;
+}
+.nav-hamburger span { display: block; width: 22px; height: 1.5px; background: var(--deep-black); }
+.nav-mobile-menu {
+  display: none; position: fixed; inset: 0; z-index: 99;
+  background: var(--off-white); flex-direction: column;
+  align-items: center; justify-content: center; gap: 32px;
+}
+.nav-mobile-menu.open { display: flex; }
+.mobile-menu-close { background: none; border: none; position: absolute; top: 20px; right: 24px; }
+.mobile-nav-link { font-family: var(--serif); font-size: 28px; font-weight: 360; }
+@media (max-width: 700px) {
+  nav { padding: 0 20px; }
+  .nav-links { display: none; }
+  .nav-hamburger { display: flex; }
+}
+
+/* ── Page header ────────────────────────────────────────── */
+.page-hero {
+  padding: 140px 40px 80px;
+  background: var(--deep-black);
+  color: var(--off-white);
+  text-align: center;
+}
+.page-hero .eyebrow {
+  display: block;
+  font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--gold-whisper); margin-bottom: 20px;
+}
+.page-hero h1 { font-size: clamp(40px, 7vw, 88px); font-weight: 320; color: var(--off-white); }
+.page-hero h1 em { font-style: italic; color: var(--gold-whisper); }
+.page-hero p {
+  margin-top: 24px; max-width: 520px; margin-inline: auto;
+  font-size: 15px; color: rgba(250,250,247,0.6); line-height: 1.7;
+}
+
+/* ── Artist grid ────────────────────────────────────────── */
+.artists-section {
+  padding: 80px 40px 120px;
+  max-width: 1200px; margin: 0 auto;
+}
+.artists-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+.artist-card {
+  display: block;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+.artist-card-img {
+  width: 100%; aspect-ratio: 3/4;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.22,1,0.36,1);
+}
+.artist-card:hover .artist-card-img { transform: scale(1.03); }
+.artist-card-inner { overflow: hidden; }
+.artist-card-info { padding: 20px 0 0; }
+.artist-card-name {
+  font-family: var(--serif); font-size: 26px; font-weight: 360;
+  letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 6px;
+}
+.artist-card-medium {
+  font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--gold-deep);
+}
+.artist-card-arrow {
+  display: inline-block; margin-top: 14px;
+  font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--stone-gray);
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+.artist-card:hover .artist-card-arrow { color: var(--deep-black); border-color: var(--deep-black); }
+
+@media (max-width: 900px) {
+  .artists-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+}
+@media (max-width: 560px) {
+  .artists-section { padding: 60px 20px 80px; }
+  .artists-grid { grid-template-columns: 1fr; gap: 40px; }
+  .page-hero { padding: 120px 20px 60px; }
+}
+
+/* ── Footer ─────────────────────────────────────────────── */
+footer {
+  background: var(--deep-black); color: var(--off-white);
+  padding: 48px 40px; text-align: center;
+  font-size: 13px; color: var(--stone-gray);
+}
+footer a { color: var(--stone-gray); }
+footer a:hover { color: var(--off-white); }
+.footer-logo { font-family: var(--serif); font-size: 22px; font-weight: 360; color: var(--off-white); margin-bottom: 20px; }
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav id="nav">
+  <a href="index.html" class="logo"><b>Unveil</b>Art</a>
+  <div class="nav-links">
+    <a href="index.html#about">About</a>
+    <a href="index.html#how">How It Works</a>
+    <a href="artists.html" class="active">Artists</a>
+    <a href="index.html#contact" class="nav-cta">Partner With Us</a>
+  </div>
+  <button class="nav-hamburger" id="hamburger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="nav-mobile-menu" id="mobile-menu">
+  <button class="mobile-menu-close" id="mobile-close" aria-label="Close menu">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+  </button>
+  <a href="index.html#about" class="mobile-nav-link" onclick="document.getElementById('mobile-menu').classList.remove('open')">About</a>
+  <a href="index.html#how" class="mobile-nav-link" onclick="document.getElementById('mobile-menu').classList.remove('open')">How It Works</a>
+  <a href="artists.html" class="mobile-nav-link">Artists</a>
+  <a href="index.html#contact" class="mobile-nav-link nav-cta">Partner With Us</a>
+</div>
+
+<!-- Page Hero -->
+<div class="page-hero">
+  <span class="eyebrow">The Roster</span>
+  <h1>Emerging voices,<br><em>on real walls.</em></h1>
+  <p>A curated selection of Melbourne artists whose work rotates through our partner venues.</p>
+</div>
+
+<!-- Artist Grid -->
+<section class="artists-section">
+  <div class="artists-grid" id="artists-grid">
+
+    <a href="artist.html?id=wade" class="artist-card">
+      <div class="artist-card-inner">
+        <img class="artist-card-img" src="assets/wade.jpeg" alt="Wade — Photography" />
+      </div>
+      <div class="artist-card-info">
+        <div class="artist-card-name">Wade</div>
+        <div class="artist-card-medium">Photography</div>
+        <span class="artist-card-arrow">View Profile →</span>
+      </div>
+    </a>
+
+    <a href="artist.html?id=jeong" class="artist-card">
+      <div class="artist-card-inner">
+        <img class="artist-card-img" src="assets/jeong.jpeg" alt="Jeong — Photography" />
+      </div>
+      <div class="artist-card-info">
+        <div class="artist-card-name">Jeong</div>
+        <div class="artist-card-medium">Photography</div>
+        <span class="artist-card-arrow">View Profile →</span>
+      </div>
+    </a>
+
+    <a href="artist.html?id=henry" class="artist-card">
+      <div class="artist-card-inner">
+        <img class="artist-card-img" src="assets/henry3.jpeg" alt="Henry — Photography" />
+      </div>
+      <div class="artist-card-info">
+        <div class="artist-card-name">Henry</div>
+        <div class="artist-card-medium">Photography</div>
+        <span class="artist-card-arrow">View Profile →</span>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-logo"><b>Unveil</b>Art</div>
+  <p>© 2025 UnveilArt · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></p>
+</footer>
+
+<script>
+  document.getElementById('hamburger').addEventListener('click', () => {
+    document.getElementById('mobile-menu').classList.add('open');
+  });
+  document.getElementById('mobile-close').addEventListener('click', () => {
+    document.getElementById('mobile-menu').classList.remove('open');
+  });
+</script>
+</body>
+</html>

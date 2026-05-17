@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Artist — UnveilArt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,280;0,9..144,320;0,9..144,360;0,9..144,400;1,9..144,320;1,9..144,360;1,9..144,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --off-white:    #FAFAF7;
+  --deep-black:   #0A0A0A;
+  --warm-charcoal:#1C1C1C;
+  --cream:        #F5F1EA;
+  --stone-gray:   #8B8680;
+  --bone:         #E8E4DD;
+  --gold-whisper: #B8A48A;
+  --gold-deep:    #8E7A5E;
+  --serif: "Fraunces", Georgia, serif;
+  --sans:  "Inter", system-ui, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--sans);
+  color: var(--deep-black);
+  background: var(--off-white);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+h1,h2,h3 { font-family: var(--serif); font-weight: 360; letter-spacing: -0.022em; line-height: 1.05; margin: 0; }
+p { margin: 0; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; }
+
+/* ── Nav ────────────────────────────────────────────────── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px; height: 68px;
+  background: rgba(250,250,247,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+.logo { font-family: var(--serif); font-size: 20px; font-weight: 360; letter-spacing: -0.01em; }
+.logo b { font-weight: 400; }
+.nav-links { display: flex; align-items: center; gap: 32px; font-size: 13px; letter-spacing: 0.04em; }
+.nav-links a { color: var(--stone-gray); transition: color 0.2s; }
+.nav-links a:hover, .nav-links a.active { color: var(--deep-black); }
+.nav-cta {
+  padding: 9px 20px;
+  border: 1px solid var(--deep-black);
+  color: var(--deep-black) !important;
+  font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+  transition: background 0.25s, color 0.25s;
+}
+.nav-cta:hover { background: var(--deep-black); color: var(--off-white) !important; }
+.nav-hamburger {
+  display: none; flex-direction: column; gap: 5px;
+  background: none; border: none; padding: 4px;
+}
+.nav-hamburger span { display: block; width: 22px; height: 1.5px; background: var(--deep-black); }
+.nav-mobile-menu {
+  display: none; position: fixed; inset: 0; z-index: 99;
+  background: var(--off-white); flex-direction: column;
+  align-items: center; justify-content: center; gap: 32px;
+}
+.nav-mobile-menu.open { display: flex; }
+.mobile-menu-close { background: none; border: none; position: absolute; top: 20px; right: 24px; }
+.mobile-nav-link { font-family: var(--serif); font-size: 28px; font-weight: 360; }
+@media (max-width: 700px) {
+  nav { padding: 0 20px; }
+  .nav-links { display: none; }
+  .nav-hamburger { display: flex; }
+}
+
+/* ── Artist Hero ─────────────────────────────────────────── */
+.artist-hero {
+  padding-top: 68px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 80vh;
+  background: var(--deep-black);
+}
+.artist-hero-img {
+  width: 100%; height: 100%; min-height: 540px;
+  object-fit: cover; display: block;
+  filter: brightness(0.88);
+}
+.artist-hero-info {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 72px 64px;
+  color: var(--off-white);
+}
+.back-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--gold-whisper); margin-bottom: 48px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--off-white); }
+.artist-eyebrow {
+  font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--gold-deep); margin-bottom: 16px;
+}
+.artist-name {
+  font-size: clamp(52px, 7vw, 96px); font-weight: 320;
+  color: var(--off-white); margin-bottom: 24px;
+}
+.artist-motto {
+  font-family: var(--serif); font-size: clamp(18px, 2.5vw, 26px);
+  font-weight: 320; font-style: italic;
+  color: var(--gold-whisper); line-height: 1.4;
+  margin-bottom: 36px;
+}
+.artist-bio {
+  font-size: 15px; line-height: 1.75; color: rgba(250,250,247,0.65);
+  max-width: 440px; margin-bottom: 40px;
+}
+.artist-tags { display: flex; flex-wrap: wrap; gap: 10px; }
+.artist-tag {
+  padding: 6px 16px;
+  border: 1px solid rgba(255,255,255,0.15);
+  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--gold-whisper);
+}
+
+@media (max-width: 900px) {
+  .artist-hero { grid-template-columns: 1fr; }
+  .artist-hero-img { min-height: 380px; max-height: 420px; }
+  .artist-hero-info { padding: 48px 24px; }
+}
+
+/* ── Works section ───────────────────────────────────────── */
+.works-section {
+  padding: 100px 40px 120px;
+  max-width: 1200px; margin: 0 auto;
+}
+.works-header {
+  display: flex; align-items: baseline; justify-content: space-between;
+  margin-bottom: 56px;
+  border-bottom: 1px solid var(--bone); padding-bottom: 20px;
+}
+.works-title {
+  font-size: clamp(28px, 4vw, 44px); font-weight: 360;
+  font-family: var(--serif);
+}
+.works-count {
+  font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--stone-gray);
+}
+.works-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 64px 48px;
+}
+.work-item {}
+.work-img-wrap { overflow: hidden; margin-bottom: 24px; }
+.work-img {
+  width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block;
+  transition: transform 0.6s cubic-bezier(0.22,1,0.36,1);
+}
+.work-img-wrap:hover .work-img { transform: scale(1.04); }
+.work-title {
+  font-family: var(--serif); font-size: 22px; font-weight: 360;
+  letter-spacing: -0.015em; margin-bottom: 10px;
+}
+.work-dims {
+  font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--gold-deep); margin-bottom: 12px;
+}
+.work-desc {
+  font-size: 14px; line-height: 1.72; color: var(--stone-gray);
+}
+
+@media (max-width: 720px) {
+  .works-section { padding: 60px 20px 80px; }
+  .works-grid { grid-template-columns: 1fr; gap: 48px; }
+}
+
+/* ── Footer ─────────────────────────────────────────────── */
+footer {
+  background: var(--deep-black);
+  padding: 48px 40px; text-align: center;
+}
+.footer-logo { font-family: var(--serif); font-size: 22px; font-weight: 360; color: var(--off-white); margin-bottom: 16px; }
+footer p { font-size: 13px; color: var(--stone-gray); }
+footer a { color: var(--stone-gray); }
+footer a:hover { color: var(--off-white); }
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <a href="index.html" class="logo"><b>Unveil</b>Art</a>
+  <div class="nav-links">
+    <a href="index.html#about">About</a>
+    <a href="index.html#how">How It Works</a>
+    <a href="artists.html" class="active">Artists</a>
+    <a href="index.html#contact" class="nav-cta">Partner With Us</a>
+  </div>
+  <button class="nav-hamburger" id="hamburger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="nav-mobile-menu" id="mobile-menu">
+  <button class="mobile-menu-close" id="mobile-close" aria-label="Close">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+  </button>
+  <a href="index.html#about" class="mobile-nav-link">About</a>
+  <a href="index.html#how" class="mobile-nav-link">How It Works</a>
+  <a href="artists.html" class="mobile-nav-link">Artists</a>
+  <a href="index.html#contact" class="mobile-nav-link nav-cta">Partner With Us</a>
+</div>
+
+<!-- Artist content rendered by JS -->
+<div id="artist-hero-wrap"></div>
+<div id="works-wrap"></div>
+
+<footer>
+  <div class="footer-logo"><b>Unveil</b>Art</div>
+  <p>© 2025 UnveilArt · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></p>
+</footer>
+
+<script>
+// ── Artist data ────────────────────────────────────────────
+const ARTISTS = {
+  wade: {
+    name:       'Wade',
+    medium:     'Photography',
+    motto:      '"Light is the brushstroke. Time is the canvas."',
+    bio:        'Wade is a Melbourne-based photographer whose work explores the tension between stillness and movement. His series capture fleeting moments of urban life — the pause between action and memory.',
+    tags:       ['Photography', 'Fine Art Print', 'Urban', 'Melbourne'],
+    heroImg:    'assets/wade.jpeg',
+    artworks: [
+      {
+        title: 'Stillwater No. 1',
+        img:   'assets/wade.jpeg',
+        dims:  '80 × 120 cm · Fine Art Archival Print',
+        desc:  'A long-exposure study of Melbourne's inner-city water channels at dusk. The extended shutter softens movement into texture, revealing the quiet beneath the city's noise.',
+      },
+      {
+        title: 'Meridian',
+        img:   'assets/wade1.jpg',
+        dims:  '60 × 90 cm · Fine Art Archival Print',
+        desc:  'Shot at the junction of two Melbourne laneways at midday. Shadow and geometry intersect in a composition that asks the viewer to consider what lies just out of frame.',
+      },
+      {
+        title: 'After Hours',
+        img:   'assets/wade2.jpg',
+        dims:  '100 × 70 cm · Fine Art Archival Print',
+        desc:  'From the Late City series — storefronts after close, their interiors lit but empty. A meditation on commercial space and its relationship with human absence.',
+      },
+    ],
+  },
+
+  jeong: {
+    name:       'Jeong',
+    medium:     'Photography',
+    motto:      '"Between seeing and feeling, there is a world worth photographing."',
+    bio:        'Jeong's practice centres on portraiture and the quiet intimacy of everyday ritual. Born in Seoul and based in Melbourne, her images negotiate cultural memory, belonging, and the small ceremonies of daily life.',
+    tags:       ['Photography', 'Portraiture', 'Documentary', 'Cultural'],
+    heroImg:    'assets/jeong.jpeg',
+    artworks: [
+      {
+        title: 'Morning Ceremony',
+        img:   'assets/jeong.jpeg',
+        dims:  '70 × 100 cm · Fine Art Archival Print',
+        desc:  'A documentary portrait from Jeong's ongoing series on ritual and morning routine. The subject — framed in early light — becomes a study in presence and repetition.',
+      },
+      {
+        title: 'In Between',
+        img:   'assets/jeong2.jpeg',
+        dims:  '60 × 80 cm · Fine Art Archival Print',
+        desc:  'Captured during the transitional hour between day and night, this work explores the threshold states that define Jeong's approach — neither here nor there, yet wholly present.',
+      },
+    ],
+  },
+
+  henry: {
+    name:       'Henry',
+    medium:     'Photography',
+    motto:      '"Architecture remembers everything the people inside it forget."',
+    bio:        'Henry photographs the built environment — its surfaces, angles, and silences. His work finds beauty in overlooked structures: stairwells, facades, and the geometry of spaces designed for function rather than feeling.',
+    tags:       ['Photography', 'Architecture', 'Abstract', 'Fine Art'],
+    heroImg:    'assets/henry3.jpeg',
+    artworks: [
+      {
+        title: 'Threshold IV',
+        img:   'assets/henry2.jpeg',
+        dims:  '90 × 120 cm · Fine Art Archival Print',
+        desc:  'Part of an ongoing series examining doorways and passage — the architectural moment between one space and another. Shot in Melbourne's inner-north.',
+      },
+      {
+        title: 'Form Study — Collingwood',
+        img:   'assets/henry3.jpeg',
+        dims:  '80 × 80 cm · Fine Art Archival Print',
+        desc:  'A square-format study of a post-industrial facade in Collingwood. The composition strips the building of context, leaving only surface, shadow, and line.',
+      },
+      {
+        title: 'Ascent',
+        img:   'assets/henry4.jpeg',
+        dims:  '60 × 100 cm · Fine Art Archival Print',
+        desc:  'A stairwell in an unnamed Melbourne building, shot from below. The geometry spirals upward toward a point of light — order, repetition, and the suggestion of escape.',
+      },
+    ],
+  },
+};
+
+// ── Render ─────────────────────────────────────────────────
+function esc(s) {
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+const id     = new URLSearchParams(location.search).get('id') || '';
+const artist = ARTISTS[id.toLowerCase()];
+
+if (!artist) {
+  document.title = '404 — UnveilArt';
+  document.getElementById('artist-hero-wrap').innerHTML = `
+    <div style="padding:200px 40px;text-align:center;">
+      <p style="font-family:var(--serif);font-size:32px;">Artist not found.</p>
+      <a href="artists.html" style="display:inline-block;margin-top:24px;font-size:13px;letter-spacing:0.1em;text-transform:uppercase;text-decoration:underline;">← Back to Artists</a>
+    </div>`;
+} else {
+  document.title = artist.name + ' — UnveilArt';
+
+  document.getElementById('artist-hero-wrap').innerHTML = `
+    <div class="artist-hero">
+      <img class="artist-hero-img" src="${esc(artist.heroImg)}" alt="${esc(artist.name)}" />
+      <div class="artist-hero-info">
+        <a href="artists.html" class="back-link">← All Artists</a>
+        <div class="artist-eyebrow">${esc(artist.medium)}</div>
+        <h1 class="artist-name">${esc(artist.name)}</h1>
+        <p class="artist-motto">${esc(artist.motto)}</p>
+        <p class="artist-bio">${esc(artist.bio)}</p>
+        <div class="artist-tags">
+          ${artist.tags.map(t => `<span class="artist-tag">${esc(t)}</span>`).join('')}
+        </div>
+      </div>
+    </div>`;
+
+  document.getElementById('works-wrap').innerHTML = `
+    <section class="works-section">
+      <div class="works-header">
+        <h2 class="works-title">Works</h2>
+        <span class="works-count">${artist.artworks.length} piece${artist.artworks.length !== 1 ? 's' : ''}</span>
+      </div>
+      <div class="works-grid">
+        ${artist.artworks.map(w => `
+          <div class="work-item">
+            <div class="work-img-wrap">
+              <img class="work-img" src="${esc(w.img)}" alt="${esc(w.title)}" loading="lazy" />
+            </div>
+            <div class="work-title">${esc(w.title)}</div>
+            <div class="work-dims">${esc(w.dims)}</div>
+            <p class="work-desc">${esc(w.desc)}</p>
+          </div>`).join('')}
+      </div>
+    </section>`;
+}
+
+// Nav toggle
+document.getElementById('hamburger').addEventListener('click', () => {
+  document.getElementById('mobile-menu').classList.add('open');
+});
+document.getElementById('mobile-close').addEventListener('click', () => {
+  document.getElementById('mobile-menu').classList.remove('open');
+});
+</script>
+</body>
+</html>
