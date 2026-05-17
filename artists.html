@@ -87,26 +87,35 @@ nav {
   text-align: center;
   overflow: hidden;
   min-height: 520px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  background: var(--deep-black);
 }
 .page-hero-bg {
   position: absolute;
   inset: 0;
   background: url('assets/hero-primary.jpg') center/cover no-repeat;
-  filter: saturate(0.75) brightness(0.6);
+  filter: saturate(0.8) brightness(0.55);
   will-change: transform;
-  transform: scale(1.06);
-  transition: transform 1.2s ease-out;
+  animation: hero-drift 18s ease-in-out infinite alternate;
+  transition: transform 1s ease-out;
+}
+@keyframes hero-drift {
+  from { transform: scale(1.06) translate(0, 0); }
+  to   { transform: scale(1.12) translate(-1.5%, -0.8%); }
 }
 .page-hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(160deg, rgba(10,10,10,0.42) 0%, rgba(10,10,10,0.22) 50%, rgba(10,10,10,0.58) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(10,10,10,0.38) 0%,
+    rgba(10,10,10,0.18) 45%,
+    rgba(10,10,10,0.62) 100%
+  );
+  z-index: 1;
 }
-.page-hero > * { position: relative; z-index: 1; }
+.page-hero .eyebrow,
+.page-hero h1,
+.page-hero p { position: relative; z-index: 2; }
 .page-hero .eyebrow {
   display: block;
   font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
@@ -116,7 +125,7 @@ nav {
 .page-hero h1 em { font-style: italic; color: var(--gold-whisper); }
 .page-hero p {
   margin-top: 24px; max-width: 520px; margin-inline: auto;
-  font-size: 15px; color: rgba(250,250,247,0.75); line-height: 1.7;
+  font-size: 15px; color: rgba(250,250,247,0.82); line-height: 1.7;
 }
 
 /* ── Artist grid ────────────────────────────────────────── */
@@ -278,10 +287,12 @@ footer a:hover { color: var(--off-white); }
       var rect = artistsHero.getBoundingClientRect();
       var dx = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
       var dy = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
-      artistsHeroBg.style.transform = 'scale(1.06) translate(' + (-dx * 1.2) + '%, ' + (-dy * 0.7) + '%)';
+      artistsHeroBg.style.animation = 'none';
+      artistsHeroBg.style.transform = 'scale(1.1) translate(' + (-dx * 1.6) + '%, ' + (-dy * 0.9) + '%)';
     });
     artistsHero.addEventListener('mouseleave', function() {
-      artistsHeroBg.style.transform = 'scale(1.06) translate(0,0)';
+      artistsHeroBg.style.animation = '';
+      artistsHeroBg.style.transform = '';
     });
   }
 </script>
