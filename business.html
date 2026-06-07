@@ -162,6 +162,25 @@ nav.solid .nav-links a:hover, nav.solid .nav-links a.active { color: var(--deep-
   background: radial-gradient(ellipse 60% 50% at 50% 55%, rgba(142,122,94,0.18) 0%, rgba(184,164,138,0.07) 40%, transparent 70%);
   animation: glow-breathe 6s ease-in-out infinite alternate;
   pointer-events: none;
+  transition: transform 0.6s ease-out;
+  will-change: transform;
+}
+
+.biz-hero-spotlight {
+  position: absolute;
+  width: 520px; height: 520px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(184,164,138,0.16) 0%, transparent 68%);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  left: 50%; top: 45%;
+  z-index: 1;
+  opacity: 0;
+  transition: left 0.5s ease-out, top 0.5s ease-out, opacity 0.5s ease;
+}
+.biz-hero:hover .biz-hero-spotlight { opacity: 1; }
+@media (max-width: 700px) {
+  .biz-hero-spotlight { display: none; }
 }
 @keyframes glow-breathe {
   from { opacity: 0.6; transform: scale(1); }
@@ -1099,9 +1118,10 @@ footer a:hover { color: var(--off-white); }
 <!-- ═══════════════════════════════════════════════════════
      1. HERO
 ═══════════════════════════════════════════════════════ -->
-<section class="biz-hero">
-  <div class="hero-glow"></div>
+<section class="biz-hero" id="biz-hero">
+  <div class="hero-glow" id="biz-hero-glow"></div>
   <div class="hero-grid"></div>
+  <div class="biz-hero-spotlight" id="biz-hero-spotlight"></div>
   <div class="biz-hero-inner">
     <span class="eyebrow reveal">The Model</span>
     <h1 class="reveal" style="transition-delay:0.1s">
@@ -1620,6 +1640,30 @@ window.addEventListener('scroll', function() {
     navEl.classList.remove('solid');
   }
 }, { passive: true });
+
+/* ── Hero cursor spotlight + parallax ───────────────────── */
+(function() {
+  var hero = document.getElementById('biz-hero');
+  var spotlight = document.getElementById('biz-hero-spotlight');
+  var glow = document.getElementById('biz-hero-glow');
+  if (!hero || !spotlight || !glow) return;
+
+  hero.addEventListener('mousemove', function(e) {
+    var rect = hero.getBoundingClientRect();
+    var mx = e.clientX - rect.left;
+    var my = e.clientY - rect.top;
+    spotlight.style.left = mx + 'px';
+    spotlight.style.top = my + 'px';
+
+    var dx = (mx / rect.width - 0.5) * 2;
+    var dy = (my / rect.height - 0.5) * 2;
+    glow.style.transform = 'translate(' + (dx * 18) + 'px, ' + (dy * 14) + 'px)';
+  });
+
+  hero.addEventListener('mouseleave', function() {
+    glow.style.transform = 'translate(0, 0)';
+  });
+})();
 
 /* ── Scroll reveal (IntersectionObserver) ───────────────── */
 var revealEls = document.querySelectorAll('.reveal');
