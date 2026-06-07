@@ -27,7 +27,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function renderTable(venues) {
-    const filtered = currentFilter === 'all' ? venues : venues.filter(v => v.status === currentFilter);
+    // Cancelled venues are hidden from "All" — view them under the Cancelled tab
+    const filtered = currentFilter === 'all'
+      ? venues.filter(v => v.status !== 'cancelled')
+      : venues.filter(v => v.status === currentFilter);
     const tbody = document.getElementById('venues-tbody');
     if (filtered.length === 0) {
       tbody.innerHTML = `<tr><td colspan="6" class="empty-state">No venues found.</td></tr>`;
