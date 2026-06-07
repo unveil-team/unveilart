@@ -62,8 +62,8 @@
 
       <div class="summary-card" style="margin-bottom:16px;">
         <p style="font-size:13px;color:var(--stone-gray);margin-bottom:20px;line-height:1.6;">
-          Configure the percentage each party receives on artwork sales. UA always receives 10%; artist and venue splits vary by tier.
-          When no venue is involved, the venue's share rolls up to the artist.
+          Configure the percentage each party receives on artwork sales. The artist's share rises with the sale price,
+          and the remainder is split equally between the venue and UnveilArt. When no venue is involved, the venue's share rolls up to the artist.
         </p>
         <form id="form-splits" novalidate>
           <div class="table-wrap" style="border:none;border-radius:0;margin-bottom:0;">
@@ -80,21 +80,21 @@
               <tbody>
                 <tr>
                   <td><span class="badge badge-entry">Entry</span></td>
-                  <td style="color:var(--stone-gray);">Under $1,500</td>
+                  <td style="color:var(--stone-gray);">Under $2,000</td>
                   <td><input type="number" id="sp-entry-artist" name="entry_artist_rate" min="0" max="100" step="1" style="width:70px;border:1px solid var(--bone);border-radius:var(--radius);padding:6px 8px;font-size:13px;background:#fff;" /></td>
                   <td><input type="number" id="sp-entry-venue"  name="entry_venue_rate"  min="0" max="100" step="1" style="width:70px;border:1px solid var(--bone);border-radius:var(--radius);padding:6px 8px;font-size:13px;background:#fff;" /></td>
                   <td><input type="number" id="sp-entry-ua"     name="entry_ua_rate"     min="0" max="100" step="1" style="width:70px;border:1px solid var(--bone);border-radius:var(--radius);padding:6px 8px;font-size:13px;background:#fff;" /></td>
                 </tr>
                 <tr>
                   <td><span class="badge badge-mid">Mid</span></td>
-                  <td style="color:var(--stone-gray);">$1,500 – $5,000</td>
+                  <td style="color:var(--stone-gray);">$2,000 – $7,000</td>
                   <td><input type="number" id="sp-mid-artist" name="mid_artist_rate" min="0" max="100" step="1" style="width:70px;border:1px solid var(--bone);border-radius:var(--radius);padding:6px 8px;font-size:13px;background:#fff;" /></td>
                   <td><input type="number" id="sp-mid-venue"  name="mid_venue_rate"  min="0" max="100" step="1" style="width:70px;border:1px solid var(--bone);border-radius:var(--radius);padding:6px 8px;font-size:13px;background:#fff;" /></td>
                   <td><input type="number" id="sp-mid-ua"     name="mid_ua_rate"     min="0" max="100" step="1" style="width:70px;border:1px solid var(--bone);border-radius:var(--radius);padding:6px 8px;font-size:13px;background:#fff;" /></td>
                 </tr>
                 <tr>
                   <td><span class="badge badge-premium">Premium</span></td>
-                  <td style="color:var(--stone-gray);">Over $5,000</td>
+                  <td style="color:var(--stone-gray);">Over $7,000</td>
                   <td><input type="number" id="sp-premium-artist" name="premium_artist_rate" min="0" max="100" step="1" style="width:70px;border:1px solid var(--bone);border-radius:var(--radius);padding:6px 8px;font-size:13px;background:#fff;" /></td>
                   <td><input type="number" id="sp-premium-venue"  name="premium_venue_rate"  min="0" max="100" step="1" style="width:70px;border:1px solid var(--bone);border-radius:var(--radius);padding:6px 8px;font-size:13px;background:#fff;" /></td>
                   <td><input type="number" id="sp-premium-ua"     name="premium_ua_rate"     min="0" max="100" step="1" style="width:70px;border:1px solid var(--bone);border-radius:var(--radius);padding:6px 8px;font-size:13px;background:#fff;" /></td>
@@ -204,9 +204,9 @@
 
   // Default split values (from api.js calcSplits rates)
   const DEFAULT_SPLITS = {
-    entry:   { artist: 75, venue: 15, ua: 10 },
-    mid:     { artist: 70, venue: 20, ua: 10 },
-    premium: { artist: 65, venue: 25, ua: 10 },
+    entry:   { artist: 70, venue: 15,   ua: 15   },
+    mid:     { artist: 75, venue: 12.5, ua: 12.5 },
+    premium: { artist: 80, venue: 10,   ua: 10   },
   };
 
   // ── Load settings ──────────────────────────────────────────
@@ -249,9 +249,9 @@
       document.getElementById('s-artist-share').placeholder = '10';
 
       Object.entries({
-        'sp-entry-artist': 75, 'sp-entry-venue': 15, 'sp-entry-ua': 10,
-        'sp-mid-artist': 70,   'sp-mid-venue': 20,   'sp-mid-ua': 10,
-        'sp-premium-artist': 65, 'sp-premium-venue': 25, 'sp-premium-ua': 10,
+        'sp-entry-artist': 70,   'sp-entry-venue': 15,   'sp-entry-ua': 15,
+        'sp-mid-artist': 75,     'sp-mid-venue': 12.5,   'sp-mid-ua': 12.5,
+        'sp-premium-artist': 80, 'sp-premium-venue': 10, 'sp-premium-ua': 10,
       }).forEach(([id, val]) => {
         const el = document.getElementById(id);
         if (el) el.value = val;

@@ -144,10 +144,12 @@ function timeSince(dateStr) {
 /**
  * Calculates the revenue split for an artwork sale.
  *
- * Commission rates by tier:
- *   Entry   (<$1,500):  Artist 75% / Venue 15% / UA 10%  (no venue → Artist 85% / UA 15%)
- *   Mid     ($1.5k–5k): Artist 70% / Venue 20% / UA 10%  (no venue → Artist 80% / UA 20%)
- *   Premium (>$5,000):  Artist 65% / Venue 25% / UA 10%  (no venue → Artist 75% / UA 25%)
+ * Commission rates by tier — the artist's share rises with price, and the
+ * remainder is shared equally between the venue and UnveilArt:
+ *   Entry   (<$2,000):    Artist 70% / Venue 15%   / UA 15%
+ *   Mid     ($2k–$7k):    Artist 75% / Venue 12.5% / UA 12.5%
+ *   Premium (>$7,000):    Artist 80% / Venue 10%   / UA 10%
+ * When no venue is involved, the venue's share rolls up to the artist.
  *
  * @param {number} salePrice
  * @param {'entry'|'mid'|'premium'} tier
@@ -158,17 +160,18 @@ function calcSplits(salePrice, tier, hasVenue) {
   const price = Number(salePrice) || 0;
 
   const rates = {
-    entry:   { artist: 0.80, ua: 0.20 },
-    mid:     { artist: 0.85, ua: 0.15 },
-    premium: { artist: 0.90, ua: 0.10 },
+    entry:   { artist: 0.70, venue: 0.15,  ua: 0.15  },
+    mid:     { artist: 0.75, venue: 0.125, ua: 0.125 },
+    premium: { artist: 0.80, venue: 0.10,  ua: 0.10  },
   };
 
   const r = rates[tier] || rates.entry;
 
-  const uaShare     = round2(price * r.ua);
-  const artistShare = round2(price - uaShare);
+  const uaShare         = round2(price * r.ua);
+  const venueCommission = hasVenue ? round2(price * r.venue) : 0;
+  const artistShare     = round2(price - uaShare - venueCommission);
 
-  return { artistShare, venueCommission: 0, uaShare };
+  return { artistShare, venueCommission, uaShare };
 }
 
 /** @param {number} n @returns {number} */

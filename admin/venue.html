@@ -22,7 +22,7 @@
         </div>
         <div style="display:flex;gap:10px;">
           <button class="btn-secondary btn-sm" id="btn-edit-toggle">Edit</button>
-          <button class="btn-danger btn-sm" id="btn-delete">Delete</button>
+          <button class="btn-danger btn-sm" id="btn-delete">Cancel Venue</button>
         </div>
       </div>
       <div id="venue-monthly" style="font-size:13px;color:var(--gold-deep);letter-spacing:0.06em;margin-top:6px;"></div>
@@ -721,18 +721,19 @@
     }
   });
 
-  // ── Delete venue ───────────────────────────────────────────
+  // ── Cancel venue (soft-delete: marks cancelled, preserves records) ──
   document.getElementById('btn-delete').addEventListener('click', () => {
     const name = venueData ? venueData.name : 'this venue';
     showModal(
-      'Delete Venue',
-      `<p style="font-size:14px;color:var(--warm-charcoal);margin-bottom:8px;">Are you sure you want to delete <strong>${esc(name)}</strong>?</p>
-       <p style="font-size:13px;color:var(--stone-gray);">This will mark the venue as cancelled and stop all billing. This action cannot be undone.</p>`,
+      'Cancel Venue',
+      `<p style="font-size:14px;color:var(--warm-charcoal);margin-bottom:8px;">Are you sure you want to cancel <strong>${esc(name)}</strong>?</p>
+       <p style="font-size:13px;color:var(--stone-gray);">This stops all billing and moves the venue to the <strong>Cancelled</strong> tab on your venues list — it won't disappear from the system. Artwork and payment history are preserved and this can't be undone from here.</p>`,
       async () => {
         await API.venues.update(venueId, { status: 'cancelled' });
+        sessionStorage.setItem('ua_toast', JSON.stringify({ message: `${name} cancelled — find it under the Cancelled tab`, type: 'success' }));
         window.location.href = 'venues.html';
       },
-      'Delete'
+      'Cancel Venue'
     ).catch(() => {});
 
     // Style the confirm button as danger after modal renders

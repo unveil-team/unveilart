@@ -92,11 +92,11 @@ async function loadSettings(supabase: ReturnType<typeof createClient>): Promise<
     subscription_price:       150,
     gst_rate:                 0.10,
     subscription_artist_rate: 0.10,
-    entry_artist_rate:        0.80,
-    mid_artist_rate:          0.85,
-    premium_artist_rate:      0.90,
-    entry_max:                1500,
-    mid_max:                  5000,
+    entry_artist_rate:        0.70,
+    mid_artist_rate:          0.75,
+    premium_artist_rate:      0.80,
+    entry_max:                2000,
+    mid_max:                  7000,
     venue_commission_rate:    0.50,
   };
   return { ...defaults, ...out };

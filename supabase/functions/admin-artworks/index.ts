@@ -119,16 +119,31 @@ function calcPriceTier(price: number): 'entry' | 'mid' | 'premium' {
   return 'premium';
 }
 
-/** Returns artist_share, venue_commission, ua_share for a sale. */
-function calcSaleSplits(salePrice: number, tier: 'entry' | 'mid' | 'premium'): {
+/**
+ * Returns artist_share, venue_commission, ua_share for a sale.
+ *
+ * The artist's share rises with price, and the remainder is split equally
+ * between the venue and UnveilArt:
+ *   Entry   (<$2,000):    Artist 70% / Venue 15%   / UA 15%
+ *   Mid     ($2k–$7k):    Artist 75% / Venue 12.5% / UA 12.5%
+ *   Premium (>$7,000):    Artist 80% / Venue 10%   / UA 10%
+ * When no venue is involved, the venue's share rolls up to the artist.
+ */
+function calcSaleSplits(salePrice: number, tier: 'entry' | 'mid' | 'premium', hasVenue: boolean): {
   artist_share: number;
   venue_commission: number;
   ua_share: number;
 } {
-  const rates = { entry: 0.80, mid: 0.85, premium: 0.90 };
-  const artist_share    = +(salePrice * rates[tier]).toFixed(2);
-  const ua_share        = +(salePrice - artist_share).toFixed(2);
-  const venue_commission = 0;
+  const rates = {
+    entry:   { artist: 0.70, venue: 0.15,  ua: 0.15  },
+    mid:     { artist: 0.75, venue: 0.125, ua: 0.125 },
+    premium: { artist: 0.80, venue: 0.10,  ua: 0.10  },
+  };
+  const r = rates[tier];
+
+  const ua_share         = +(salePrice * r.ua).toFixed(2);
+  const venue_commission = hasVenue ? +(salePrice * r.venue).toFixed(2) : 0;
+  const artist_share     = +(salePrice - ua_share - venue_commission).toFixed(2);
 
   return { artist_share, venue_commission, ua_share };
 }
@@ -451,7 +466,7 @@ async function handleSell(
 
   // Use stored price_tier or recalculate from sale_price
   const tier = calcPriceTier(numSalePrice);
-  const { artist_share, venue_commission, ua_share } = calcSaleSplits(numSalePrice, tier);
+  const { artist_share, venue_commission, ua_share } = calcSaleSplits(numSalePrice, tier, !!aw.venue_id);
 
   const now = new Date().toISOString();
 

@@ -2,6 +2,16 @@ document.addEventListener('DOMContentLoaded', () => {
   requireLogin();
   document.getElementById('btn-logout').addEventListener('click', logout);
 
+  // Show a one-off toast carried over from another page (e.g. after cancelling a venue)
+  const pendingToast = sessionStorage.getItem('ua_toast');
+  if (pendingToast) {
+    sessionStorage.removeItem('ua_toast');
+    try {
+      const { message, type } = JSON.parse(pendingToast);
+      showToast(message, type !== 'success');
+    } catch (_) {}
+  }
+
   let allVenues = [];
   let currentFilter = 'all';
 
