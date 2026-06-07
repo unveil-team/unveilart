@@ -46,7 +46,8 @@ nav {
   backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(0,0,0,0.06);
 }
-.logo { font-family: var(--serif); font-size: 20px; font-weight: 360; letter-spacing: -0.01em; }
+.logo { display: flex; align-items: center; gap: 10px; font-family: var(--serif); font-size: 20px; font-weight: 360; letter-spacing: -0.01em; }
+.logo img { height: 30px; width: 30px; object-fit: contain; display: block; }
 .logo b { font-weight: 400; }
 .nav-links { display: flex; align-items: center; gap: 32px; font-size: 13px; letter-spacing: 0.04em; }
 .nav-links a { color: var(--stone-gray); transition: color 0.2s; }
@@ -249,7 +250,7 @@ footer a:hover { color: var(--off-white); }
 
 <!-- Nav -->
 <nav id="nav">
-  <a href="index.html" class="logo"><b>Unveil</b>Art</a>
+  <a href="index.html" class="logo"><img src="assets/unveil-logo.png" alt="" /><span><b>Unveil</b>Art</span></a>
   <div class="nav-links">
     <a href="index.html#about">About</a>
     <a href="index.html#how">How It Works</a>

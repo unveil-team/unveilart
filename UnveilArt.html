@@ -111,12 +111,17 @@ nav.solid {
   padding: 26px 56px;
 }
 .logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-family: var(--serif);
   font-size: 26px;
   font-weight: 400;
   letter-spacing: 0.02em;
   font-style: italic;
 }
+.logo img { height: 32px; width: 32px; object-fit: contain; display: block; font-style: normal; filter: invert(1); transition: filter 0.4s ease; }
+nav.solid .logo img { filter: invert(0); }
 .logo b { font-style: normal; font-weight: 500; letter-spacing: -0.01em; }
 .nav-links {
   display: flex;
@@ -954,7 +959,7 @@ footer ul a:hover { color: var(--off-white); }
 
 <!-- ─── Nav ─────────────────────────────────────────────── -->
 <nav id="nav">
-  <a href="#hero" class="logo"><b>Unveil</b>Art</a>
+  <a href="#hero" class="logo"><img src="assets/unveil-logo.png" alt="" /><span><b>Unveil</b>Art</span></a>
   <div class="nav-links">
     <a href="#about">About</a>
     <a href="#how">How It Works</a>
@@ -1240,7 +1245,7 @@ footer ul a:hover { color: var(--off-white); }
 <footer>
   <div class="footer-grid">
     <div>
-      <a href="#hero" class="logo"><b>Unveil</b>Art</a>
+      <a href="#hero" class="logo"><img src="assets/unveil-logo.png" alt="" /><span><b>Unveil</b>Art</span></a>
       <p>Curating Melbourne's emerging artists into the spaces that matter.</p>
     </div>
     <div>
