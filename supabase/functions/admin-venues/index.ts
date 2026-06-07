@@ -182,14 +182,19 @@ Deno.serve(async (req) => {
     const updates: Record<string, unknown> = {};
     allowed.forEach(k => { if (body[k] !== undefined) updates[k] = body[k]; });
 
+    if (Object.keys(updates).length === 0) {
+      return json({ error: 'No valid fields provided to update' }, 400);
+    }
+
     const { data, error } = await supabase
       .from('venues')
       .update(updates)
       .eq('id', id)
       .select()
-      .single();
+      .maybeSingle();
 
     if (error) return json({ error: error.message }, 400);
+    if (!data) return json({ error: 'Venue not found' }, 404);
     return json(data);
   }
 
