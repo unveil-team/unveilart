@@ -134,7 +134,10 @@
   function renderTable() {
     let rows = allArtists;
 
-    if (currentFilter !== 'all') {
+    if (currentFilter === 'all') {
+      // Deactivated artists are hidden from "All" — view them under the Inactive tab
+      rows = rows.filter(a => a.status !== 'inactive');
+    } else {
       rows = rows.filter(a => a.status === currentFilter);
     }
 
