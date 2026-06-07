@@ -140,11 +140,10 @@
 
   // ── Render table ───────────────────────────────────────────
   function renderTable() {
-    let rows = allVenues;
-
-    if (currentFilter !== 'all') {
-      rows = rows.filter(v => v.status === currentFilter);
-    }
+    // Cancelled venues are hidden from "All" — view them under the Cancelled tab
+    let rows = currentFilter === 'all'
+      ? allVenues.filter(v => v.status !== 'cancelled')
+      : allVenues.filter(v => v.status === currentFilter);
 
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
