@@ -290,7 +290,8 @@ nav.solid .nav-links a:hover, nav.solid .nav-links a.active { color: var(--deep-
   font-family: var(--serif);
   font-size: 72px;
   font-weight: 280;
-  color: var(--bone);
+  color: var(--gold-whisper);
+  opacity: 0.55;
   line-height: 1;
   margin-bottom: 24px;
   display: block;
@@ -439,11 +440,12 @@ nav.solid .nav-links a:hover, nav.solid .nav-links a.active { color: var(--deep-
 }
 .breakeven-title {
   text-align: center;
-  font-size: 13px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(250,250,247,0.4);
-  margin-bottom: 40px;
+  font-size: 15px;
+  letter-spacing: 0.01em;
+  color: rgba(250,250,247,0.55);
+  max-width: 620px;
+  margin: 0 auto 40px;
+  line-height: 1.5;
 }
 .breakeven-grid {
   display: grid;
@@ -463,13 +465,17 @@ nav.solid .nav-links a:hover, nav.solid .nav-links a.active { color: var(--deep-
   color: var(--gold-whisper);
   margin-bottom: 16px;
 }
-.be-earnings {
-  font-family: var(--serif);
-  font-size: 38px;
-  font-weight: 360;
+.be-calc {
+  font-size: 15px;
   color: var(--off-white);
-  line-height: 1;
+  line-height: 1.5;
   margin-bottom: 6px;
+}
+.be-calc strong {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 360;
+  color: var(--gold-whisper);
 }
 .be-sub-cost {
   font-size: 13px;
@@ -484,6 +490,14 @@ nav.solid .nav-links a:hover, nav.solid .nav-links a.active { color: var(--deep-
   background: var(--gold-whisper);
   padding: 4px 14px;
   letter-spacing: 0.06em;
+}
+.breakeven-footnote {
+  text-align: center;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: rgba(250,250,247,0.35);
+  max-width: 640px;
+  margin: 28px auto 0;
 }
 
 @media (max-width: 700px) {
@@ -1113,7 +1127,7 @@ footer a:hover { color: var(--off-white); }
         <div class="pillar-title">Monthly Subscription</div>
         <p class="pillar-desc">
           Venues pay a fixed monthly fee based on the number of artworks displayed.
-          Predictable costs, no surprises — with artwork delivered, installed, and insured.
+          Predictable costs, no surprises — with artwork delivered and installed.
         </p>
         <span class="pillar-tag">Venues</span>
       </div>
@@ -1157,10 +1171,10 @@ footer a:hover { color: var(--off-white); }
         <div class="tier-name">Solo Starter</div>
         <div class="tier-artwork-count">5 artworks</div>
         <div class="tier-price">
-          <span class="tier-price-main">$790</span>
+          <span class="tier-price-main">$750</span>
           <span class="tier-price-period">/month</span>
         </div>
-        <div class="tier-per-piece">$158 per piece</div>
+        <div class="tier-per-piece">$150 per piece (ex GST)</div>
         <div class="tier-divider"></div>
         <p class="tier-benefit">Perfect for intimate spaces — a boutique hotel lobby, a wine bar, or a private members' lounge.</p>
       </div>
@@ -1172,7 +1186,7 @@ footer a:hover { color: var(--off-white); }
           <span class="tier-price-main">$1,200</span>
           <span class="tier-price-period">/month</span>
         </div>
-        <div class="tier-per-piece">$150 per piece</div>
+        <div class="tier-per-piece">$150 per piece (ex GST)</div>
         <div class="tier-divider"></div>
         <p class="tier-benefit">The most popular choice. Enough coverage to create a genuine gallery feel across multiple areas.</p>
       </div>
@@ -1180,38 +1194,39 @@ footer a:hover { color: var(--off-white); }
         <div class="tier-name">Solo Premium</div>
         <div class="tier-artwork-count">10 artworks</div>
         <div class="tier-price">
-          <span class="tier-price-main">$1,450</span>
+          <span class="tier-price-main">$1,500</span>
           <span class="tier-price-period">/month</span>
         </div>
-        <div class="tier-per-piece">$145 per piece</div>
+        <div class="tier-per-piece">$150 per piece (ex GST)</div>
         <div class="tier-divider"></div>
-        <p class="tier-benefit">Full venue transformation — restaurant floors, lobbies, private dining. The lowest per-piece rate.</p>
+        <p class="tier-benefit">Full venue transformation — restaurant floors, lobbies, private dining. The most coverage for your space.</p>
       </div>
     </div>
 
     <!-- Breakeven -->
     <div class="breakeven-section reveal">
-      <p class="breakeven-title">When art sells, you earn too — based on avg $1,500 artwork price</p>
+      <p class="breakeven-title">A simple illustration — if every displayed piece sold once a month at an average price of $1,500</p>
       <div class="breakeven-grid">
         <div class="breakeven-item">
           <div class="be-plan">Starter &middot; 5 artworks</div>
-          <div class="be-earnings">$1,500</div>
-          <div class="be-sub-cost">venue commission vs $790 sub</div>
-          <span class="be-net">+$710 net</span>
+          <div class="be-calc">5 sold &times; $225 commission = <strong>$1,125</strong></div>
+          <div class="be-sub-cost">&minus; $750 subscription</div>
+          <span class="be-net">= +$375 / month</span>
         </div>
         <div class="breakeven-item">
           <div class="be-plan">Plus &middot; 8 artworks</div>
-          <div class="be-earnings">$2,400</div>
-          <div class="be-sub-cost">venue commission vs $1,200 sub</div>
-          <span class="be-net">+$1,200 net</span>
+          <div class="be-calc">8 sold &times; $225 commission = <strong>$1,800</strong></div>
+          <div class="be-sub-cost">&minus; $1,200 subscription</div>
+          <span class="be-net">= +$600 / month</span>
         </div>
         <div class="breakeven-item">
           <div class="be-plan">Premium &middot; 10 artworks</div>
-          <div class="be-earnings">$3,000</div>
-          <div class="be-sub-cost">venue commission vs $1,450 sub</div>
-          <span class="be-net">+$1,550 net</span>
+          <div class="be-calc">10 sold &times; $225 commission = <strong>$2,250</strong></div>
+          <div class="be-sub-cost">&minus; $1,500 subscription</div>
+          <span class="be-net">= +$750 / month</span>
         </div>
       </div>
+      <p class="breakeven-footnote">Commission shown reflects the venue's 15% share on sales under $2,000 (the venue's share adjusts to 12.5% or 10% on higher-priced works — see the revenue split below). This is an illustration, not a guarantee — actual sales vary by venue, audience, and season.</p>
     </div>
 
     <!-- Handled by UnveilArt -->
@@ -1223,12 +1238,6 @@ footer a:hover { color: var(--off-white); }
             <path d="M2 8l4 4 8-8" stroke="#B8A48A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
           Professional Installation
-        </div>
-        <div class="handled-item">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M2 8l4 4 8-8" stroke="#B8A48A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          Artwork Insurance
         </div>
         <div class="handled-item">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -1298,7 +1307,7 @@ footer a:hover { color: var(--off-white); }
           </li>
           <li class="artist-benefit-item">
             <span class="benefit-dot"></span>
-            <span><strong>Zero upfront cost</strong> and zero setup fee. We handle delivery, installation, and insurance.</span>
+            <span><strong>Zero upfront cost</strong> and zero setup fee. We handle delivery and installation.</span>
           </li>
           <li class="artist-benefit-item">
             <span class="benefit-dot"></span>
@@ -1461,7 +1470,7 @@ footer a:hover { color: var(--off-white); }
           </svg>
         </div>
         <div class="step-title">Install</div>
-        <p class="step-desc">UnveilArt delivers and professionally installs the artwork at your venue. Every piece comes with QR tag, insurance, and placement guidance.</p>
+        <p class="step-desc">UnveilArt delivers and professionally installs the artwork at your venue. Every piece comes with a QR tag and placement guidance.</p>
       </div>
       <div class="cycle-step reveal" style="transition-delay:0.1s">
         <div class="step-number-wrap">
@@ -1524,7 +1533,7 @@ footer a:hover { color: var(--off-white); }
         <h2>Be first.<br><em>Risk nothing.</em></h2>
         <p>
           We're inviting a select group of Melbourne venues to join as Founding Partners.
-          You get the full UnveilArt experience — artworks, installation, insurance, QR sales —
+          You get the full UnveilArt experience — artworks, installation, QR sales —
           with no lock-in and no risk.
         </p>
         <a href="index.html#contact" class="btn-cta">
@@ -1584,7 +1593,7 @@ footer a:hover { color: var(--off-white); }
           </div>
           <div>
             <div class="feature-title">Full operations handled</div>
-            <div class="feature-desc">Installation, insurance, QR, and logistics — all UnveilArt.</div>
+            <div class="feature-desc">Installation, QR, and logistics — all handled by UnveilArt.</div>
           </div>
         </div>
       </div>
