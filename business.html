@@ -1121,8 +1121,9 @@ footer a:hover { color: var(--off-white); }
         <span class="pillar-number">02</span>
         <div class="pillar-title">Artwork Sale Commission</div>
         <p class="pillar-desc">
-          When a guest purchases a piece via QR tag, the revenue splits automatically —
-          70% to the artist, 20% to the venue, 10% to UnveilArt. Everyone earns.
+          When a guest purchases a piece via QR tag, the revenue splits automatically.
+          The artist's share rises with the price &mdash; from 70% up to 80% &mdash;
+          while UnveilArt and the venue share the rest equally. Everyone earns.
         </p>
         <span class="pillar-tag">Everyone</span>
       </div>
@@ -1259,15 +1260,15 @@ footer a:hover { color: var(--off-white); }
   <div class="section-inner">
     <div class="artists-header reveal">
       <span class="eyebrow">For Artists</span>
-      <h2>70% of every sale.<br><em>Always.</em></h2>
+      <h2>70&ndash;80% of every sale.<br><em>The higher it sells, the more you keep.</em></h2>
     </div>
     <div class="artists-inner">
       <!-- Left: counter + bars + benefits -->
       <div class="counter-col reveal">
         <div class="counter-wrap">
-          <span class="counter-number" id="counter-num">0</span><span class="counter-pct">%</span>
+          <span class="counter-number" id="counter-num">0</span><span class="counter-pct">%</span><span class="counter-pct" style="font-size:0.34em;color:var(--stone-gray);"> &ndash; 80%</span>
         </div>
-        <p class="counter-label">Artist share of every sale</p>
+        <p class="counter-label">Artist share of every sale &mdash; rises as the price does</p>
 
         <div class="compare-bars" id="compare-bars">
           <div class="compare-bar-item">
@@ -1282,7 +1283,7 @@ footer a:hover { color: var(--off-white); }
           <div class="compare-bar-item">
             <div class="compare-bar-header">
               <span class="compare-bar-label">UnveilArt</span>
-              <span class="compare-bar-pct">70%</span>
+              <span class="compare-bar-pct">70&ndash;80%</span>
             </div>
             <div class="compare-bar-track">
               <div class="compare-bar-fill unveil" id="bar-unveil" style="width:0%"></div>
@@ -1318,46 +1319,52 @@ footer a:hover { color: var(--off-white); }
             <thead>
               <tr>
                 <th>Artwork Price</th>
-                <th>Artist (70%)</th>
-                <th>Venue (20%)</th>
-                <th>UnveilArt (10%)</th>
+                <th>Split (Artist / Venue / UA)</th>
+                <th>Artist</th>
+                <th>Venue</th>
+                <th>UnveilArt</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td class="price-col">$1,000</td>
+                <td class="price-col">$1,000<br><span class="tier-tag">Under $2,000</span></td>
+                <td class="split-col">70 / 15 / 15</td>
                 <td class="artist-col">$700</td>
-                <td>$200</td>
-                <td>$100</td>
-              </tr>
-              <tr>
-                <td class="price-col">$1,500</td>
-                <td class="artist-col">$1,050</td>
-                <td>$300</td>
+                <td>$150</td>
                 <td>$150</td>
               </tr>
               <tr>
-                <td class="price-col">$2,000</td>
-                <td class="artist-col">$1,400</td>
-                <td>$400</td>
-                <td>$200</td>
+                <td class="price-col">$1,500<br><span class="tier-tag">Under $2,000</span></td>
+                <td class="split-col">70 / 15 / 15</td>
+                <td class="artist-col">$1,050</td>
+                <td>$225</td>
+                <td>$225</td>
               </tr>
               <tr>
-                <td class="price-col">$5,000</td>
-                <td class="artist-col">$3,500</td>
-                <td>$1,000</td>
-                <td>$500</td>
+                <td class="price-col">$2,000<br><span class="tier-tag">$2,000&ndash;$7,000</span></td>
+                <td class="split-col">75 / 12.5 / 12.5</td>
+                <td class="artist-col">$1,500</td>
+                <td>$250</td>
+                <td>$250</td>
               </tr>
               <tr>
-                <td class="price-col">$8,000</td>
-                <td class="artist-col">$5,600</td>
-                <td>$1,600</td>
+                <td class="price-col">$5,000<br><span class="tier-tag">$2,000&ndash;$7,000</span></td>
+                <td class="split-col">75 / 12.5 / 12.5</td>
+                <td class="artist-col">$3,750</td>
+                <td>$625</td>
+                <td>$625</td>
+              </tr>
+              <tr>
+                <td class="price-col">$8,000<br><span class="tier-tag">Over $7,000</span></td>
+                <td class="split-col">80 / 10 / 10</td>
+                <td class="artist-col">$6,400</td>
+                <td>$800</td>
                 <td>$800</td>
               </tr>
             </tbody>
           </table>
         </div>
-        <p class="earnings-note">Revenue splits are fixed and non-negotiable &mdash; the artist always receives 70%.</p>
+        <p class="earnings-note">The artist's share grows with the sale price &mdash; from 70% on works under $2,000, to 75% between $2,000&ndash;$7,000, up to 80% on sales over $7,000. Venue and UnveilArt always split the remainder equally.</p>
 
         <div style="margin-top:48px;padding:32px;background:var(--cream);border:1px solid var(--bone);">
           <p style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:12px;">Industry comparison</p>
@@ -1406,25 +1413,25 @@ footer a:hover { color: var(--off-white); }
       <!-- Split bars -->
       <div class="calc-bars">
         <div class="calc-bar-item">
-          <span class="calc-bar-label">Artist 70%</span>
+          <span class="calc-bar-label">Artist <span id="calc-pct-artist">75%</span></span>
           <div class="calc-bar-track">
-            <div class="calc-bar-fill artist-fill highlighted" id="calc-bar-artist" style="width:70%"></div>
+            <div class="calc-bar-fill artist-fill highlighted" id="calc-bar-artist" style="width:75%"></div>
           </div>
-          <span class="calc-bar-amount" id="calc-amt-artist">$1,400</span>
+          <span class="calc-bar-amount" id="calc-amt-artist">$1,500</span>
         </div>
         <div class="calc-bar-item">
-          <span class="calc-bar-label">Venue 20%</span>
+          <span class="calc-bar-label">Venue <span id="calc-pct-venue">12.5%</span></span>
           <div class="calc-bar-track">
-            <div class="calc-bar-fill venue-fill" id="calc-bar-venue" style="width:20%"></div>
+            <div class="calc-bar-fill venue-fill" id="calc-bar-venue" style="width:12.5%"></div>
           </div>
-          <span class="calc-bar-amount" id="calc-amt-venue">$400</span>
+          <span class="calc-bar-amount" id="calc-amt-venue">$250</span>
         </div>
         <div class="calc-bar-item">
-          <span class="calc-bar-label">UnveilArt 10%</span>
+          <span class="calc-bar-label">UnveilArt <span id="calc-pct-unveil">12.5%</span></span>
           <div class="calc-bar-track">
-            <div class="calc-bar-fill unveil-fill" id="calc-bar-unveil" style="width:10%"></div>
+            <div class="calc-bar-fill unveil-fill" id="calc-bar-unveil" style="width:12.5%"></div>
           </div>
-          <span class="calc-bar-amount" id="calc-amt-unveil">$200</span>
+          <span class="calc-bar-amount" id="calc-amt-unveil">$250</span>
         </div>
       </div>
     </div>
@@ -1485,7 +1492,7 @@ footer a:hover { color: var(--off-white); }
           </svg>
         </div>
         <div class="step-title">Sell</div>
-        <p class="step-desc">A sale is made. Revenue splits automatically — 70% to the artist, 20% to the venue, 10% to UnveilArt. No invoices. No waiting.</p>
+        <p class="step-desc">A sale is made. Revenue splits automatically — the artist's share rises with the price, from 70% up to 80%, while UnveilArt and the venue split the rest equally. No invoices. No waiting.</p>
       </div>
       <div class="cycle-step reveal" style="transition-delay:0.3s">
         <div class="step-number-wrap">
@@ -1656,7 +1663,7 @@ function animateBars() {
   if (barsDone) return;
   barsDone = true;
   document.getElementById('bar-industry').style.width = '50%';
-  document.getElementById('bar-unveil').style.width = '70%';
+  document.getElementById('bar-unveil').style.width = '80%';
 }
 
 var artistSectionEl = document.getElementById('artists');
@@ -1680,6 +1687,9 @@ var barUnveil = document.getElementById('calc-bar-unveil');
 var amtArtist = document.getElementById('calc-amt-artist');
 var amtVenue = document.getElementById('calc-amt-venue');
 var amtUnveil = document.getElementById('calc-amt-unveil');
+var pctArtist = document.getElementById('calc-pct-artist');
+var pctVenue = document.getElementById('calc-pct-venue');
+var pctUnveil = document.getElementById('calc-pct-unveil');
 
 var currentView = 'artist';
 
@@ -1687,21 +1697,36 @@ function formatDollar(n) {
   return '$' + n.toLocaleString('en-AU');
 }
 
+function formatPct(n) {
+  return (n % 1 === 0 ? n : n.toFixed(1)) + '%';
+}
+
+function ratesForPrice(price) {
+  if (price < 2000)  return { artist: 0.70, venue: 0.15,  unveil: 0.15  };
+  if (price <= 7000) return { artist: 0.75, venue: 0.125, unveil: 0.125 };
+  return                    { artist: 0.80, venue: 0.10,  unveil: 0.10  };
+}
+
 function updateCalc() {
   var price = parseInt(slider.value, 10);
-  var artist = Math.round(price * 0.70);
-  var venue  = Math.round(price * 0.20);
-  var unveil = Math.round(price * 0.10);
+  var rates = ratesForPrice(price);
+  var artist = Math.round(price * rates.artist);
+  var venue  = Math.round(price * rates.venue);
+  var unveil = Math.round(price * rates.unveil);
 
   priceDisplay.textContent = formatDollar(price);
   amtArtist.textContent = formatDollar(artist);
   amtVenue.textContent  = formatDollar(venue);
   amtUnveil.textContent = formatDollar(unveil);
 
-  /* Widths: scale to 70% = full bar */
-  barArtist.style.width = '70%';
-  barVenue.style.width  = '20%';
-  barUnveil.style.width = '10%';
+  pctArtist.textContent = formatPct(rates.artist * 100);
+  pctVenue.textContent  = formatPct(rates.venue * 100);
+  pctUnveil.textContent = formatPct(rates.unveil * 100);
+
+  /* Widths: scale relative to the artist share so the bars stay readable */
+  barArtist.style.width = (rates.artist * 100) + '%';
+  barVenue.style.width  = (rates.venue * 100) + '%';
+  barUnveil.style.width = (rates.unveil * 100) + '%';
 }
 
 function setView(view) {
