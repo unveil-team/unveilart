@@ -81,7 +81,11 @@ Deno.serve(async (req) => {
 
   if (req.method === 'PATCH' && id) {
     const body = await req.json();
-    const allowed = ['name', 'email', 'phone', 'instagram', 'website', 'bio', 'notes', 'status'];
+    const allowed = [
+      'name', 'email', 'phone', 'instagram', 'website', 'bio', 'notes', 'status',
+      'genre', 'style', 'portfolio_url', 'contract_date',
+      'photo_url', 'motto', 'tags', 'published',
+    ];
     const updates: Record<string, unknown> = {};
     allowed.forEach(k => { if (body[k] !== undefined) updates[k] = body[k]; });
     const { data, error } = await supabase.from('artists').update(updates).eq('id', id).select().single();

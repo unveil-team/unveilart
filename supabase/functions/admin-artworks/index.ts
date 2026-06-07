@@ -225,7 +225,7 @@ async function handleGet(
 
   let query = supabase
     .from('artworks')
-    .select('id, title, artist_id, venue_id, price, price_tier, status, installed_at, removed_at, arrival_condition, return_condition, sold_at, sale_price, artist_name, notes')
+    .select('id, title, artist_id, venue_id, price, price_tier, status, installed_at, removed_at, arrival_condition, return_condition, sold_at, sale_price, artist_name, notes, image_url, dimensions, published')
     .order('installed_at', { ascending: false });
 
   if (venueId) query = query.eq('venue_id', venueId);
@@ -349,6 +349,7 @@ async function handleUpdate(
     'installed_at', 'arrival_condition', 'return_condition',
     'notes', 'status', 'price', 'genre', 'description',
     'buyer_name', 'buyer_email', 'delivery_date', 'delivered_at',
+    'image_url', 'dimensions', 'published',
   ];
 
   const updates: Record<string, unknown> = {};

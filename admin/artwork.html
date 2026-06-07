@@ -143,6 +143,33 @@
             <label>Description</label>
             <textarea id="fe-desc" name="description"></textarea>
           </div>
+
+          <div class="section-header" style="margin-top:8px;">
+            <h2 class="section-title" style="font-size:16px;">Public Listing</h2>
+          </div>
+          <p style="font-size:12px;color:var(--stone-gray);margin-bottom:16px;">
+            These fields control how this piece appears on the artist's public profile page.
+          </p>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Image</label>
+              <div style="display:flex;align-items:center;gap:14px;">
+                <img id="fe-image-preview" src="" alt="" style="width:72px;height:72px;object-fit:cover;border-radius:6px;border:1px solid var(--bone);display:none;" />
+                <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" id="fe-image-file" />
+              </div>
+              <input type="hidden" id="fe-image-url" name="image_url" />
+            </div>
+            <div class="form-group">
+              <label>Dimensions</label>
+              <input type="text" id="fe-dimensions" name="dimensions" placeholder="e.g. 80 x 120 cm, Fine Art Archival Print" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label style="display:flex;align-items:center;gap:8px;font-weight:400;">
+              <input type="checkbox" id="fe-published" name="published" style="width:auto;" />
+              Published — show this artwork on the artist's public page
+            </label>
+          </div>
         </form>
       </div>
     </div>
@@ -454,6 +481,41 @@
     document.getElementById('sale-ua-share').textContent         = formatCurrency(splits.uaShare);
   }
 
+  // ── Image upload ───────────────────────────────────────────
+  function showImagePreview(url) {
+    const img = document.getElementById('fe-image-preview');
+    if (url) { img.src = url; img.style.display = ''; }
+    else { img.src = ''; img.style.display = 'none'; }
+  }
+
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload  = () => resolve(String(reader.result).split(',')[1] || '');
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  document.getElementById('fe-image-file').addEventListener('change', async (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const input = e.target;
+    input.disabled = true;
+    try {
+      const data = await fileToBase64(file);
+      const res  = await fnFetch('admin-upload', { method: 'POST', body: { folder: 'artworks', contentType: file.type, data } });
+      document.getElementById('fe-image-url').value = res.url;
+      showImagePreview(res.url);
+      toast('Image uploaded', 'success');
+    } catch (err) {
+      toast(err.message || 'Failed to upload image', 'error');
+    } finally {
+      input.disabled = false;
+      input.value = '';
+    }
+  });
+
   // ── Edit mode ──────────────────────────────────────────────
   function setEditMode(on) {
     document.getElementById('info-grid-wrap').style.display  = on ? 'none' : '';
@@ -471,6 +533,10 @@
       document.getElementById('fe-installed').value = artworkData.installed_at ? artworkData.installed_at.slice(0, 10) : '';
       document.getElementById('fe-removed').value   = artworkData.removed_at  ? artworkData.removed_at.slice(0, 10)  : '';
       document.getElementById('fe-desc').value      = artworkData.description || '';
+      document.getElementById('fe-image-url').value = artworkData.image_url   || '';
+      document.getElementById('fe-dimensions').value = artworkData.dimensions || '';
+      document.getElementById('fe-published').checked = !!artworkData.published;
+      showImagePreview(artworkData.image_url || '');
 
       // Populate artist select
       const artistSel = document.getElementById('fe-artist');
@@ -509,6 +575,9 @@
       installed_at: document.getElementById('fe-installed').value     || null,
       removed_at:   document.getElementById('fe-removed').value       || null,
       description:  document.getElementById('fe-desc').value.trim()   || null,
+      image_url:    document.getElementById('fe-image-url').value.trim()  || null,
+      dimensions:   document.getElementById('fe-dimensions').value.trim() || null,
+      published:    document.getElementById('fe-published').checked,
     };
 
     try {

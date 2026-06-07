@@ -118,147 +118,86 @@ footer a:hover { color: var(--off-white); }
 </footer>
 
 <script>
-var ARTISTS = {
-  wade: {
-    name: 'Wade',
-    medium: 'Photography',
-    motto: '"Light is the brushstroke. Time is the canvas."',
-    bio: 'Wade is a Melbourne-based photographer whose work explores the tension between stillness and movement. His series capture fleeting moments of urban life — the pause between action and memory.',
-    tags: ['Photography', 'Fine Art Print', 'Urban', 'Melbourne'],
-    heroImg: 'assets/wade.jpeg',
-    artworks: [
-      {
-        title: 'Stillwater No. 1',
-        img: 'assets/wade.jpeg',
-        dims: '80 x 120 cm, Fine Art Archival Print',
-        desc: 'A long-exposure study of Melbourne\'s inner-city water channels at dusk. The extended shutter softens movement into texture, revealing the quiet beneath the city\'s noise.'
-      },
-      {
-        title: 'Meridian',
-        img: 'assets/wade1.jpg',
-        dims: '60 x 90 cm, Fine Art Archival Print',
-        desc: 'Shot at the junction of two Melbourne laneways at midday. Shadow and geometry intersect in a composition that asks the viewer to consider what lies just out of frame.'
-      },
-      {
-        title: 'After Hours',
-        img: 'assets/wade2.jpg',
-        dims: '100 x 70 cm, Fine Art Archival Print',
-        desc: 'From the Late City series — storefronts after close, their interiors lit but empty. A meditation on commercial space and its relationship with human absence.'
-      }
-    ]
-  },
-  jeong: {
-    name: 'Jeong',
-    medium: 'Photography',
-    motto: '"Between seeing and feeling, there is a world worth photographing."',
-    bio: 'Jeong\'s practice centres on portraiture and the quiet intimacy of everyday ritual. Born in Seoul and based in Melbourne, her images negotiate cultural memory, belonging, and the small ceremonies of daily life.',
-    tags: ['Photography', 'Portraiture', 'Documentary', 'Cultural'],
-    heroImg: 'assets/jeong.jpeg',
-    artworks: [
-      {
-        title: 'Morning Ceremony',
-        img: 'assets/jeong.jpeg',
-        dims: '70 x 100 cm, Fine Art Archival Print',
-        desc: 'A documentary portrait from Jeong\'s ongoing series on ritual and morning routine. The subject, framed in early light, becomes a study in presence and repetition.'
-      },
-      {
-        title: 'In Between',
-        img: 'assets/jeong2.jpeg',
-        dims: '60 x 80 cm, Fine Art Archival Print',
-        desc: 'Captured during the transitional hour between day and night, this work explores the threshold states that define Jeong\'s approach — neither here nor there, yet wholly present.'
-      }
-    ]
-  },
-  henry: {
-    name: 'Henry',
-    medium: 'Photography',
-    motto: '"Architecture remembers everything the people inside it forget."',
-    bio: 'Henry photographs the built environment — its surfaces, angles, and silences. His work finds beauty in overlooked structures: stairwells, facades, and the geometry of spaces designed for function rather than feeling.',
-    tags: ['Photography', 'Architecture', 'Abstract', 'Fine Art'],
-    heroImg: 'assets/henry3.jpeg',
-    artworks: [
-      {
-        title: 'Threshold IV',
-        img: 'assets/henry2.jpeg',
-        dims: '90 x 120 cm, Fine Art Archival Print',
-        desc: 'Part of an ongoing series examining doorways and passage — the architectural moment between one space and another. Shot in Melbourne\'s inner-north.'
-      },
-      {
-        title: 'Form Study, Collingwood',
-        img: 'assets/henry3.jpeg',
-        dims: '80 x 80 cm, Fine Art Archival Print',
-        desc: 'A square-format study of a post-industrial facade in Collingwood. The composition strips the building of context, leaving only surface, shadow, and line.'
-      },
-      {
-        title: 'Ascent',
-        img: 'assets/henry4.jpeg',
-        dims: '60 x 100 cm, Fine Art Archival Print',
-        desc: 'A stairwell in an unnamed Melbourne building, shot from below. The geometry spirals upward toward a point of light — order, repetition, and the suggestion of escape.'
-      }
-    ]
-  }
-};
+var SUPABASE_URL = 'https://frgxtqljqliaafpxgloo.supabase.co';
+var FN_BASE      = SUPABASE_URL + '/functions/v1';
+var ANON_KEY     = 'sb_publishable_b5qRYxgOCwMUayJdC-flCw_GEnoL2Ue';
 
 function esc(s) {
   if (s == null) return '';
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
-function render() {
-  var params = new URLSearchParams(window.location.search);
-  var id = (params.get('id') || '').toLowerCase();
-  var artist = ARTISTS[id];
+function notFound() {
+  document.getElementById('main-content').innerHTML =
+    '<div class="not-found"><h2>Artist not found.</h2><a href="artists.html">Back to Artists</a></div>';
+}
+
+function render(artist) {
   var main = document.getElementById('main-content');
-
-  if (!artist) {
-    main.innerHTML = '<div class="not-found"><h2>Artist not found.</h2><a href="artists.html">Back to Artists</a></div>';
-    return;
-  }
-
   document.title = artist.name + ' — UnveilArt';
 
+  var medium = artist.genre || artist.style || 'Artist';
+
   // Hero
+  var tags = Array.isArray(artist.tags) ? artist.tags : [];
   var tagsHtml = '';
-  for (var i = 0; i < artist.tags.length; i++) {
-    tagsHtml += '<span class="artist-tag">' + esc(artist.tags[i]) + '</span>';
+  for (var i = 0; i < tags.length; i++) {
+    tagsHtml += '<span class="artist-tag">' + esc(tags[i]) + '</span>';
   }
 
   var heroHtml = '<div class="artist-hero">'
-    + '<img class="artist-hero-img" src="' + esc(artist.heroImg) + '" alt="' + esc(artist.name) + '" />'
+    + '<img class="artist-hero-img" src="' + esc(artist.photo_url || 'assets/unveil-logo.png') + '" alt="' + esc(artist.name) + '" />'
     + '<div class="artist-hero-info">'
     + '<a href="artists.html" class="back-link">&#8592; All Artists</a>'
-    + '<div class="artist-eyebrow">' + esc(artist.medium) + '</div>'
+    + '<div class="artist-eyebrow">' + esc(medium) + '</div>'
     + '<h1 class="artist-name">' + esc(artist.name) + '</h1>'
-    + '<p class="artist-motto">' + esc(artist.motto) + '</p>'
-    + '<p class="artist-bio">' + esc(artist.bio) + '</p>'
+    + (artist.motto ? '<p class="artist-motto">' + esc(artist.motto) + '</p>' : '')
+    + (artist.bio ? '<p class="artist-bio">' + esc(artist.bio) + '</p>' : '')
     + '<div class="artist-tags">' + tagsHtml + '</div>'
     + '</div>'
     + '</div>';
 
   // Works
+  var artworks = Array.isArray(artist.artworks) ? artist.artworks : [];
   var worksHtml = '';
-  for (var j = 0; j < artist.artworks.length; j++) {
-    var w = artist.artworks[j];
+  for (var j = 0; j < artworks.length; j++) {
+    var w = artworks[j];
     worksHtml += '<div class="work-item">'
-      + '<div class="work-img-wrap"><img class="work-img" src="' + esc(w.img) + '" alt="' + esc(w.title) + '" loading="lazy" /></div>'
+      + '<div class="work-img-wrap"><img class="work-img" src="' + esc(w.image_url) + '" alt="' + esc(w.title) + '" loading="lazy" /></div>'
       + '<div class="work-title">' + esc(w.title) + '</div>'
-      + '<div class="work-dims">' + esc(w.dims) + '</div>'
-      + '<p class="work-desc">' + esc(w.desc) + '</p>'
+      + (w.dimensions ? '<div class="work-dims">' + esc(w.dimensions) + '</div>' : '')
+      + (w.description ? '<p class="work-desc">' + esc(w.description) + '</p>' : '')
       + '</div>';
   }
 
-  var worksSection = '<section class="works-section">'
-    + '<div class="works-header">'
-    + '<h2 class="works-title">Works</h2>'
-    + '<span class="works-count">' + artist.artworks.length + ' piece' + (artist.artworks.length !== 1 ? 's' : '') + '</span>'
-    + '</div>'
-    + '<div class="works-grid">' + worksHtml + '</div>'
-    + '</section>';
+  var worksSection = '';
+  if (artworks.length) {
+    worksSection = '<section class="works-section">'
+      + '<div class="works-header">'
+      + '<h2 class="works-title">Works</h2>'
+      + '<span class="works-count">' + artworks.length + ' piece' + (artworks.length !== 1 ? 's' : '') + '</span>'
+      + '</div>'
+      + '<div class="works-grid">' + worksHtml + '</div>'
+      + '</section>';
+  }
 
   main.innerHTML = heroHtml + worksSection;
 }
 
-render();
+var params = new URLSearchParams(window.location.search);
+var id = params.get('id') || '';
+
+if (!id) {
+  notFound();
+} else {
+  fetch(FN_BASE + '/public-artists?id=' + encodeURIComponent(id), { headers: { 'apikey': ANON_KEY } })
+    .then(function(res) {
+      if (!res.ok) throw new Error('not found');
+      return res.json();
+    })
+    .then(function(artist) { render(artist); })
+    .catch(function() { notFound(); });
+}
 
 document.getElementById('hamburger').addEventListener('click', function() {
   document.getElementById('mobile-menu').classList.add('open');

@@ -99,6 +99,39 @@
             <label>Notes</label>
             <textarea name="notes" id="fi-notes" disabled></textarea>
           </div>
+
+          <div class="section-header" style="margin-top:8px;">
+            <h2 class="section-title" style="font-size:16px;">Public Profile</h2>
+          </div>
+          <p style="font-size:12px;color:var(--stone-gray);margin-bottom:16px;">
+            These fields control what appears on the public unveilart.com.au artist page.
+          </p>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Photo</label>
+              <div style="display:flex;align-items:center;gap:14px;">
+                <img id="fi-photo-preview" src="" alt="" style="width:72px;height:72px;object-fit:cover;border-radius:6px;border:1px solid var(--bone);display:none;" />
+                <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" id="fi-photo-file" disabled />
+              </div>
+              <input type="hidden" name="photo_url" id="fi-photo-url" />
+            </div>
+            <div class="form-group">
+              <label>Motto</label>
+              <input type="text" name="motto" id="fi-motto" placeholder="A short tagline for the hero section" disabled />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Tags</label>
+              <input type="text" name="tags" id="fi-tags" placeholder="Comma-separated, e.g. Photography, Portraiture" disabled />
+            </div>
+            <div class="form-group" style="display:flex;align-items:flex-end;">
+              <label style="display:flex;align-items:center;gap:8px;font-weight:400;">
+                <input type="checkbox" name="published" id="fi-published" disabled style="width:auto;" />
+                Published — show this artist on the public site
+              </label>
+            </div>
+          </div>
         </form>
       </div>
 
@@ -300,7 +333,48 @@
     document.getElementById('fi-bio').value       = a.bio         || '';
     document.getElementById('fi-notes').value     = a.notes       || '';
     document.getElementById('fi-status').value    = a.status      || 'active';
+
+    document.getElementById('fi-photo-url').value = a.photo_url   || '';
+    document.getElementById('fi-motto').value     = a.motto       || '';
+    document.getElementById('fi-tags').value      = Array.isArray(a.tags) ? a.tags.join(', ') : '';
+    document.getElementById('fi-published').checked = !!a.published;
+    showPhotoPreview(a.photo_url || '');
   }
+
+  function showPhotoPreview(url) {
+    const img = document.getElementById('fi-photo-preview');
+    if (url) { img.src = url; img.style.display = ''; }
+    else { img.src = ''; img.style.display = 'none'; }
+  }
+
+  // ── Photo upload ───────────────────────────────────────────
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload  = () => resolve(String(reader.result).split(',')[1] || '');
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  document.getElementById('fi-photo-file').addEventListener('change', async (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const input = e.target;
+    input.disabled = true;
+    try {
+      const data = await fileToBase64(file);
+      const res  = await fnFetch('admin-upload', { method: 'POST', body: { folder: 'artists', contentType: file.type, data } });
+      document.getElementById('fi-photo-url').value = res.url;
+      showPhotoPreview(res.url);
+      toast('Photo uploaded', 'success');
+    } catch (err) {
+      toast(err.message || 'Failed to upload photo', 'error');
+    } finally {
+      input.disabled = false;
+      input.value = '';
+    }
+  });
 
   function renderArtworks(artworks) {
     const tbody = document.getElementById('artworks-tbody');
@@ -382,6 +456,12 @@
       bio:           document.getElementById('fi-bio').value.trim()       || null,
       notes:         document.getElementById('fi-notes').value.trim()     || null,
       status:        document.getElementById('fi-status').value,
+      photo_url:     document.getElementById('fi-photo-url').value.trim() || null,
+      motto:         document.getElementById('fi-motto').value.trim()     || null,
+      tags:          document.getElementById('fi-tags').value.trim()
+                       ? document.getElementById('fi-tags').value.split(',').map(t => t.trim()).filter(Boolean)
+                       : null,
+      published:     document.getElementById('fi-published').checked,
     };
 
     try {
