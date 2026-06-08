@@ -181,11 +181,16 @@ img { max-width: 100%; display: block; }
 }
 
 .sidebar-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 20px;
-  text-align: center;
-  font-size: 15px;
   flex-shrink: 0;
   opacity: 0.85;
+}
+
+.sidebar-icon svg {
+  display: block;
 }
 
 .sidebar-nav-item span:not(.sidebar-icon):not(.sidebar-badge) {

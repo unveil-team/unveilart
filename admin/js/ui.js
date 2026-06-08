@@ -41,13 +41,22 @@ function initPage(options = {}) {
  * @param {string} activePage
  */
 function renderSidebar(activePage) {
+  const icons = {
+    dashboard: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>',
+    venues:    '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1"/><path d="M9 21v-5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v5"/><path d="M8 8h2M14 8h2M8 12h2M14 12h2"/></svg>',
+    artists:   '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg>',
+    artworks:  '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="1"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>',
+    revenue:   '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>',
+    settings:  '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>',
+  };
+
   const navItems = [
-    { page: 'dashboard', href: 'index.html',    icon: '📊', label: 'Dashboard',  badge: '' },
-    { page: 'venues',    href: 'venues.html',   icon: '🏨', label: 'Venues',     badge: 'badge-venues' },
-    { page: 'artists',   href: 'artists.html',  icon: '🎨', label: 'Artists',    badge: 'badge-artists' },
-    { page: 'artworks',  href: 'artworks.html', icon: '🖼️', label: 'Artworks',   badge: 'badge-artworks' },
-    { page: 'revenue',   href: 'revenue.html',  icon: '💰', label: 'Revenue',    badge: '' },
-    { page: 'settings',  href: 'settings.html', icon: '⚙️', label: 'Settings',   badge: '' },
+    { page: 'dashboard', href: 'index.html',    icon: icons.dashboard, label: 'Dashboard',  badge: '' },
+    { page: 'venues',    href: 'venues.html',   icon: icons.venues,    label: 'Venues',     badge: 'badge-venues' },
+    { page: 'artists',   href: 'artists.html',  icon: icons.artists,   label: 'Artists',    badge: 'badge-artists' },
+    { page: 'artworks',  href: 'artworks.html', icon: icons.artworks,  label: 'Artworks',   badge: 'badge-artworks' },
+    { page: 'revenue',   href: 'revenue.html',  icon: icons.revenue,   label: 'Revenue',    badge: '' },
+    { page: 'settings',  href: 'settings.html', icon: icons.settings,  label: 'Settings',   badge: '' },
   ];
 
   const navHTML = navItems.map(item => {
