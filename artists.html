@@ -276,10 +276,17 @@ footer a:hover { color: var(--off-white); }
 
 <!-- Page Hero -->
 <div class="page-hero" id="artists-hero">
+  <div class="page-hero-slide active" style="background-image:url('assets/wade.jpeg')"></div>
+  <div class="page-hero-slide" style="background-image:url('assets/jeong.jpeg')"></div>
+  <div class="page-hero-slide" style="background-image:url('assets/henry3.jpeg')"></div>
   <div class="page-hero-veil" id="artists-veil"></div>
   <div class="page-hero-cursor" id="artists-cursor"></div>
-  <div class="page-hero-label" id="artists-label"></div>
-  <div class="page-hero-indicators" id="artists-dots"></div>
+  <div class="page-hero-label" id="artists-label">Wade — Photography</div>
+  <div class="page-hero-indicators" id="artists-dots">
+    <div class="page-hero-dot active"></div>
+    <div class="page-hero-dot"></div>
+    <div class="page-hero-dot"></div>
+  </div>
   <span class="eyebrow">The Roster</span>
   <h1>Emerging voices,<br><em>on real walls.</em></h1>
   <p>A curated selection of Melbourne artists whose work rotates through our partner venues.</p>
@@ -288,7 +295,40 @@ footer a:hover { color: var(--off-white); }
 <!-- Artist Grid -->
 <section class="artists-section">
   <div class="artists-grid" id="artists-grid">
-    <p style="grid-column:1/-1;color:var(--stone-gray);font-size:14px;">Loading artists…</p>
+
+    <a href="artist.html?id=wade" class="artist-card">
+      <div class="artist-card-inner">
+        <img class="artist-card-img" src="assets/wade.jpeg" alt="Wade — Photography" />
+      </div>
+      <div class="artist-card-info">
+        <div class="artist-card-name">Wade</div>
+        <div class="artist-card-medium">Photography</div>
+        <span class="artist-card-arrow">View Profile →</span>
+      </div>
+    </a>
+
+    <a href="artist.html?id=jeong" class="artist-card">
+      <div class="artist-card-inner">
+        <img class="artist-card-img" src="assets/jeong.jpeg" alt="Jeong — Photography" />
+      </div>
+      <div class="artist-card-info">
+        <div class="artist-card-name">Jeong</div>
+        <div class="artist-card-medium">Photography</div>
+        <span class="artist-card-arrow">View Profile →</span>
+      </div>
+    </a>
+
+    <a href="artist.html?id=henry" class="artist-card">
+      <div class="artist-card-inner">
+        <img class="artist-card-img" src="assets/henry3.jpeg" alt="Henry — Photography" />
+      </div>
+      <div class="artist-card-info">
+        <div class="artist-card-name">Henry</div>
+        <div class="artist-card-medium">Photography</div>
+        <span class="artist-card-arrow">View Profile →</span>
+      </div>
+    </a>
+
   </div>
 </section>
 
@@ -307,34 +347,17 @@ footer a:hover { color: var(--off-white); }
   });
 
   /* ── Artists hero: slideshow + cursor spotlight lens ──── */
-  var SUPABASE_URL = 'https://frgxtqljqliaafpxgloo.supabase.co';
-  var FN_BASE      = SUPABASE_URL + '/functions/v1';
-  var ANON_KEY     = 'sb_publishable_b5qRYxgOCwMUayJdC-flCw_GEnoL2Ue';
-
-  function esc(s) {
-    if (s == null) return '';
-    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  }
-
-  function fetchPublicArtists() {
-    return fetch(FN_BASE + '/public-artists', { headers: { 'apikey': ANON_KEY } })
-      .then(function(res) {
-        if (!res.ok) throw new Error('Failed to load artists');
-        return res.json();
-      });
-  }
-
-  var heroEl   = document.getElementById('artists-hero');
-  var veilEl   = document.getElementById('artists-veil');
-  var cursorEl = document.getElementById('artists-cursor');
-  var labelEl  = document.getElementById('artists-label');
-  var dotsWrap = document.getElementById('artists-dots');
-  var gridEl   = document.getElementById('artists-grid');
-
-  var slides, dots, labels, current = 0, timer;
+  var heroEl    = document.getElementById('artists-hero');
+  var veilEl    = document.getElementById('artists-veil');
+  var cursorEl  = document.getElementById('artists-cursor');
+  var labelEl   = document.getElementById('artists-label');
+  var slides    = heroEl ? heroEl.querySelectorAll('.page-hero-slide') : [];
+  var dots      = heroEl ? heroEl.querySelectorAll('.page-hero-dot') : [];
+  var labels    = ['Wade — Photography', 'Jeong — Photography', 'Henry — Photography'];
+  var current   = 0;
+  var timer;
 
   function goTo(n) {
-    if (!slides.length) return;
     slides[current].classList.remove('active');
     dots[current].classList.remove('active');
     current = (n + slides.length) % slides.length;
@@ -345,27 +368,10 @@ footer a:hover { color: var(--off-white); }
 
   function startTimer() {
     clearInterval(timer);
-    if (slides.length > 1) timer = setInterval(function() { goTo(current + 1); }, 5000);
+    timer = setInterval(function() { goTo(current + 1); }, 5000);
   }
 
-  function renderHero(artists) {
-    var featured = artists.filter(function(a) { return a.photo_url; }).slice(0, 5);
-    if (!featured.length) { return; }
-
-    heroEl.insertAdjacentHTML('afterbegin', featured.map(function(a, i) {
-      return '<div class="page-hero-slide' + (i === 0 ? ' active' : '') + '" style="background-image:url(\'' + esc(a.photo_url) + '\')"></div>';
-    }).join(''));
-
-    dotsWrap.innerHTML = featured.map(function(a, i) {
-      return '<div class="page-hero-dot' + (i === 0 ? ' active' : '') + '"></div>';
-    }).join('');
-
-    slides = heroEl.querySelectorAll('.page-hero-slide');
-    dots   = dotsWrap.querySelectorAll('.page-hero-dot');
-    labels = featured.map(function(a) { return a.name + (a.genre ? ' — ' + a.genre : ''); });
-    current = 0;
-    if (labelEl) labelEl.textContent = labels[0];
-
+  if (slides.length) {
     startTimer();
     for (var di = 0; di < dots.length; di++) {
       (function(i) {
@@ -373,32 +379,6 @@ footer a:hover { color: var(--off-white); }
       })(di);
     }
   }
-
-  function renderGrid(artists) {
-    if (!artists.length) {
-      gridEl.innerHTML = '<p style="grid-column:1/-1;color:var(--stone-gray);font-size:14px;">New artist profiles are coming soon — check back shortly.</p>';
-      return;
-    }
-    gridEl.innerHTML = artists.map(function(a) {
-      var medium = a.genre || a.style || 'Artist';
-      var img    = a.photo_url || 'assets/unveil-logo.png';
-      return '<a href="artist.html?id=' + esc(a.id) + '" class="artist-card">'
-        + '<div class="artist-card-inner"><img class="artist-card-img" src="' + esc(img) + '" alt="' + esc(a.name) + ' — ' + esc(medium) + '" /></div>'
-        + '<div class="artist-card-info">'
-        + '<div class="artist-card-name">' + esc(a.name) + '</div>'
-        + '<div class="artist-card-medium">' + esc(medium) + '</div>'
-        + '<span class="artist-card-arrow">View Profile →</span>'
-        + '</div></a>';
-    }).join('');
-  }
-
-  fetchPublicArtists().then(function(artists) {
-    artists = Array.isArray(artists) ? artists : [];
-    renderHero(artists);
-    renderGrid(artists);
-  }).catch(function() {
-    gridEl.innerHTML = '<p style="grid-column:1/-1;color:var(--stone-gray);font-size:14px;">Unable to load artists right now — please try again later.</p>';
-  });
 
   /* Cursor spotlight — custom cursor that clears the veil locally */
   if (heroEl && veilEl && cursorEl) {
