@@ -254,7 +254,7 @@ async function handleCreate(
   supabase: ReturnType<typeof sb>,
   body: Record<string, unknown>,
 ): Promise<Response> {
-  const { venue_id, title, artist_id, notes, price } = body;
+  const { venue_id, title, artist_id, notes, price, quantity, memo } = body;
 
   // ── Stored artwork (no venue) ─────────────────────────────
   if (!venue_id) {
@@ -274,8 +274,10 @@ async function handleCreate(
         artist_name,
         venue_id:   null,
         notes:      notes ?? null,
+        memo:       memo ?? null,
         price:      numPrice,
         price_tier: priceTier,
+        quantity:   quantity ? Number(quantity) : 1,
         status:     'stored',
       })
       .select()
@@ -317,8 +319,10 @@ async function handleCreate(
       artist_id:  artist_id ?? null,
       artist_name,
       notes:      notes ?? null,
+      memo:       memo ?? null,
       price:      numPrice,
       price_tier: priceTier,
+      quantity:   quantity ? Number(quantity) : 1,
       status:     'installed',
     })
     .select()
@@ -373,9 +377,9 @@ async function handleUpdate(
   const allowed = [
     'title', 'artist_id', 'artist_name', 'venue_id',
     'installed_at', 'arrival_condition', 'return_condition',
-    'notes', 'status', 'price', 'genre', 'description',
+    'notes', 'memo', 'status', 'price', 'genre', 'description',
     'buyer_name', 'buyer_email', 'delivery_date', 'delivered_at',
-    'image_url', 'dimensions', 'published',
+    'image_url', 'dimensions', 'published', 'quantity',
   ];
 
   const updates: Record<string, unknown> = {};
