@@ -36,6 +36,7 @@ const API = {
     install: (data)    => fnFetch('admin-artworks',         { method: 'POST', body: data }),
     remove:  (data)    => fnFetch('admin-artworks/remove',  { method: 'POST', body: data }),
     sell:    (data)    => fnFetch('admin-artworks/sell',    { method: 'POST', body: data }),
+    delete:  (id)      => fnFetch('admin-artworks?id=' + id, { method: 'DELETE' }),
   },
 
   // ── Revenue ───────────────────────────────────────────────

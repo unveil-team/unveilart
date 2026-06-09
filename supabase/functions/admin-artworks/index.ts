@@ -401,23 +401,21 @@ async function handleUpdate(
   return json(data);
 }
 
-// DELETE /admin-artworks?id=X&venue_id=Y  →  remove artwork, update Stripe subscription
+// DELETE /admin-artworks?id=X  →  hard-delete artwork record
 async function handleDelete(
   supabase: ReturnType<typeof sb>,
   id: string,
-  venueId: string,
+  venueId: string | null,
   body: Record<string, unknown>,
 ): Promise<Response> {
-  const removed_at        = (body.removed_at as string)        || new Date().toISOString().split('T')[0];
-  const return_condition  = (body.return_condition as string)  || null;
+  const { error } = await supabase.from('artworks').delete().eq('id', id);
+  if (error) return json({ error: error.message }, 400);
+
+  // If artwork was at a venue, adjust the Stripe subscription count
+  if (!venueId) return json({ deleted: true });
 
   const { data: venue } = await supabase.from('venues').select('*').eq('id', venueId).single();
-  if (!venue) return json({ error: 'Venue not found' }, 404);
-
-  await supabase
-    .from('artworks')
-    .update({ status: 'removed', removed_at, return_condition })
-    .eq('id', id);
+  if (!venue) return json({ deleted: true });
 
   const remainingCount = await getInstalledCount(supabase, venueId);
 
@@ -439,15 +437,10 @@ async function handleDelete(
       );
     }
   } catch (stripeErr) {
-    // Log but don't fail — artwork already marked removed
-    console.error('Stripe update failed after remove:', (stripeErr as Error).message);
+    console.error('Stripe update failed after delete:', (stripeErr as Error).message);
   }
 
-  const { amount, gstAmount, total } = calculateSubscriptionAmounts(remainingCount);
-  return json({
-    removed:      true,
-    subscription: { artwork_count: remainingCount, monthly_amount: amount, monthly_gst: gstAmount, monthly_total: total },
-  });
+  return json({ deleted: true });
 }
 
 // POST /admin-artworks/sell  →  mark artwork sold, calculate splits, update settlement
@@ -716,8 +709,8 @@ Deno.serve(async (req) => {
     return handleUpdate(supabase, id, body);
   }
 
-  // DELETE /admin-artworks?id=X&venue_id=Y
-  if (req.method === 'DELETE' && id && venueId) {
+  // DELETE /admin-artworks?id=X  (venue_id optional — stored artworks have none)
+  if (req.method === 'DELETE' && id) {
     const body = req.headers.get('content-length') !== '0'
       ? await req.json().catch(() => ({}))
       : {};

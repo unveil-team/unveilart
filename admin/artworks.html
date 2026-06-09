@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Artworks — UnveilArt Admin</title>
 <link rel="stylesheet" href="css/admin.css" />
+<style>
+  .btn-danger { background: var(--red, #c0392b); color: #fff; border: none; font-size: 12px; padding: 4px 10px; border-radius: 4px; cursor: pointer; }
+  .btn-danger:hover { opacity: 0.85; }
+</style>
 </head>
 <body>
 <div class="main-content">
@@ -185,7 +189,10 @@
         <td>${badge(tier, priceTierLabel(tier))}</td>
         <td>${badge(a.status)}</td>
         <td>${formatDate(a.installed_at)}</td>
-        <td><a href="artwork.html?id=${esc(a.id)}" class="action-btn">View →</a></td>
+        <td style="display:flex;gap:6px;align-items:center;">
+          <a href="artwork.html?id=${esc(a.id)}" class="action-btn">View →</a>
+          <button class="action-btn btn-danger" onclick="deleteArtwork('${esc(a.id)}', '${esc(a.title)}')">Delete</button>
+        </td>
       </tr>`;
     }).join('');
   }
@@ -301,6 +308,18 @@
       btn.textContent = 'Add Artwork';
     }
   });
+
+  // ── Delete ─────────────────────────────────────────────────
+  async function deleteArtwork(id, title) {
+    if (!confirm(`Delete "${title}"? This cannot be undone.`)) return;
+    try {
+      await API.artworks.delete(id);
+      toast('Artwork deleted', 'success');
+      loadArtworks();
+    } catch (err) {
+      toast(err.message || 'Failed to delete artwork.', 'error');
+    }
+  }
 
   // ── Init ───────────────────────────────────────────────────
   loadArtworks();
