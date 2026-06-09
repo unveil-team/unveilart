@@ -101,6 +101,7 @@ nav {
   opacity: 0;
   transition: opacity 1.4s ease;
   transform: scale(1.04);
+  will-change: transform, opacity;
 }
 .page-hero-slide.active {
   opacity: 1;
@@ -115,7 +116,6 @@ nav {
   inset: 0;
   background: rgba(10,10,10,0.48);
   z-index: 1;
-  transition: background 0.06s linear;
   pointer-events: none;
 }
 .page-hero-indicators {
@@ -380,19 +380,28 @@ footer a:hover { color: var(--off-white); }
     }
   }
 
-  /* Cursor spotlight — custom cursor that clears the veil locally */
+  /* Cursor spotlight — rAF-throttled so it only paints once per frame */
   if (heroEl && veilEl && cursorEl) {
+    var rafPending = false;
+    var pendingX = 0, pendingY = 0;
     heroEl.addEventListener('mousemove', function(e) {
       var rect = heroEl.getBoundingClientRect();
-      var mx = e.clientX - rect.left;
-      var my = e.clientY - rect.top;
-      cursorEl.style.left = mx + 'px';
-      cursorEl.style.top  = my + 'px';
-      veilEl.style.background =
-        'radial-gradient(circle 160px at ' + mx + 'px ' + my + 'px, ' +
-        'rgba(10,10,10,0.04) 0%, rgba(10,10,10,0.52) 65%)';
+      pendingX = e.clientX - rect.left;
+      pendingY = e.clientY - rect.top;
+      cursorEl.style.left = pendingX + 'px';
+      cursorEl.style.top  = pendingY + 'px';
+      if (!rafPending) {
+        rafPending = true;
+        requestAnimationFrame(function() {
+          veilEl.style.background =
+            'radial-gradient(circle 160px at ' + pendingX + 'px ' + pendingY + 'px, ' +
+            'rgba(10,10,10,0.04) 0%, rgba(10,10,10,0.52) 65%)';
+          rafPending = false;
+        });
+      }
     });
     heroEl.addEventListener('mouseleave', function() {
+      rafPending = false;
       veilEl.style.background = 'rgba(10,10,10,0.48)';
     });
   }
