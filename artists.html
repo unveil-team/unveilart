@@ -276,14 +276,16 @@ footer a:hover { color: var(--off-white); }
 
 <!-- Page Hero -->
 <div class="page-hero" id="artists-hero">
-  <div class="page-hero-slide active" style="background-image:url('assets/wade.jpeg')"></div>
+  <div class="page-hero-slide active" style="background-image:url('assets/silence-1.jpeg')"></div>
+  <div class="page-hero-slide" style="background-image:url('assets/silence-2.jpeg')"></div>
+  <div class="page-hero-slide" style="background-image:url('assets/wade.jpeg')"></div>
   <div class="page-hero-slide" style="background-image:url('assets/jeong.jpeg')"></div>
-  <div class="page-hero-slide" style="background-image:url('assets/henry3.jpeg')"></div>
   <div class="page-hero-veil" id="artists-veil"></div>
   <div class="page-hero-cursor" id="artists-cursor"></div>
-  <div class="page-hero-label" id="artists-label">Wade — Photography</div>
+  <div class="page-hero-label" id="artists-label">Silence — Aerosol &amp; Mixed Media</div>
   <div class="page-hero-indicators" id="artists-dots">
     <div class="page-hero-dot active"></div>
+    <div class="page-hero-dot"></div>
     <div class="page-hero-dot"></div>
     <div class="page-hero-dot"></div>
   </div>
@@ -295,6 +297,17 @@ footer a:hover { color: var(--off-white); }
 <!-- Artist Grid -->
 <section class="artists-section">
   <div class="artists-grid" id="artists-grid">
+
+    <a href="artist.html?id=silence" class="artist-card">
+      <div class="artist-card-inner">
+        <img class="artist-card-img" src="assets/silence-1.jpeg" alt="Silence — Aerosol &amp; Mixed Media" />
+      </div>
+      <div class="artist-card-info">
+        <div class="artist-card-name">Silence</div>
+        <div class="artist-card-medium">Aerosol &amp; Mixed Media</div>
+        <span class="artist-card-arrow">View Profile →</span>
+      </div>
+    </a>
 
     <a href="artist.html?id=wade" class="artist-card">
       <div class="artist-card-inner">
@@ -353,7 +366,7 @@ footer a:hover { color: var(--off-white); }
   var labelEl   = document.getElementById('artists-label');
   var slides    = heroEl ? heroEl.querySelectorAll('.page-hero-slide') : [];
   var dots      = heroEl ? heroEl.querySelectorAll('.page-hero-dot') : [];
-  var labels    = ['Wade — Photography', 'Jeong — Photography', 'Henry — Photography'];
+  var labels    = ['Silence — Aerosol & Mixed Media', 'Silence — Aerosol & Mixed Media', 'Wade — Photography', 'Jeong — Photography'];
   var current   = 0;
   var timer;
 
