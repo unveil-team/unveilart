@@ -88,25 +88,6 @@
             <option value="">No venue / Stored</option>
           </select>
         </div>
-        <div class="form-group">
-          <label for="f-genre">Genre</label>
-          <input type="text" id="f-genre" name="genre" />
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label for="f-install-date">Install Date</label>
-          <input type="date" id="f-install-date" name="installed_at" />
-        </div>
-        <div class="form-group">
-          <label for="f-condition">Arrival Condition</label>
-          <input type="text" id="f-condition" name="condition_on_arrival" placeholder="Note any damage…" />
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="f-desc">Description</label>
-        <textarea id="f-desc" name="description"></textarea>
-      </div>
       <div id="form-error" class="alert-row alert-error" style="display:none;">
         <div class="alert-body"><span id="form-error-msg"></span></div>
       </div>
@@ -279,19 +260,14 @@
     btn.disabled = true;
     btn.textContent = 'Saving…';
 
-    const venueId    = document.getElementById('f-venue').value       || null;
-    const installDate = document.getElementById('f-install-date').value || null;
+    const venueId = document.getElementById('f-venue').value || null;
 
     const data = {
       title,
-      artist_id:           document.getElementById('f-artist').value       || null,
-      venue_id:            venueId,
-      price:               parseFloat(document.getElementById('f-price').value) || null,
-      genre:               document.getElementById('f-genre').value.trim()  || null,
-      description:         document.getElementById('f-desc').value.trim()   || null,
-      condition_on_arrival: document.getElementById('f-condition').value.trim() || null,
-      installed_at:        installDate,
-      status:              venueId ? 'installed' : 'stored',
+      artist_id: document.getElementById('f-artist').value || null,
+      venue_id:  venueId,
+      price:     parseFloat(document.getElementById('f-price').value) || null,
+      status:    venueId ? 'installed' : 'stored',
     };
 
     try {

@@ -254,7 +254,7 @@ async function handleCreate(
   supabase: ReturnType<typeof sb>,
   body: Record<string, unknown>,
 ): Promise<Response> {
-  const { venue_id, title, artist_id, installed_at, arrival_condition, notes, price, genre, description } = body;
+  const { venue_id, title, artist_id, notes, price } = body;
 
   // ── Stored artwork (no venue) ─────────────────────────────
   if (!venue_id) {
@@ -269,18 +269,14 @@ async function handleCreate(
     const { data: artwork, error: artErr } = await supabase
       .from('artworks')
       .insert({
-        title:             title ?? null,
-        artist_id:         artist_id ?? null,
+        title:      title ?? null,
+        artist_id:  artist_id ?? null,
         artist_name,
-        venue_id:          null,
-        installed_at:      null,
-        arrival_condition: arrival_condition ?? null,
-        notes:             notes ?? null,
-        price:             numPrice,
-        price_tier:        priceTier,
-        genre:             genre ?? null,
-        description:       description ?? null,
-        status:            'stored',
+        venue_id:   null,
+        notes:      notes ?? null,
+        price:      numPrice,
+        price_tier: priceTier,
+        status:     'stored',
       })
       .select()
       .single();
@@ -317,15 +313,13 @@ async function handleCreate(
     .from('artworks')
     .insert({
       venue_id,
-      title:             title ?? null,
-      artist_id:         artist_id ?? null,
+      title:      title ?? null,
+      artist_id:  artist_id ?? null,
       artist_name,
-      installed_at:      installed_at ?? null,
-      arrival_condition: arrival_condition ?? null,
-      notes:             notes ?? null,
-      price:             numPrice,
-      price_tier:        priceTier,
-      status:            'installed',
+      notes:      notes ?? null,
+      price:      numPrice,
+      price_tier: priceTier,
+      status:     'installed',
     })
     .select()
     .single();
