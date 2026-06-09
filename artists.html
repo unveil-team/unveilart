@@ -95,8 +95,8 @@ nav {
 .page-hero-slide {
   position: absolute;
   inset: 0;
-  background-size: 108%;
-  background-position: 45% 45%;
+  background-size: cover;
+  background-position: center;
   filter: saturate(0.65) brightness(0.52);
   opacity: 0;
   transition: opacity 1.4s ease;
@@ -202,13 +202,11 @@ nav {
 .artist-card-img {
   width: 100%; aspect-ratio: 3/4;
   object-fit: cover;
-  object-position: 40% 40%;
   display: block;
-  transform: scale(1.22);
-  transform-origin: 40% 40%;
+  will-change: transform;
   transition: transform 0.28s ease-out;
 }
-.artist-card:hover .artist-card-img { transform: scale(1.28); }
+.artist-card:hover .artist-card-img { transform: scale(1.04); }
 .artist-card-inner { overflow: hidden; }
 .artist-card-info { padding: 20px 0 0; }
 .artist-card-name {
