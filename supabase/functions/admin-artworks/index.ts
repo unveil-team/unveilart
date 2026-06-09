@@ -249,15 +249,47 @@ async function handleGet(
   return json(rows);
 }
 
-// POST /admin-artworks  →  install artwork, create/update Stripe subscription
+// POST /admin-artworks  →  create artwork (stored or installed at a venue)
 async function handleCreate(
   supabase: ReturnType<typeof sb>,
   body: Record<string, unknown>,
 ): Promise<Response> {
-  const { venue_id, title, artist_id, installed_at, arrival_condition, notes, price } = body;
+  const { venue_id, title, artist_id, installed_at, arrival_condition, notes, price, genre, description } = body;
 
-  if (!venue_id) return json({ error: 'venue_id is required' }, 400);
+  // ── Stored artwork (no venue) ─────────────────────────────
+  if (!venue_id) {
+    let artist_name: string | null = (body.artist_name as string) || null;
+    if (artist_id) {
+      const { data: artist } = await supabase.from('artists').select('name').eq('id', artist_id).single();
+      if (artist) artist_name = (artist as { name: string }).name;
+    }
+    const numPrice  = price ? Number(price) : null;
+    const priceTier = numPrice !== null ? calcPriceTier(numPrice) : null;
 
+    const { data: artwork, error: artErr } = await supabase
+      .from('artworks')
+      .insert({
+        title:             title ?? null,
+        artist_id:         artist_id ?? null,
+        artist_name,
+        venue_id:          null,
+        installed_at:      null,
+        arrival_condition: arrival_condition ?? null,
+        notes:             notes ?? null,
+        price:             numPrice,
+        price_tier:        priceTier,
+        genre:             genre ?? null,
+        description:       description ?? null,
+        status:            'stored',
+      })
+      .select()
+      .single();
+
+    if (artErr) return json({ error: artErr.message }, 400);
+    return json({ artwork }, 201);
+  }
+
+  // ── Installed artwork (venue required) ───────────────────
   const { data: venue, error: venueErr } = await supabase
     .from('venues')
     .select('*')
