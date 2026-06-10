@@ -67,7 +67,8 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; a
 .work-img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; transition: transform 0.6s cubic-bezier(0.22,1,0.36,1); }
 .work-img-wrap:hover .work-img { transform: scale(1.04); }
 .work-title { font-family: var(--serif); font-size: 22px; font-weight: 360; letter-spacing: -0.015em; margin-bottom: 10px; }
-.work-dims { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold-deep); margin-bottom: 12px; }
+.work-dims { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold-deep); margin-bottom: 8px; }
+.work-price { font-size: 15px; font-weight: 500; color: var(--deep-black); margin-bottom: 10px; }
 .work-desc { font-size: 14px; line-height: 1.72; color: var(--stone-gray); }
 @media (max-width: 720px) { .works-section { padding: 60px 20px 80px; } .works-grid { grid-template-columns: 1fr; gap: 48px; } }
 
@@ -209,6 +210,27 @@ var ARTISTS = {
       }
     ]
   },
+  'luke-parry': {
+    name: 'Luke Parry',
+    medium: 'Oil Portraits',
+    motto: '"Each face holds a lifetime — my job is to let it speak."',
+    bio: 'Luke is a Melbourne-based portrait artist working in oils, drawn to the challenge of capturing more than just a likeness. Over several decades, he has dedicated himself to refining his style and technique, exploring drama, character, and the interplay of light and dark that brings his subjects to life. His work focuses on a limited number of paintings each year, allowing him to immerse deeper in each portrait. Luke seeks to create pieces that resonate with both strong likeness and emotional presence, revealing the identity and temperament of his subjects. This collection presents ten portraits that meditate on the quiet grandeur of lived experience — figures drawn from diverse communities across the world, each a meditation on resilience, dignity, and the enduring beauty of the human spirit.',
+    tags: ['Oil Painting', 'Portraiture', 'Realism', 'Fine Art', 'Melbourne'],
+    heroImg: 'assets/luke-parry.webp',
+    artworks: [
+      { title: 'Ahmad',   img: 'assets/luke-parry-ahmad.webp',   dims: '90 × 90 cm · Original oil on stretched canvas, floating wooden frame', desc: 'A powerful portrait conveying quiet strength and dignity.', price: '$7,520' },
+      { title: 'Amala',   img: 'assets/luke-parry-amala.webp',   dims: '60 × 60 cm · Original oil on stretched canvas, floating wooden frame', desc: 'A portrait of graceful poise and deep inner life.', price: '$3,340' },
+      { title: 'Sarita',  img: 'assets/luke-parry-sarita.webp',  dims: '80 × 60 cm · Original oil on stretched canvas, floating wooden frame', desc: 'A study in resilience — light catching the texture of lived experience.', price: '$4,610' },
+      { title: 'Rachid',  img: 'assets/luke-parry-rachid.webp',  dims: '80 × 60 cm · Original oil on stretched canvas, floating wooden frame', desc: 'Character and calm rendered with remarkable sensitivity.', price: '$4,610' },
+      { title: 'Pipaluk', img: 'assets/luke-parry-pipaluk.webp', dims: '80 × 60 cm · Original oil on stretched canvas, floating wooden frame', desc: 'A portrait that holds both sorrow and quiet optimism.', price: '$4,610' },
+      { title: 'Suresh',  img: 'assets/luke-parry-suresh.webp',  dims: '80 × 60 cm · Original oil on stretched canvas, floating wooden frame', desc: 'The weight of years expressed through form and light.', price: '$4,610' },
+      { title: 'Lakshmi', img: 'assets/luke-parry-lakshmi.webp', dims: '80 × 60 cm · Original oil on stretched canvas, floating wooden frame', desc: 'A poised and contemplative presence on canvas.', price: '$4,610' },
+      { title: 'Farhan',  img: 'assets/luke-parry-farhan.webp',  dims: '80 × 60 cm · Original oil on stretched canvas, floating wooden frame', desc: 'Steady gaze, deep humanity — a portrait of enduring character.', price: '$4,610' },
+      { title: 'Zainab',  img: 'assets/luke-parry-zainab.webp',  dims: '80 × 60 cm · Original oil on stretched canvas, floating wooden frame', desc: 'Quiet dignity rendered in warm, layered oils.', price: '$4,610' },
+      { title: 'Amit',    img: 'assets/luke-parry-amit.webp',    dims: '80 × 60 cm · Original oil on stretched canvas, floating wooden frame', desc: 'A face that carries its history with grace.', price: '$4,610' }
+    ]
+  },
+
   henry: {
     name: 'Henry',
     medium: 'Photography',
@@ -283,6 +305,7 @@ function render() {
       + '<div class="work-img-wrap"><img class="work-img" src="' + esc(w.img) + '" alt="' + esc(w.title) + '" loading="lazy" /></div>'
       + '<div class="work-title">' + esc(w.title) + '</div>'
       + '<div class="work-dims">' + esc(w.dims) + '</div>'
+      + (w.price ? '<div class="work-price">' + esc(w.price) + '</div>' : '')
       + '<p class="work-desc">' + esc(w.desc) + '</p>'
       + '</div>';
   }
