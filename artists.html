@@ -281,6 +281,7 @@ footer a:hover { color: var(--off-white); }
   <div class="page-hero-slide" style="background-image:url('assets/wade.jpeg')"></div>
   <div class="page-hero-slide" style="background-image:url('assets/jeong.jpeg')"></div>
   <div class="page-hero-slide" style="background-image:url('assets/luke-parry.webp')"></div>
+  <div class="page-hero-slide" style="background-image:url('assets/alexander-morris.webp')"></div>
   <div class="page-hero-veil" id="artists-veil"></div>
   <div class="page-hero-cursor" id="artists-cursor"></div>
   <div class="page-hero-label" id="artists-label">Silence — Aerosol &amp; Mixed Media</div>
@@ -355,6 +356,17 @@ footer a:hover { color: var(--off-white); }
       </div>
     </a>
 
+    <a href="artist.html?id=alexander-morris" class="artist-card">
+      <div class="artist-card-inner">
+        <img class="artist-card-img" src="assets/alexander-morris.webp" alt="Alexander Morris — Oil Painting" />
+      </div>
+      <div class="artist-card-info">
+        <div class="artist-card-name">Alexander Morris</div>
+        <div class="artist-card-medium">Oil Painting</div>
+        <span class="artist-card-arrow">View Profile →</span>
+      </div>
+    </a>
+
   </div>
 </section>
 
@@ -379,7 +391,7 @@ footer a:hover { color: var(--off-white); }
   var labelEl   = document.getElementById('artists-label');
   var slides    = heroEl ? heroEl.querySelectorAll('.page-hero-slide') : [];
   var dots      = heroEl ? heroEl.querySelectorAll('.page-hero-dot') : [];
-  var labels    = ['Silence — Aerosol & Mixed Media', 'Silence — Aerosol & Mixed Media', 'Wade — Photography', 'Jeong — Photography', 'Luke Parry — Oil Portraits'];
+  var labels    = ['Silence — Aerosol & Mixed Media', 'Silence — Aerosol & Mixed Media', 'Wade — Photography', 'Jeong — Photography', 'Luke Parry — Oil Portraits', 'Alexander Morris — Oil Painting'];
   var current   = 0;
   var timer;
 
