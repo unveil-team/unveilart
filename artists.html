@@ -209,9 +209,11 @@ nav {
 /* ── Artist grid ────────────────────────────────────────── */
 .artists-section {
   padding: 0 40px 120px;
-  background: var(--cream) url('assets/grain.webp');
-  background-size: 256px 256px;
-  background-blend-mode: multiply;
+  background-color: var(--cream);
+  background-image:
+    linear-gradient(to right, rgba(10,10,10,0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(10,10,10,0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
 }
 .artists-grid {
   max-width: 1200px; margin: 0 auto;
@@ -230,6 +232,12 @@ nav {
   position: relative;
   overflow: hidden;
   aspect-ratio: 3/4;
+  box-shadow: 0 1px 3px rgba(10,10,10,0.06), 0 8px 24px rgba(10,10,10,0.08);
+  transition: box-shadow 0.35s ease, transform 0.35s ease;
+}
+.artist-card:hover .artist-card-inner {
+  box-shadow: 0 4px 10px rgba(10,10,10,0.10), 0 20px 40px rgba(10,10,10,0.16);
+  transform: translateY(-4px);
 }
 .artist-card-bracket {
   position: absolute;
