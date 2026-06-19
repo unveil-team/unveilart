@@ -199,6 +199,12 @@ nav {
   text-decoration: none;
   color: inherit;
 }
+.artist-card.feature {
+  grid-column: span 2;
+}
+.artist-card.feature .artist-card-img {
+  aspect-ratio: 16/10;
+}
 .artist-card-img {
   width: 100%; aspect-ratio: 3/4;
   object-fit: cover;
@@ -302,7 +308,7 @@ footer a:hover { color: var(--off-white); }
 <section class="artists-section">
   <div class="artists-grid" id="artists-grid">
 
-    <a href="artist.html?id=silence" class="artist-card">
+    <a href="artist.html?id=silence" class="artist-card feature">
       <div class="artist-card-inner">
         <img class="artist-card-img" src="assets/silence-aqua2023.webp" alt="Silence — Aerosol &amp; Mixed Media" />
       </div>
@@ -335,7 +341,7 @@ footer a:hover { color: var(--off-white); }
       </div>
     </a>
 
-    <a href="artist.html?id=luke-parry" class="artist-card">
+    <a href="artist.html?id=luke-parry" class="artist-card feature">
       <div class="artist-card-inner">
         <img class="artist-card-img" src="assets/luke-parry.webp" alt="Luke Parry — Oil Portraits" />
       </div>
