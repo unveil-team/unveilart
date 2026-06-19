@@ -211,9 +211,18 @@ nav {
   padding: 0 40px 120px;
   background-color: var(--cream);
   background-image:
-    linear-gradient(to right, rgba(10,10,10,0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(10,10,10,0.05) 1px, transparent 1px);
-  background-size: 48px 48px;
+    radial-gradient(at 20% 20%, rgba(184,164,138,0.20) 0px, transparent 50%),
+    radial-gradient(at 80% 10%, rgba(232,228,221,0.55) 0px, transparent 50%),
+    radial-gradient(at 60% 85%, rgba(184,164,138,0.14) 0px, transparent 50%),
+    radial-gradient(at 5% 90%, rgba(245,241,234,0.6) 0px, transparent 50%);
+  background-size: 200% 200%;
+  background-position: 0% 0%;
+  animation: mesh-flow 38s ease-in-out infinite alternate;
+}
+@keyframes mesh-flow {
+  0%   { background-position: 0% 0%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 100%; }
 }
 .artists-grid {
   max-width: 1200px; margin: 0 auto;
