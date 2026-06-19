@@ -97,16 +97,37 @@ nav {
 .page-hero-slide {
   position: absolute;
   inset: 0;
-  background-size: cover;
-  background-position: center;
-  filter: saturate(0.65) brightness(0.52);
   opacity: 0;
+  isolation: isolate;
   transition: opacity 1.4s ease;
-  transform: scale(1.04);
-  will-change: transform, opacity;
+  will-change: opacity;
 }
 .page-hero-slide.active {
   opacity: 1;
+}
+.page-hero-slide-glow {
+  position: absolute;
+  inset: -15%;
+  background-image: var(--img);
+  background-size: cover;
+  background-position: center;
+  filter: blur(70px) saturate(1.6) brightness(0.8);
+  transform: scale(1.1);
+  opacity: 0.9;
+  z-index: 0;
+}
+.page-hero-slide-sharp {
+  position: absolute;
+  inset: 0;
+  background-image: var(--img);
+  background-size: cover;
+  background-position: center;
+  filter: saturate(0.65) brightness(0.52);
+  transform: scale(1.04);
+  z-index: 1;
+  will-change: transform;
+}
+.page-hero-slide.active .page-hero-slide-sharp {
   animation: slide-breathe 14s ease-in-out infinite alternate;
 }
 @keyframes slide-breathe {
@@ -309,13 +330,13 @@ footer a:hover { color: var(--off-white); }
 
 <!-- Page Hero -->
 <div class="page-hero" id="artists-hero">
-  <div class="page-hero-slide active" style="background-image:url('assets/silence-aqua2023.webp')"></div>
-  <div class="page-hero-slide" style="background-image:url('assets/Blue-and-white-drips-on-black-with-pipes-canvas-Silence-Melbourne.webp')"></div>
-  <div class="page-hero-slide" style="background-image:url('assets/wade.jpeg')"></div>
-  <div class="page-hero-slide" style="background-image:url('assets/jeong.jpeg')"></div>
-  <div class="page-hero-slide" style="background-image:url('assets/luke-parry.webp')"></div>
-  <div class="page-hero-slide" style="background-image:url('assets/alexander-morris.webp')"></div>
-  <div class="page-hero-slide" style="background-image:url('assets/611-vessel404-black.webp')"></div>
+  <div class="page-hero-slide active" style="--img:url('assets/silence-aqua2023.webp')"><div class="page-hero-slide-glow"></div><div class="page-hero-slide-sharp"></div></div>
+  <div class="page-hero-slide" style="--img:url('assets/Blue-and-white-drips-on-black-with-pipes-canvas-Silence-Melbourne.webp')"><div class="page-hero-slide-glow"></div><div class="page-hero-slide-sharp"></div></div>
+  <div class="page-hero-slide" style="--img:url('assets/wade.jpeg')"><div class="page-hero-slide-glow"></div><div class="page-hero-slide-sharp"></div></div>
+  <div class="page-hero-slide" style="--img:url('assets/jeong.jpeg')"><div class="page-hero-slide-glow"></div><div class="page-hero-slide-sharp"></div></div>
+  <div class="page-hero-slide" style="--img:url('assets/luke-parry.webp')"><div class="page-hero-slide-glow"></div><div class="page-hero-slide-sharp"></div></div>
+  <div class="page-hero-slide" style="--img:url('assets/alexander-morris.webp')"><div class="page-hero-slide-glow"></div><div class="page-hero-slide-sharp"></div></div>
+  <div class="page-hero-slide" style="--img:url('assets/611-vessel404-black.webp')"><div class="page-hero-slide-glow"></div><div class="page-hero-slide-sharp"></div></div>
   <div class="page-hero-veil" id="artists-veil"></div>
   <div class="page-hero-cursor" id="artists-cursor"></div>
   <div class="page-hero-label" id="artists-label">Silence — Aerosol &amp; Mixed Media</div>
