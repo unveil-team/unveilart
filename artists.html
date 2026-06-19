@@ -185,7 +185,7 @@ nav {
   position: absolute;
   bottom: 0; left: 0; right: 0;
   height: 320px;
-  background: linear-gradient(to top, var(--off-white) 0%, transparent 100%);
+  background: linear-gradient(to top, var(--cream) 0%, transparent 100%);
   z-index: 2;
   pointer-events: none;
 }
@@ -209,9 +209,12 @@ nav {
 /* ── Artist grid ────────────────────────────────────────── */
 .artists-section {
   padding: 0 40px 120px;
-  max-width: 1200px; margin: 0 auto;
+  background: var(--cream) url('assets/grain.webp');
+  background-size: 256px 256px;
+  background-blend-mode: multiply;
 }
 .artists-grid {
+  max-width: 1200px; margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 32px;
