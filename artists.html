@@ -28,7 +28,9 @@ body {
   margin: 0;
   font-family: var(--sans);
   color: var(--deep-black);
-  background: var(--off-white);
+  background: var(--off-white) url('assets/grain.webp');
+  background-size: 256px 256px;
+  background-blend-mode: multiply;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
@@ -205,6 +207,20 @@ nav {
   overflow: hidden;
   aspect-ratio: 3/4;
 }
+.artist-card-bracket {
+  position: absolute;
+  width: 22px; height: 22px;
+  border: 1px solid var(--gold-whisper);
+  opacity: 0;
+  transition: opacity 0.35s ease, width 0.35s ease, height 0.35s ease;
+  z-index: 2;
+  pointer-events: none;
+}
+.artist-card-bracket.tl { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+.artist-card-bracket.tr { top: 10px; right: 10px; border-left: none; border-bottom: none; }
+.artist-card-bracket.bl { bottom: 10px; left: 10px; border-right: none; border-top: none; }
+.artist-card-bracket.br { bottom: 10px; right: 10px; border-left: none; border-top: none; }
+.artist-card:hover .artist-card-bracket { opacity: 1; width: 28px; height: 28px; }
 .artist-card-img {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
@@ -323,6 +339,10 @@ footer a:hover { color: var(--off-white); }
       <div class="artist-card-inner">
         <img class="artist-card-img" src="assets/silence-aqua2023.webp" alt="Silence — Aerosol &amp; Mixed Media" />
         <div class="artist-card-scrim"></div>
+        <div class="artist-card-bracket tl"></div>
+        <div class="artist-card-bracket tr"></div>
+        <div class="artist-card-bracket bl"></div>
+        <div class="artist-card-bracket br"></div>
       </div>
       <div class="artist-card-info">
         <div class="artist-card-name">Silence</div>
@@ -335,6 +355,10 @@ footer a:hover { color: var(--off-white); }
       <div class="artist-card-inner">
         <img class="artist-card-img" src="assets/wade.jpeg" alt="Wade — Photography" />
         <div class="artist-card-scrim"></div>
+        <div class="artist-card-bracket tl"></div>
+        <div class="artist-card-bracket tr"></div>
+        <div class="artist-card-bracket bl"></div>
+        <div class="artist-card-bracket br"></div>
       </div>
       <div class="artist-card-info">
         <div class="artist-card-name">Wade</div>
@@ -347,6 +371,10 @@ footer a:hover { color: var(--off-white); }
       <div class="artist-card-inner">
         <img class="artist-card-img" src="assets/jeong.jpeg" alt="Jeong — Photography" />
         <div class="artist-card-scrim"></div>
+        <div class="artist-card-bracket tl"></div>
+        <div class="artist-card-bracket tr"></div>
+        <div class="artist-card-bracket bl"></div>
+        <div class="artist-card-bracket br"></div>
       </div>
       <div class="artist-card-info">
         <div class="artist-card-name">Jeong</div>
@@ -359,6 +387,10 @@ footer a:hover { color: var(--off-white); }
       <div class="artist-card-inner">
         <img class="artist-card-img" src="assets/luke-parry.webp" alt="Luke Parry — Oil Portraits" />
         <div class="artist-card-scrim"></div>
+        <div class="artist-card-bracket tl"></div>
+        <div class="artist-card-bracket tr"></div>
+        <div class="artist-card-bracket bl"></div>
+        <div class="artist-card-bracket br"></div>
       </div>
       <div class="artist-card-info">
         <div class="artist-card-name">Luke Parry</div>
@@ -371,6 +403,10 @@ footer a:hover { color: var(--off-white); }
       <div class="artist-card-inner">
         <img class="artist-card-img" src="assets/henry3.jpeg" alt="Henry — Photography" />
         <div class="artist-card-scrim"></div>
+        <div class="artist-card-bracket tl"></div>
+        <div class="artist-card-bracket tr"></div>
+        <div class="artist-card-bracket bl"></div>
+        <div class="artist-card-bracket br"></div>
       </div>
       <div class="artist-card-info">
         <div class="artist-card-name">Henry</div>
@@ -383,6 +419,10 @@ footer a:hover { color: var(--off-white); }
       <div class="artist-card-inner">
         <img class="artist-card-img" src="assets/alexander-morris.webp" alt="Alexander Morris — Oil Painting" />
         <div class="artist-card-scrim"></div>
+        <div class="artist-card-bracket tl"></div>
+        <div class="artist-card-bracket tr"></div>
+        <div class="artist-card-bracket bl"></div>
+        <div class="artist-card-bracket br"></div>
       </div>
       <div class="artist-card-info">
         <div class="artist-card-name">Alexander Morris</div>
@@ -395,6 +435,10 @@ footer a:hover { color: var(--off-white); }
       <div class="artist-card-inner">
         <img class="artist-card-img" src="assets/611-vessel404-black.webp" alt="611 — 3D Printing &amp; Sculpture" />
         <div class="artist-card-scrim"></div>
+        <div class="artist-card-bracket tl"></div>
+        <div class="artist-card-bracket tr"></div>
+        <div class="artist-card-bracket bl"></div>
+        <div class="artist-card-bracket br"></div>
       </div>
       <div class="artist-card-info">
         <div class="artist-card-name">611</div>
